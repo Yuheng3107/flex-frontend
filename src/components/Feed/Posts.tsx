@@ -34,7 +34,6 @@ const Posts = ({ posts, loadData }: PostProps) => {
             key={item.id}
           />
       ))}
-      <IonButton onClick={loadData}>Load More</IonButton>
     </div>
   );
 };
