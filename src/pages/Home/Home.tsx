@@ -32,7 +32,7 @@ const Home: React.FC = () => {
           <IonTitle>Communities</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
+      <IonContent className="ion-no-padding">
         <CommunitiesList closeSideMenu={closeSideMenu} communitiesList={communitiesRedux}/>
         <IonButton routerLink="/profile/friendslist" onClick={() => {
           closeSideMenu();
