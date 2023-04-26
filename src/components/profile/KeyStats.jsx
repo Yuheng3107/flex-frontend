@@ -1,4 +1,10 @@
+import { useAppDispatch } from "../../store/hooks";
+import { profileDataActions } from "../../store/profileDataSlice";
+import { useHistory } from "react-router";
+
 export default function KeyStats({ followers, reps, perfect_reps }) {
+  const dispatch = useAppDispatch();
+  const history = useHistory();
   return (
     <div
       id="user-stats"
@@ -18,11 +24,14 @@ export default function KeyStats({ followers, reps, perfect_reps }) {
         </span>
         <span className="text-l">Perfect</span>
       </div>
-      <div id="followers" className="flex flex-col items-center justify-evenly">
+      <div id="followers" className="flex flex-col items-center justify-evenly" onClick={() => {
+        dispatch(profileDataActions.updateProfileCounter());
+        history.push("/profile/friendslist")
+      }}>
         <span className="text-xl font-semibold -mb-1">
           {followers === undefined ? "?" : followers}
         </span>
-        <span className="text-l">Followers</span>
+        <span className="text-l">Friends</span>
       </div>
     </div>
   );

@@ -34,12 +34,6 @@ const Home: React.FC = () => {
       </IonHeader>
       <IonContent className="ion-no-padding">
         <CommunitiesList closeSideMenu={closeSideMenu} communitiesList={communitiesRedux}/>
-        <IonButton routerLink="/profile/friendslist" onClick={() => {
-          closeSideMenu();
-          dispatch(profileDataActions.updateProfileCounter());
-        }}>
-          Friends
-        </IonButton>
         <button onClick={() => {
           sideMenuRef.current?.close();
         }}>close</button>
