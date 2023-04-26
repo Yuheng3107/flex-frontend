@@ -4,8 +4,9 @@ import { useState, useRef } from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonMenu, IonMenuButton, IonButton } from '@ionic/react';
 
 //Redux imports
-import { useAppDispatch } from '../../store/hooks';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { profileDataActions } from '../../store/profileDataSlice';
+
 
 //Component imports
 import Feed from '../../components/Feed/Feed';
@@ -15,9 +16,11 @@ import { Link } from "react-router-dom";
 import AddIcon from "../../assets/svgComponents/AddIcon";
 
 const Home: React.FC = () => {
+  const communitiesRedux = useAppSelector((state) => state.profile.profileData.communities);
+  console.log(communitiesRedux);
   const [sideMenuShowing, setSetMenuShowing] = useState(false);
   const sideMenuRef = useRef<HTMLIonMenuElement>(null);
-const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   function closeSideMenu() {
     sideMenuRef.current?.close();
   }
@@ -26,11 +29,11 @@ const dispatch = useAppDispatch();
     <IonMenu ref={sideMenuRef} contentId="main-content">
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Menu Content</IonTitle>
+          <IonTitle>Communities</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <CommunitiesList closeSideMenu={closeSideMenu} />
+        <CommunitiesList closeSideMenu={closeSideMenu} communitiesList={communitiesRedux}/>
         <IonButton routerLink="/profile/friendslist" onClick={() => {
           closeSideMenu();
           dispatch(profileDataActions.updateProfileCounter());
@@ -55,7 +58,7 @@ const dispatch = useAppDispatch();
       <IonContent fullscreen className="relative">
         <Feed />
         <Link to="/home/post/create" className="w-14 h-14 bg-sky-500 rounded-full fixed right-4 bottom-4 flex justify-center items-center" >
-            <AddIcon className="fill-slate-50"/>
+          <AddIcon className="fill-slate-50" />
         </Link>
       </IonContent>
     </IonPage>
