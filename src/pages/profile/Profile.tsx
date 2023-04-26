@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FormEvent } from "react";
 
 //redux imports
 import { useAppSelector, useAppDispatch } from "../../store/hooks";
@@ -10,11 +10,15 @@ import { getUserPostsAsync } from "../../utils/data/posts";
 
 import { googleLogout } from "@react-oauth/google";
 import { emptyProfileData } from "../../types/stateTypes";
+
+import { toggleDarkTheme } from "../../utils/darkMode";
+
 //ionic imports
 import {
   IonContent,
   IonPage,
   IonButton,
+  IonToggle,
 } from "@ionic/react";
 
 //component imports
@@ -25,10 +29,21 @@ type ProfileProps = {
   updateProfileState: number;
   setUpdateProfileState: (arg: number) => void;
 }
+interface ToggleChangeEventDetail<T = any> {
+  value: T;
+  checked: boolean;
+}
+interface ToggleCustomEvent<T = any> extends CustomEvent {
+  detail: ToggleChangeEventDetail<T>;
+  target: HTMLIonToggleElement;
+}
+
 let currentUserPostSet = 0;
 const Tab3 = ({ updateProfileState, setUpdateProfileState }: ProfileProps) => {
   const [userPostArray, setUserPostArray] = useState([]);
   const [loginStatus, setLoginStatus] = useState(false);
+  const [darkThemeToggleChecked, setDarkThemeToggleChecked] = useState(false);
+
   const dispatch = useAppDispatch();
 
   const profileDataRedux = useAppSelector((state) => state.profile.profileData)
@@ -52,13 +67,21 @@ const Tab3 = ({ updateProfileState, setUpdateProfileState }: ProfileProps) => {
     currentUserPostSet += 1;
   };
 
+
+  function onDarkThemeToggle() {
+    setDarkThemeToggleChecked((currState) => {
+      console.log(currState);
+
+      toggleDarkTheme(!currState);
+      return !currState
+    });
+  }
   return (
     <IonPage>
       <IonContent fullscreen>
+        <IonToggle checked={darkThemeToggleChecked} onIonChange={onDarkThemeToggle}></IonToggle>
         {loginStatus ?
-          <div>
-            <UserProfileTemplate profileData={profileDataRedux} exerciseStats={exerciseStatsRedux} userPostArray={userPostArray} loadUserPostData={loadUserPostData}/>
-          </div>
+          <UserProfileTemplate profileData={profileDataRedux} exerciseStats={exerciseStatsRedux} userPostArray={userPostArray} loadUserPostData={loadUserPostData} />
           :
           <Login setLoginStatus={setLoginStatus} setUpdateProfileState={setUpdateProfileState} updateProfileState={updateProfileState} />
         }

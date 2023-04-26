@@ -9,7 +9,7 @@ import { exerciseStatsActions } from './store/exerciseStatsSlice';
 //Util function imports
 import { getProfileData, getProfileDataAsync, getFavoriteExerciseAsync, getFavoriteExerciseRegimeAsync, splitProfileData } from './utils/data/profile';
 import { getExerciseRegimeAsync } from './utils/data/getExerciseData';
-
+import { checkAndToggleDarkTheme } from './utils/darkMode';
 //type import
 import { ProfileData, emptyProfileData, ExerciseStats, emptyExerciseStats } from './types/stateTypes';
 
@@ -62,7 +62,11 @@ import "@ionic/react/css/display.css";
 import OtherUserProfile from './pages/other users/OtherUserProfile';
 import CommunityDisplay from './pages/community/CommunityDisplay';
 
+//import styles
+import "./theme/variables.css";
+
 setupIonicReact();
+checkAndToggleDarkTheme();
 
 const backend = " http://localhost:8000";
 const exercises = ["zero", "Squats", "Push-ups", "Hamstring Stretch"];
