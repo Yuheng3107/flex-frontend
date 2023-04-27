@@ -1,8 +1,8 @@
 import { useState, useRef } from 'react';
 
 //Ionic imports
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonMenu, IonMenuButton, IonButton } from '@ionic/react';
-
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonMenu, IonMenuButton, IonButton, IonMenuToggle, IonIcon } from '@ionic/react';
+import { chevronBackOutline } from 'ionicons/icons';
 //Redux imports
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { profileDataActions } from '../../store/profileDataSlice';
@@ -29,14 +29,16 @@ const Home: React.FC = () => {
     <IonMenu ref={sideMenuRef} contentId="main-content">
       <IonHeader>
         <IonToolbar>
+          <IonMenuToggle>
+            <IonButton fill="clear" size="small">
+              <IonIcon icon={chevronBackOutline} />
+            </IonButton>
+          </IonMenuToggle>
           <IonTitle>Communities</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-no-padding">
-        <CommunitiesList closeSideMenu={closeSideMenu} communitiesList={communitiesRedux}/>
-        <button onClick={() => {
-          sideMenuRef.current?.close();
-        }}>close</button>
+        <CommunitiesList closeSideMenu={closeSideMenu} communitiesList={communitiesRedux} />
       </IonContent>
     </IonMenu>
     {/* This is the main content of the page */}
