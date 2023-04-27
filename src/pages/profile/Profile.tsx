@@ -42,8 +42,7 @@ let currentUserPostSet = 0;
 const Tab3 = ({ updateProfileState, setUpdateProfileState }: ProfileProps) => {
   const [userPostArray, setUserPostArray] = useState([]);
   const [loginStatus, setLoginStatus] = useState(false);
-  const [darkThemeToggleChecked, setDarkThemeToggleChecked] = useState(false);
-
+  const [darkThemeToggleChecked, setDarkThemeToggleChecked] = useState(window.matchMedia('(prefers-color-scheme: dark)').matches);
   const dispatch = useAppDispatch();
 
   const profileDataRedux = useAppSelector((state) => state.profile.profileData)
