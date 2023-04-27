@@ -26,20 +26,12 @@ import Login from "../../components/login/Login";
 import UserProfileTemplate from "../../components/profile/UserProfileTemplate";
 
 type ProfileProps = {
-  updateProfileState: number;
-  setUpdateProfileState: (arg: number) => void;
-}
-interface ToggleChangeEventDetail<T = any> {
-  value: T;
-  checked: boolean;
-}
-interface ToggleCustomEvent<T = any> extends CustomEvent {
-  detail: ToggleChangeEventDetail<T>;
-  target: HTMLIonToggleElement;
+  // updateProfileState: number;
+  // setUpdateProfileState: (arg: number) => void;
 }
 
 let currentUserPostSet = 0;
-const Tab3 = ({ updateProfileState, setUpdateProfileState }: ProfileProps) => {
+const Tab3 = ({ }: ProfileProps) => {
   const [userPostArray, setUserPostArray] = useState([]);
   const [loginStatus, setLoginStatus] = useState(false);
   const [darkThemeToggleChecked, setDarkThemeToggleChecked] = useState(window.matchMedia('(prefers-color-scheme: dark)').matches);
@@ -51,7 +43,7 @@ const Tab3 = ({ updateProfileState, setUpdateProfileState }: ProfileProps) => {
   useEffect(() => {
     console.log(`the current loginStatus is ${loginStatus}`);
     checkLoginStatus(loginStatus, setLoginStatus);
-  }, [loginStatus, setLoginStatus, checkLoginStatus, updateProfileState, exerciseStatsRedux]);
+  }, [loginStatus, setLoginStatus, checkLoginStatus, exerciseStatsRedux]);
 
   const logOut = () => {
     googleLogout();
@@ -82,7 +74,7 @@ const Tab3 = ({ updateProfileState, setUpdateProfileState }: ProfileProps) => {
         {loginStatus ?
           <UserProfileTemplate profileData={profileDataRedux} exerciseStats={exerciseStatsRedux} userPostArray={userPostArray} loadUserPostData={loadUserPostData} />
           :
-          <Login setLoginStatus={setLoginStatus} setUpdateProfileState={setUpdateProfileState} updateProfileState={updateProfileState} />
+          <Login setLoginStatus={setLoginStatus}  />
         }
         <IonButton routerLink="/profile/create" routerDirection="forward">
           Edit Profile

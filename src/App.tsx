@@ -65,6 +65,7 @@ import CommunityDisplay from './pages/community/CommunityDisplay';
 
 //import styles
 import "./theme/variables.css";
+import ProfilePages from './pages/profile/ProfilePages';
 
 setupIonicReact();
 checkAndToggleDarkTheme();
@@ -124,19 +125,12 @@ const App: React.FC = () => {
             <Route exact path="/exercise/:exerciseId" render={(props) => {
               return <Exercise {...props} />;
             }} />
-            <Route exact path="/profile">
-              <Profile updateProfileState={updateProfileState} setUpdateProfileState={setUpdateProfileState} />
-            </Route>
 
             <Route exact path="/home/profile/:userId" render={(props) => {
               return <OtherUserProfile {...props} />;
             }} />
-            <Route exact path='/profile/create/'>
-              <EditProfile updateProfileState={updateProfileState} setUpdateProfileState={setUpdateProfileState} />
-            </Route>
-            <Route exact path='/profile/friendslist/'>
-              <FriendsList />
-            </Route>
+            <Route path="/profile" component={ProfilePages} />
+
             <Route exact path="/">
               <Redirect to="/home" />
             </Route>

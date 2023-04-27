@@ -30,11 +30,11 @@ import { getProfileData, getProfileDataAsync } from '../../utils/data/profile';
 import { ProfileData, emptyProfileData } from '../../types/stateTypes';
 
 type EditProfileProps = {
-    setUpdateProfileState: (newState: number) => void;
-    updateProfileState: number;
+    // setUpdateProfileState: (newState: number) => void;
+    // updateProfileState: number;
 }
 // Functional Component
-function EditProfile({ setUpdateProfileState, updateProfileState }: EditProfileProps) {
+function EditProfile({ }: EditProfileProps) {
     const usernameInputRef = useRef<HTMLInputElement>(null);
     const bioInputRef = useRef<HTMLTextAreaElement>(null);
     const history = useHistory();
@@ -71,14 +71,13 @@ function EditProfile({ setUpdateProfileState, updateProfileState }: EditProfileP
             // do something with response
             console.log(response);
             history.push('/profile')
-            setUpdateProfileState(updateProfileState + 1);
         }).catch((err) => {
             console.log(err);
         });
     }
 
     const editProfileComponents = <div className="p-10">
-        <UpdateProfilePic setUpdateProfileState={setUpdateProfileState} updateProfileState={updateProfileState} />
+        <UpdateProfilePic />
         <TextInput defaultValue={profileData.username} ref={usernameInputRef} inputName="username" label="Username" />
         <TextAreaInput className="mt-3" ref={bioInputRef} inputName="bio" label="Bio" defaultValue={profileData.bio} ></TextAreaInput>
         <div className="flex flex-row justify-end">
