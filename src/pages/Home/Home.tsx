@@ -1,8 +1,22 @@
 import { useState, useRef } from 'react';
 
 //Ionic imports
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonMenu, IonMenuButton, IonButton, IonMenuToggle, IonIcon } from '@ionic/react';
-import { chevronBackOutline } from 'ionicons/icons';
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonButtons,
+  IonMenu,
+  IonMenuButton,
+  IonButton,
+  IonMenuToggle,
+  IonIcon,
+  IonFabButton,
+  IonFab
+} from '@ionic/react';
+import { chevronBackOutline, pencilOutline } from 'ionicons/icons';
 //Redux imports
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { profileDataActions } from '../../store/profileDataSlice';
@@ -53,9 +67,11 @@ const Home: React.FC = () => {
       </IonHeader>
       <IonContent fullscreen className="relative">
         <Feed />
-        <Link to="/home/post/create" className="w-14 h-14 bg-sky-500 rounded-full fixed right-4 bottom-4 flex justify-center items-center" >
-          <AddIcon className="fill-slate-50" />
-        </Link>
+        <IonFab slot="fixed" vertical="bottom" horizontal="end">
+          <IonFabButton routerLink='/home/post/create'>
+            <IonIcon icon={pencilOutline}></IonIcon>
+          </IonFabButton>
+        </IonFab>
       </IonContent>
     </IonPage>
   </>
