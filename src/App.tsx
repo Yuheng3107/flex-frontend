@@ -1,5 +1,5 @@
 //React imports
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 //Redux imports
 import { useAppSelector, useAppDispatch } from './store/hooks';
@@ -21,6 +21,7 @@ import { Redirect, Route } from "react-router-dom";
 import {
   IonApp,
   IonIcon,
+  IonMenuToggle,
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
@@ -80,6 +81,7 @@ const App: React.FC = () => {
   const exerciseStatsRedux = useAppSelector((state) => state.exerciseStats);
   const dispatch = useAppDispatch();
 
+  const homeMenuRef = useRef<HTMLIonMenuElement>(null);
   useEffect(() => {
     console.log('getprofiledata running from App.tsx')
     async function obtainProfileData() {
@@ -97,15 +99,20 @@ const App: React.FC = () => {
     }
 
     obtainProfileData();
-  }, [getProfileData, updateProfileState,updateProfileCounter])
+  }, [getProfileData, updateProfileState, updateProfileCounter])
+
+  function closeHomeSideMenu() {
+    homeMenuRef.current?.close();
+  }
 
   return (
     <IonApp>
       <IonReactRouter>
+
         <IonTabs>
           <IonRouterOutlet>
             <Route exact path="/home">
-              <Home />
+              <Home ref={homeMenuRef} />
             </Route>
             <Route exact path="/home/post/create">
               <CreatePost />
@@ -134,12 +141,12 @@ const App: React.FC = () => {
               <Redirect to="/home" />
             </Route>
           </IonRouterOutlet>
-          <IonTabBar slot="bottom">
-            <IonTabButton tab="home" href="/home">
+          <IonTabBar slot="bottom" onClick={closeHomeSideMenu}>
+            <IonTabButton tab="home" href="/home" >
               <IonIcon aria-hidden="true" icon={home} />
             </IonTabButton>
 
-            <IonTabButton tab="exercise" href="/exercise">
+            <IonTabButton tab="exercise" href="/exercise" >
               {/* <div className="relative bg-sky-400 aspect-square rounded-full"> */}
               <IonIcon
                 className="absolute"
@@ -148,7 +155,7 @@ const App: React.FC = () => {
               />
               {/* </div> */}
             </IonTabButton>
-            <IonTabButton tab="profile" href="/profile">
+            <IonTabButton tab="profile" href="/profile" >
               {/* <IonIcon className="fill-red-600 stroke-red-600" aria-hidden="true" src={personUnfilled} /> */}
               {/* <IonIcon aria-hidden="true" icon={backend.concat(profileData.profile_photo)} /> */}
               <img className={`rounded-full border border-neutral-800 h-9`} src={backend.concat(profileDataRedux.profile_photo)} />

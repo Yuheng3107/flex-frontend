@@ -16,15 +16,12 @@ function CommunitiesList({ closeSideMenu, communitiesList }: CommunitiesListProp
     const [communitiesData, setCommunitiesData] = useState([emptyCommunityData]);
 
     useEffect(() => {
-        console.log('useEffect running from CommunitiesList.tsx')
         async function getCommunitiesInfo() {
             const data = await getCommunityListAsync(communitiesList);
             setCommunitiesData(data);
-            console.log(data);
         }
         getCommunitiesInfo();
     }, [setCommunitiesData, getCommunityListAsync, communitiesList]);
-    console.log(communitiesList[0]);
     return <aside>
         <ul>
             {communitiesData.map(item => (

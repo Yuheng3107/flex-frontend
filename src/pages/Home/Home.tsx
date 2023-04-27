@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, forwardRef } from 'react';
 
 //Ionic imports
 import {
@@ -28,8 +28,11 @@ import SearchBar from '../../components/Feed/SearchBar';
 import CommunitiesList from '../../components/home/CommunitiesList';
 import { Link } from "react-router-dom";
 import AddIcon from "../../assets/svgComponents/AddIcon";
+type Ref = HTMLIonMenuElement
+type HomeProps = {
 
-const Home: React.FC = () => {
+}
+const Home = forwardRef<Ref, HomeProps>(function (props, ref) {
   const communitiesRedux = useAppSelector((state) => state.profile.profileData.communities);
   console.log(communitiesRedux);
   const [sideMenuShowing, setSetMenuShowing] = useState(false);
@@ -40,7 +43,7 @@ const Home: React.FC = () => {
   }
   return <>
     {/* This is the content of the sideMenu  */}
-    <IonMenu ref={sideMenuRef} contentId="main-content">
+    <IonMenu ref={ref} contentId="main-content">
       <IonHeader>
         <IonToolbar>
           <IonMenuToggle>
@@ -77,6 +80,8 @@ const Home: React.FC = () => {
   </>
 
 
-};
+});
+
+
 
 export default Home;
