@@ -1,12 +1,14 @@
 export const checkAndToggleDarkTheme = function () {
-    // Use matchMedia to check the user preference
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    // Use matchMedia to check the user's device darkmode preference
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    // check if there's darkmode preference in localStorage
+    const localStoragePref = JSON.parse(localStorage.getItem("darkmode") || "null");
 
-    toggleDarkTheme(prefersDark.matches);
-
-    // Listen for changes to the prefers-color-scheme media query
-    prefersDark.addListener((mediaQuery) => toggleDarkTheme(mediaQuery.matches));
-
+    if (localStoragePref !== null) {
+        toggleDarkTheme(localStoragePref);
+    } else {
+        toggleDarkTheme(prefersDark);
+    }
     // Add or remove the "dark" class based on if the media query matches
 
 

@@ -9,17 +9,27 @@ import {
     IonBackButton,
     IonTitle,
     IonButtons,
-    IonButton,
-    IonSpinner
+    IonToggle
 } from '@ionic/react';
 
-type SettingsProps = {
-    // setUpdateProfileState: (newState: number) => void;
-    // updateProfileState: number;
-}
-// Functional Component
-function Settings({ }: SettingsProps) {
+//utils
+import { toggleDarkTheme } from '../../utils/darkMode';
 
+// Functional Component
+function Settings() {
+    let mediaDarkmodePref = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    let localDarkmodePref = JSON.parse(localStorage.getItem("darkmode") || "undefined");
+    console.log(localDarkmodePref);
+    const [darkThemeToggleChecked, setDarkThemeToggleChecked] = useState<boolean | undefined>(localDarkmodePref === null ? mediaDarkmodePref : localDarkmodePref);
+    console.log(darkThemeToggleChecked);
+    function onDarkThemeToggle() {
+        setDarkThemeToggleChecked((currState) => {
+            console.log(currState);
+            localStorage.setItem('darkmode', JSON.stringify(!currState));
+            toggleDarkTheme(!currState);
+            return !currState
+        });
+    }
 
     return <IonPage>
         <IonHeader>
@@ -31,7 +41,8 @@ function Settings({ }: SettingsProps) {
             </IonToolbar>
         </IonHeader>
         <IonContent >
-
+            <p>Darkmode Toggle</p>
+            <IonToggle checked={darkThemeToggleChecked} onIonChange={onDarkThemeToggle}></IonToggle>
 
         </IonContent>
     </IonPage >

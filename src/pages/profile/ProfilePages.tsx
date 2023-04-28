@@ -26,8 +26,11 @@ function ProfilePages({ match }: CommunityPageProps) {
             <Route exact path='/profile/friendslist/'>
                 <FriendsList />
             </Route>
+            <Route exact path={`${match.url}/settings`} >
+                <Settings />
+            </Route>
         </IonRouterOutlet>
-        <Route exact path={`${match.url}/settings`} render={Settings}></Route>
+
     </IonPage>;
 }
 

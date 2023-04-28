@@ -11,7 +11,6 @@ import { getUserPostsAsync } from "../../utils/data/posts";
 import { googleLogout } from "@react-oauth/google";
 import { emptyProfileData } from "../../types/stateTypes";
 
-import { toggleDarkTheme } from "../../utils/darkMode";
 
 //ionic imports
 import {
@@ -19,7 +18,9 @@ import {
   IonPage,
   IonButton,
   IonToggle,
+  IonIcon,
 } from "@ionic/react";
+import { cog } from "ionicons/icons";
 
 //component imports
 import Login from "../../components/login/Login";
@@ -34,7 +35,6 @@ let currentUserPostSet = 0;
 const Tab3 = ({ }: ProfileProps) => {
   const [userPostArray, setUserPostArray] = useState([]);
   const [loginStatus, setLoginStatus] = useState(false);
-  const [darkThemeToggleChecked, setDarkThemeToggleChecked] = useState(window.matchMedia('(prefers-color-scheme: dark)').matches);
   const dispatch = useAppDispatch();
 
   const profileDataRedux = useAppSelector((state) => state.profile.profileData)
@@ -58,23 +58,16 @@ const Tab3 = ({ }: ProfileProps) => {
     currentUserPostSet += 1;
   };
 
-
-  function onDarkThemeToggle() {
-    setDarkThemeToggleChecked((currState) => {
-      console.log(currState);
-
-      toggleDarkTheme(!currState);
-      return !currState
-    });
-  }
   return (
     <IonPage>
       <IonContent fullscreen>
-        <IonToggle checked={darkThemeToggleChecked} onIonChange={onDarkThemeToggle}></IonToggle>
+        <IonButton routerLink="/profile/settings" fill="default" shape="round">
+          <IonIcon icon={cog} />
+        </IonButton>
         {loginStatus ?
           <UserProfileTemplate profileData={profileDataRedux} exerciseStats={exerciseStatsRedux} userPostArray={userPostArray} loadUserPostData={loadUserPostData} />
           :
-          <Login setLoginStatus={setLoginStatus}  />
+          <Login setLoginStatus={setLoginStatus} />
         }
         <IonButton routerLink="/profile/create" routerDirection="forward">
           Edit Profile

@@ -10,6 +10,7 @@ import { exerciseStatsActions } from './store/exerciseStatsSlice';
 import { getProfileData, getProfileDataAsync, getFavoriteExerciseAsync, getFavoriteExerciseRegimeAsync, splitProfileData } from './utils/data/profile';
 import { getExerciseRegimeAsync } from './utils/data/getExerciseData';
 import { checkAndToggleDarkTheme } from './utils/darkMode';
+import { toggleDarkTheme } from './utils/darkMode';
 //type import
 import { ProfileData, emptyProfileData, ExerciseStats, emptyExerciseStats } from './types/stateTypes';
 
@@ -100,6 +101,7 @@ const App: React.FC = () => {
     }
 
     obtainProfileData();
+
   }, [getProfileData, updateProfileState, updateProfileCounter])
 
   function closeHomeSideMenu() {
