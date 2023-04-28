@@ -30,7 +30,7 @@ type UpdateProfilePicProps = {
 }
 
 //functional component
-const UpdateProfilePic = ({  }: UpdateProfilePicProps) => {
+const UpdateProfilePic = ({ }: UpdateProfilePicProps) => {
     const history = useHistory();
     const dispatch = useAppDispatch();
 
@@ -103,7 +103,9 @@ const UpdateProfilePic = ({  }: UpdateProfilePicProps) => {
                 body: profilePhotoFormData,
             }).then((response) => {
                 // do something with response
+                dispatch(profileDataActions.updateProfileCounter());
                 history.push('/profile');
+
             }).catch((err) => {
                 console.log(err);
             });

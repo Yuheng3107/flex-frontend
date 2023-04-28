@@ -7,6 +7,7 @@ import { Route, RouteComponentProps } from "react-router";
 import EditProfile from "./EditProfile";
 import Profile from "./Profile";
 import FriendsList from "./FriendsList";
+import Settings from "./Settings";
 
 //Page component imports
 interface CommunityPageProps extends RouteComponentProps<{
@@ -26,6 +27,7 @@ function ProfilePages({ match }: CommunityPageProps) {
                 <FriendsList />
             </Route>
         </IonRouterOutlet>
+        <Route exact path={`${match.url}/settings`} render={Settings}></Route>
     </IonPage>;
 }
 
