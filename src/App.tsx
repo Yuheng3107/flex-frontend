@@ -98,6 +98,9 @@ const App: React.FC = () => {
     async function obtainProfileData() {
       let data = await getProfileDataAsync();
       //get favorite exercse
+      if (data === false) {
+        return;
+      }
       data.favorite_exercise = await getFavoriteExerciseAsync(data.id);
       //get favorite exercise regime
       data.favorite_exercise_regime = await getFavoriteExerciseRegimeAsync(
