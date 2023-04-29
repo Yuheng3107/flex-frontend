@@ -15,7 +15,7 @@ import { getCommunityListAsync } from "../../utils/data/communities";
 import { backend } from "../../App";
 
 //ionic imports
-import { IonInfiniteScroll, IonInfiniteScrollContent } from "@ionic/react";
+import { IonButton, IonInfiniteScroll, IonInfiniteScrollContent } from "@ionic/react";
 
 function Feed() {
   const profileDataRedux = useAppSelector((state) => state.profile.profileData);
