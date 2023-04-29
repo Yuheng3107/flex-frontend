@@ -23,6 +23,7 @@ const Posts = ({ posts, loadData }: PostProps) => {
       id="userFeed"
       className="flex flex-col justify-start w-full h-full px-5"
     >
+      <IonButton onClick={loadData}>Load Posts</IonButton>
       {posts.postArray.length === 0 ? 
         <div className="text-center">No More Posts</div>
       :
