@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 
+//auth imports
 import {
   googleLogout,
   useGoogleLogin,
@@ -7,9 +8,16 @@ import {
 } from "@react-oauth/google";
 import axios from "axios";
 
+//ionic imports
 import { IonButton, IonImg } from "@ionic/react";
 
+//icon import
 import googleIcon from "../../assets/svg/google-icon.svg";
+
+//redux imports
+import { profileDataActions } from "../../store/profileDataSlice";
+import { useAppDispatch } from "../../store/hooks";
+//utils
 import { backend } from "../../App";
 
 function Login(props) {
@@ -17,6 +25,7 @@ function Login(props) {
   const [user, setUser] = useState({});
   const [profile, setProfile] = useState({});
   let csrftoken = null;
+  const dispatch = useAppDispatch();
 
   // useGoogleOneTapLogin({
   //   onSuccess: (credentialResponse) => {
@@ -81,7 +90,8 @@ function Login(props) {
             body: JSON.stringify(data),
           }).then((response) => {
             console.log(response);
-            props.setUpdateProfileState(props.updateProfileState + 1);
+            // props.setUpdateProfileState(props.updateProfileState + 1);
+            dispatch(profileDataActions.updateProfileCounter());
           })
           // To use fetch API to send POST request to backend here
         })
@@ -90,7 +100,7 @@ function Login(props) {
           console.log(err)
         });
     }
-  }, [user]);
+  }, [user, profileDataActions]);
 
   const logOut = () => {
     googleLogout();
