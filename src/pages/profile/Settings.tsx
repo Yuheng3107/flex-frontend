@@ -17,8 +17,10 @@ import { toggleDarkTheme } from '../../utils/darkMode';
 
 // Functional Component
 function Settings() {
+    // check if the user device has preference for darkmode
     let mediaDarkmodePref = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    let localDarkmodePref = JSON.parse(localStorage.getItem("darkmode") || "undefined");
+    //check if the user has a previously stored darkmode preference
+    let localDarkmodePref = JSON.parse(localStorage.getItem("darkmode") || "false");
     console.log(localDarkmodePref);
     const [darkThemeToggleChecked, setDarkThemeToggleChecked] = useState<boolean | undefined>(localDarkmodePref === null ? mediaDarkmodePref : localDarkmodePref);
     console.log(darkThemeToggleChecked);
