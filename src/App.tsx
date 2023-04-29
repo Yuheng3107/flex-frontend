@@ -1,5 +1,5 @@
 //React imports
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 //Redux imports
 import { useAppSelector, useAppDispatch } from "./store/hooks";
@@ -15,7 +15,8 @@ import {
   splitProfileData,
 } from "./utils/data/profile";
 import { getExerciseRegimeAsync } from "./utils/data/getExerciseData";
-
+import { checkAndToggleDarkTheme } from "./utils/darkMode";
+import { toggleDarkTheme } from "./utils/darkMode";
 //type import
 import {
   ProfileData,
@@ -32,6 +33,7 @@ import { Redirect, Route } from "react-router-dom";
 import {
   IonApp,
   IonIcon,
+  IonMenuToggle,
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
@@ -70,7 +72,12 @@ import "@ionic/react/css/display.css";
 import OtherUserProfile from "./pages/other users/OtherUserProfile";
 import CommunityDisplay from "./pages/community/CommunityDisplay";
 
+//import styles
+import "./theme/variables.css";
+import ProfilePages from "./pages/profile/ProfilePages";
+
 setupIonicReact();
+checkAndToggleDarkTheme();
 
 const backend = " https://fitai.click";
 const exercises = ["zero", "Squats", "Push-ups", "Hamstring Stretch"];
@@ -85,6 +92,7 @@ const App: React.FC = () => {
   const exerciseStatsRedux = useAppSelector((state) => state.exerciseStats);
   const dispatch = useAppDispatch();
 
+  const homeMenuRef = useRef<HTMLIonMenuElement>(null);
   useEffect(() => {
     console.log("getprofiledata running from App.tsx");
     async function obtainProfileData() {
@@ -109,13 +117,17 @@ const App: React.FC = () => {
     obtainProfileData();
   }, [getProfileData, updateProfileState, updateProfileCounter]);
 
+  function closeHomeSideMenu() {
+    homeMenuRef.current?.close();
+  }
+
   return (
     <IonApp>
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet>
             <Route exact path="/home">
-              <Home />
+              <Home ref={homeMenuRef} />
             </Route>
             <Route exact path="/home/post/create">
               <CreatePost />
@@ -131,12 +143,6 @@ const App: React.FC = () => {
                 return <Exercise {...props} />;
               }}
             />
-            <Route exact path="/profile">
-              <Profile
-                updateProfileState={updateProfileState}
-                setUpdateProfileState={setUpdateProfileState}
-              />
-            </Route>
 
             <Route
               exact
@@ -145,20 +151,13 @@ const App: React.FC = () => {
                 return <OtherUserProfile {...props} />;
               }}
             />
-            <Route exact path="/profile/create/">
-              <EditProfile
-                updateProfileState={updateProfileState}
-                setUpdateProfileState={setUpdateProfileState}
-              />
-            </Route>
-            <Route exact path="/profile/friendslist/">
-              <FriendsList />
-            </Route>
+            <Route path="/profile" component={ProfilePages} />
+
             <Route exact path="/">
               <Redirect to="/home" />
             </Route>
           </IonRouterOutlet>
-          <IonTabBar slot="bottom">
+          <IonTabBar slot="bottom" onClick={closeHomeSideMenu}>
             <IonTabButton tab="home" href="/home">
               <IonIcon aria-hidden="true" icon={home} />
             </IonTabButton>

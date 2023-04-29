@@ -1,11 +1,26 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, forwardRef } from 'react';
 
 //Ionic imports
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButtons, IonMenu, IonMenuButton, IonButton } from '@ionic/react';
-
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonButtons,
+  IonMenu,
+  IonMenuButton,
+  IonButton,
+  IonMenuToggle,
+  IonIcon,
+  IonFabButton,
+  IonFab
+} from '@ionic/react';
+import { chevronBackOutline, pencilOutline } from 'ionicons/icons';
 //Redux imports
-import { useAppDispatch } from '../../store/hooks';
+import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { profileDataActions } from '../../store/profileDataSlice';
+
 
 //Component imports
 import Feed from '../../components/Feed/Feed';
@@ -13,33 +28,34 @@ import SearchBar from '../../components/Feed/SearchBar';
 import CommunitiesList from '../../components/home/CommunitiesList';
 import { Link } from "react-router-dom";
 import AddIcon from "../../assets/svgComponents/AddIcon";
+type Ref = HTMLIonMenuElement
+type HomeProps = {
 
-const Home: React.FC = () => {
+}
+const Home = forwardRef<Ref, HomeProps>(function (props, ref) {
+  const communitiesRedux = useAppSelector((state) => state.profile.profileData.communities);
+  console.log(communitiesRedux);
   const [sideMenuShowing, setSetMenuShowing] = useState(false);
   const sideMenuRef = useRef<HTMLIonMenuElement>(null);
-const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   function closeSideMenu() {
     sideMenuRef.current?.close();
   }
   return <>
     {/* This is the content of the sideMenu  */}
-    <IonMenu ref={sideMenuRef} contentId="main-content">
+    <IonMenu ref={ref} contentId="main-content">
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Menu Content</IonTitle>
+          <IonMenuToggle>
+            <IonButton fill="clear" size="small">
+              <IonIcon icon={chevronBackOutline} />
+            </IonButton>
+          </IonMenuToggle>
+          <IonTitle>Communities</IonTitle>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
-        <CommunitiesList closeSideMenu={closeSideMenu} />
-        <IonButton routerLink="/profile/friendslist" onClick={() => {
-          closeSideMenu();
-          dispatch(profileDataActions.updateProfileCounter());
-        }}>
-          Friends
-        </IonButton>
-        <button onClick={() => {
-          sideMenuRef.current?.close();
-        }}>close</button>
+      <IonContent className="ion-no-padding">
+        <CommunitiesList closeSideMenu={closeSideMenu} communitiesList={communitiesRedux} />
       </IonContent>
     </IonMenu>
     {/* This is the main content of the page */}
@@ -54,14 +70,18 @@ const dispatch = useAppDispatch();
       </IonHeader>
       <IonContent fullscreen className="relative">
         <Feed />
-        <Link to="/home/post/create" className="w-14 h-14 bg-sky-500 rounded-full fixed right-4 bottom-4 flex justify-center items-center" >
-            <AddIcon className="fill-slate-50"/>
-        </Link>
+        <IonFab slot="fixed" vertical="bottom" horizontal="end">
+          <IonFabButton routerLink='/home/post/create'>
+            <IonIcon icon={pencilOutline}></IonIcon>
+          </IonFabButton>
+        </IonFab>
       </IonContent>
     </IonPage>
   </>
 
 
-};
+});
+
+
 
 export default Home;

@@ -66,14 +66,6 @@ function CommunityDisplay({ match }: CommunityDisplayProps) {
     }
 
     return <IonPage>
-        <IonHeader>
-            <IonToolbar>
-                <IonButtons slot="start">
-                    <IonBackButton></IonBackButton>
-                </IonButtons>
-                <IonTitle>{communityData.name}</IonTitle>
-            </IonToolbar>
-        </IonHeader>
         <IonContent>
             { communityData.id === -1 ?
                 <div className="flex flex-col justify-evenly items-center">

@@ -3,7 +3,13 @@ import { useEffect } from 'react';
 // Ionic imports
 import {
     IonPage,
-    IonContent
+    IonContent,
+    IonHeader,
+    IonToolbar,
+    IonBackButton,
+    IonTitle,
+    IonButtons,
+    IonButton,
 } from '@ionic/react';
 
 //redux imports
@@ -23,7 +29,16 @@ function FriendsList() {
     //     dispatch(profileDataActions.updateProfileCounter);
     // }, [])
     return <IonPage>
+        <IonHeader>
+            <IonToolbar>
+                <IonButtons slot="start">
+                    <IonBackButton defaultHref="/profile"></IonBackButton>
+                </IonButtons>
+                <IonTitle>Friend List</IonTitle>
+            </IonToolbar>
+        </IonHeader>
         <IonContent>
+
             <div>Friends</div>
             <FriendDisplay friends={profileDataRedux.followers} />
             <div>Incoming Friend Requests</div>
