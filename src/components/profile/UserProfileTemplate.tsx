@@ -17,7 +17,7 @@ type UserProfileTemplateProps = {
 
 const UserProfileTemplate = ({ profileData, exerciseStats, userPostArray, loadUserPostData }: UserProfileTemplateProps) => {
   useEffect(() => {
-    loadUserPostData();
+
   },[])
   const [isTrend, setTrend] = useState(true);
   return (

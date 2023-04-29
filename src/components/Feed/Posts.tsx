@@ -3,9 +3,8 @@ import React, { useState, useEffect } from "react";
 import { backend } from "../../App";
 import PersonTextCard from "./PersonTextCard";
 
-import {
-  IonButton,
-} from '@ionic/react';
+//ionic imports
+import { IonButton, IonInfiniteScroll, IonInfiniteScrollContent } from "@ionic/react";
 
 type PostProps = {
   posts: {
@@ -18,12 +17,17 @@ type PostProps = {
 
 let hasLoaded = false;
 const Posts = ({ posts, loadData }: PostProps) => {
+  useEffect(() => {
+    if (hasLoaded == false) {
+      loadData();
+      hasLoaded = true;
+    }
+  },[])
   return (
     <div
       id="userFeed"
       className="flex flex-col justify-start w-full h-full px-5"
     >
-      <IonButton onClick={loadData}>Load Posts</IonButton>
       {posts.postArray.length === 0 ? 
         <div className="text-center">No More Posts</div>
       :
@@ -35,6 +39,15 @@ const Posts = ({ posts, loadData }: PostProps) => {
             key={item.id}
           />
       ))}
+      <IonButton onClick={loadData}>Load Posts</IonButton>
+      <IonInfiniteScroll
+        onIonInfinite={(ev) => {
+          loadData();
+          setTimeout(() => ev.target.complete(), 500);
+        }}
+      >
+        <IonInfiniteScrollContent></IonInfiniteScrollContent>
+      </IonInfiniteScroll>
     </div>
   );
 };
