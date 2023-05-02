@@ -11,9 +11,7 @@ import {
   IonItem,
   IonLabel,
   IonThumbnail,
-  IonFab,
-  IonFabButton,
-  IonRouterOutlet,
+  IonRouterOutlet
 
 } from "@ionic/react";
 
@@ -55,9 +53,6 @@ function Workout({ match }: WorkoutPageProps) {
   return (
     <IonPage>
       <IonContent fullscreen>
-        <IonRouterOutlet>
-          <Route exact path={`${match.url}/exercise/:exerciseId`} component={ExercisePage} />
-        </IonRouterOutlet>
         <main className="h-full w-full relative">
           <section id="top-section" className="relative h-1/4">
             <div id="workout-info" className="text-white z-20 absolute flex flex-col justify-end h-full p-3">

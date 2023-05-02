@@ -48,8 +48,6 @@ import { accessibility, home } from "ionicons/icons";
 
 //Pages Components imports
 import Home from "./pages/Home/Home";
-import Exercise from "./pages/exercise/Exercise";
-import ChooseExercise from "./pages/exercise/ChooseExercise";
 import ExercisePages from "./pages/exercise/ExercisePages";
 import CreatePost from "./pages/post/CreatePost";
 import CommunityPage from "./pages/community/CommunityPage";
@@ -71,7 +69,6 @@ import "@ionic/react/css/text-transformation.css";
 import "@ionic/react/css/flex-utils.css";
 import "@ionic/react/css/display.css";
 import OtherUserProfile from "./pages/other users/OtherUserProfile";
-import CommunityDisplay from "./pages/community/CommunityDisplay";
 
 //import styles
 import "./theme/variables.css";
