@@ -13,10 +13,13 @@ import {
   getFavoriteExerciseAsync,
   getFavoriteExerciseRegimeAsync,
   splitProfileData,
-} from "./utils/data/profile";
+  getAllProfileData,
+} from "./utils/data/profileData";
 import { getExerciseRegimeAsync } from "./utils/data/getExerciseData";
 import { checkAndToggleDarkTheme } from "./utils/darkMode";
 import { toggleDarkTheme } from "./utils/darkMode";
+
+
 //type import
 import {
   ProfileData,
@@ -50,6 +53,7 @@ import ChooseExercise from "./pages/exercise/ChooseExercise";
 import ExercisePages from "./pages/exercise/ExercisePages";
 import CreatePost from "./pages/post/CreatePost";
 import CommunityPage from "./pages/community/CommunityPage";
+import PostPage from "./pages/post/PostPage";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -126,14 +130,18 @@ const App: React.FC = () => {
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet>
+            <Route exact path="/">
+              <Redirect to="/home" />
+            </Route>
             <Route exact path="/home">
               <Home ref={homeMenuRef} />
             </Route>
+        
             <Route exact path="/home/post/create">
               <CreatePost />
             </Route>
             <Route path="/home/community" component={CommunityPage} />
-            <Route path="/exercise" component={ExercisePages} />
+            
             <Route
               exact
               path="/home/profile/:userId"
@@ -141,11 +149,18 @@ const App: React.FC = () => {
                 return <OtherUserProfile {...props} />;
               }}
             />
+
+            <Route
+              exact
+              path="/home/post/:postId"
+              render={(props) => {
+                return <PostPage {...props} />;
+              }}
+            />
             <Route path="/profile" component={ProfilePages} />
 
-            <Route exact path="/">
-              <Redirect to="/home" />
-            </Route>
+            
+            <Route path="/exercise" component={ExercisePages} />
           </IonRouterOutlet>
           <IonTabBar slot="bottom" onClick={closeHomeSideMenu}>
             <IonTabButton tab="home" href="/home">

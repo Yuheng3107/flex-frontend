@@ -10,11 +10,11 @@ import FriendsList from "./FriendsList";
 import Settings from "./Settings";
 
 //Page component imports
-interface CommunityPageProps extends RouteComponentProps<{
+interface ProfilePagesProps extends RouteComponentProps<{
 }> { }
 
 //This component defines the routes following /community
-function ProfilePages({ match }: CommunityPageProps) {
+function ProfilePages({ match }: ProfilePagesProps) {
     return <IonPage>
         <IonRouterOutlet>
             <Route exact path={`${match.url}`}>

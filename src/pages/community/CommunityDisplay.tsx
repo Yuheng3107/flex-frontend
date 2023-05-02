@@ -18,9 +18,9 @@ import { RouteComponentProps } from "react-router";
 import img404 from "../../assets/img/404.png"
 
 //utils imports
-import { getCommunityAsync } from '../../utils/data/communities';
-import { getCommunityPostsAsync } from "../../utils/data/posts";
-import { getManyOtherProfileDataAsync } from "../../utils/data/profile";
+import { getCommunityAsync } from '../../utils/data/communityData';
+import { getCommunityPostsAsync } from "../../utils/data/postData";
+import { getManyOtherProfileDataAsync } from "../../utils/data/profileData";
 
 import { backend } from '../../App';
 import { CommunityData, emptyCommunityData, invalidCommunityData } from '../../types/stateTypes';

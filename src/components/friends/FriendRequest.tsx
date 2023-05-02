@@ -7,7 +7,7 @@ import {
   acceptFriendRequest,
   declineFriendRequest,
 } from "../../utils/data/friends";
-import { getOtherProfileDataAsync } from "../../utils/data/profile";
+import { getOtherProfileDataAsync } from "../../utils/data/profileData";
 
 import { backend } from "../../App";
 

@@ -8,9 +8,9 @@ import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import Posts from "./Posts";
 
 //util imports
-import { getUserFeedAsync } from "../../utils/data/posts";
-import { getManyOtherProfileDataAsync } from "../../utils/data/profile";
-import { getCommunityListAsync } from "../../utils/data/communities";
+import { getUserFeedAsync } from "../../utils/data/postData";
+import { getManyOtherProfileDataAsync } from "../../utils/data/profileData";
+import { getCommunityListAsync } from "../../utils/data/communityData";
 
 import { backend } from "../../App";
 let currentFeedSet = 0;

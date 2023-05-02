@@ -6,7 +6,7 @@ import { profileDataActions } from '../../store/profileDataSlice';
 
 //utils imports
 import checkLoginStatus from "../../utils/checkLogin";
-import { getUserPostsAsync } from "../../utils/data/posts";
+import { getUserPostsAsync } from "../../utils/data/postData";
 
 import { googleLogout } from "@react-oauth/google";
 import { emptyProfileData } from "../../types/stateTypes";
@@ -39,6 +39,7 @@ const Tab3 = ({ }: ProfileProps) => {
 
   const profileDataRedux = useAppSelector((state) => state.profile.profileData)
   const exerciseStatsRedux = useAppSelector((state) => state.exerciseStats)
+  console.log(profileDataRedux);
 
   useEffect(() => {
     console.log(`the current loginStatus is ${loginStatus}`);

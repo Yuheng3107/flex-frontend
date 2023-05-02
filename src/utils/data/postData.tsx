@@ -1,5 +1,23 @@
 import { backend } from "../../App";
 
+export const getPostAsync = async function (post_id:number) {
+  try {
+    let res = await fetch(`${backend}/feed/user_post/${post_id}`, {
+      method: "GET",
+      credentials: "include", // include cookies in the request
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]),
+      }
+    })
+    let data = await res.json();
+    return data
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
 export const getUserPostsAsync = async function (user_id:number, set_no:number) {
   try {
     let res = await fetch(`${backend}/feed/user_post/latest`, {
@@ -33,6 +51,26 @@ export const getCommunityPostsAsync = async function (community_id:number, set_n
       body: JSON.stringify({
         community_id: community_id,
         set_no: set_no,
+      })
+    })
+    let data = await res.json();
+    return data
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const getCommentsAsync = async function (comments: any[]) {
+  try {
+    let res = await fetch(`${backend}/feed/comment/list`, {
+      method: "POST",
+      credentials: "include", // include cookies in the request
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]),
+      },
+      body: JSON.stringify({
+        comments: comments,
       })
     })
     let data = await res.json();

@@ -33,7 +33,7 @@ const Posts = ({ posts, loadData }: PostProps) => {
       :
         posts.postArray.map((item, i) => (
           <PersonTextCard 
-            userPostData={item} 
+            postData={item} 
             profileData={posts.profileArray.length === 1 ? posts.profileArray[0]:posts.profileArray[i]} 
             communityData={posts.communityArray.length === 1 ? posts.communityArray[0]:posts.communityArray[i] } 
             key={item.id}
