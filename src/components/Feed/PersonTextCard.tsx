@@ -74,7 +74,11 @@ const PersonTextCard = ({ postData, profileData, communityData }: PostProps) => 
         </div>
         <button id="menu-button"></button>
       </div>
-      <IonRouterLink routerLink={`/home/post/${postData.id}`} id="content" className="mb-2">
+      <IonRouterLink routerLink={ postData?.community === undefined ? 
+        `/home/post/${postData.id}`
+      :
+        `/home/community/post/${postData.id}`
+      } id="content" className="mb-2">
         <p id="title" className="font-semibold text-xl mb-2">
           {postData?.title}
         </p>

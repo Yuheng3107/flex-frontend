@@ -5,13 +5,12 @@ import { useState, useEffect, useReducer } from 'react';
 import {
     IonPage,
     IonContent,
-    IonHeader,
-    IonToolbar,
-    IonBackButton,
-    IonTitle,
-    IonButtons,
-    IonButton,
+    IonFab,
+    IonFabButton,
+    IonIcon,
 } from '@ionic/react';
+import { pencilOutline } from 'ionicons/icons';
+
 import { RouteComponentProps } from "react-router";
 
 //img imports
@@ -43,25 +42,27 @@ function CommunityDisplay({ match }: CommunityDisplayProps) {
             if (communityDetails === undefined) communityDetails = invalidCommunityData;
             setCommunityData(communityDetails);
         }
-        getCommunityData(parseInt(match.params.communityId));
-    }, [match])
+        if (communityData === emptyCommunityData) {
+            getCommunityData(parseInt(match.params.communityId))
+        } else loadFeedData();
+    }, [match,communityData])
 
     const loadFeedData = async () => {
-        const postArray = await getCommunityPostsAsync(Number(match.params.communityId), currentFeedSet);
+        const newPostArray = await getCommunityPostsAsync(Number(match.params.communityId), currentFeedSet);
         console.log(`set:${currentFeedSet}`)
-        console.log(postArray);
+        console.log(newPostArray);
         let profiles:any[] = [];
-        for (let i=0;i<postArray.length;i++) profiles.push(postArray[i].poster);
-        let profileArray = await getManyOtherProfileDataAsync(profiles);
-        const profileMap = profileArray.reduce((acc:any, profile:any) => {
+        for (let i=0;i<newPostArray.length;i++) profiles.push(newPostArray[i].poster);
+        let newProfileArray = await getManyOtherProfileDataAsync(profiles);
+        const profileMap = newProfileArray.reduce((acc:any, profile:any) => {
             return {
               ...acc,
               [profile.id]: profile,
             };
           }, {});
-        for (let i=0;i<postArray.length;i++) profileArray[i] = profileMap[postArray[i].poster];
-        setPostArray(postArray);
-        setProfileArray(profileArray);
+        for (let i=0;i<newPostArray.length;i++) newProfileArray[i] = profileMap[newPostArray[i].poster];
+        setPostArray(postArray.concat(newPostArray));
+        setProfileArray(profileArray.concat(newProfileArray));
         currentFeedSet += 1;
     }
 
@@ -72,12 +73,18 @@ function CommunityDisplay({ match }: CommunityDisplayProps) {
                     <img src={img404} />
                 </div> 
             :
-                <main className="h-full">
-                    <CommunityInfo communityData={communityData} />
-                    <CommunityFeed postArray={postArray} profileArray={profileArray} communityData={communityData} loadData={loadFeedData} />
-                </main>
+                <>
+                    <main className="h-full">
+                        <CommunityInfo communityData={communityData} />
+                        <CommunityFeed postArray={postArray} profileArray={profileArray} communityData={communityData} loadData={loadFeedData} />
+                    </main>
+                    <IonFab slot="fixed" vertical="bottom" horizontal="end">
+                        <IonFabButton routerLink={`/home/community/${communityData.id}/create`}>
+                            <IonIcon icon={pencilOutline}></IonIcon>
+                        </IonFabButton>
+                    </IonFab>
+                </>
             }
-            
         </IonContent>
     </IonPage>
 }

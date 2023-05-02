@@ -8,6 +8,8 @@ import { Route, RouteComponentProps } from "react-router";
 import CreateCommunity from "./CreateCommunity";
 import CommunityDisplay from "./CommunityDisplay";
 import CreateCommunityPost from "./CreateCommunityPost";
+import CommunityPostPage from "./CommunityPostPage";
+import CreateCommunityComment from "./CreateCommunityComment";
 
 interface CommunityPageProps extends RouteComponentProps<{
 }> { }
@@ -25,6 +27,14 @@ function CommunityPage({ match }: CommunityPageProps) {
             <Route exact path={`${match.url}/:communityId/create`} render={(props) => {
                 return <CreateCommunityPost {...props} />;
             }} />
+            <Route exact path={`${match.url}/post/:postId`} render={(props) => {
+                return <CommunityPostPage {...props} />;
+              }}
+            />
+            <Route exact path={`${match.url}/post/:postId/create`} render={(props) => {
+                return <CreateCommunityComment {...props} />;
+              }}
+            />
         </IonRouterOutlet>
     </IonPage>;
 }
