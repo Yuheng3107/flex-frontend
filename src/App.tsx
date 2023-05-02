@@ -14,7 +14,7 @@ import {
   getFavoriteExerciseRegimeAsync,
   splitProfileData,
   getAllProfileData,
-} from "./utils/data/profile";
+} from "./utils/data/profileData";
 import { getExerciseRegimeAsync } from "./utils/data/getExerciseData";
 import { checkAndToggleDarkTheme } from "./utils/darkMode";
 import { toggleDarkTheme } from "./utils/darkMode";
