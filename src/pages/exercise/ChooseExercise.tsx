@@ -9,11 +9,12 @@ import {
 
 import { backend } from "../../App";
 import ExerciseCard from "../../components/Exercise/ExerciseCard";
+import WorkoutCard from "../../components/Exercise/WorkoutCard";
 
 type ExerciseInfo = {
   id: number;
   likers: number[];
-  likes:number;
+  likes: number;
   media: string;
   name: string;
   perfect_reps: number;
@@ -56,16 +57,18 @@ const ChooseExercise = () => {
     getExercises();
   }, [backend])
 
+  let samplePhoto = "https://images.unsplash.com/photo-1607962837359-5e7e89f86776?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
 
-  for (let card of exerciseCardArray) {
-    console.log(card)
-  }
   return (
     <IonPage>
       <IonContent fullscreen>
         <IonItem routerLink="/exercise/placeholder">
           Start
         </IonItem>
+        <section id="workouts-container">
+          <p>Workouts</p>
+          <WorkoutCard name={`Cardio`} likes = {42069} media={samplePhoto} exercises={["squats, flutter kicks, rope skips"]} exerciseRegimeId={1} /> 
+        </section>
         <section id="Exercises-container">
           <p>Exercises</p>
           <div className="flex flex-row">

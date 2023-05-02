@@ -47,11 +47,8 @@ import { accessibility, home } from "ionicons/icons";
 import Home from "./pages/Home/Home";
 import Exercise from "./pages/exercise/Exercise";
 import ChooseExercise from "./pages/exercise/ChooseExercise";
-import Profile from "./pages/profile/Profile";
-import EditProfile from "./pages/profile/EditProfile";
+import ExercisePages from "./pages/exercise/ExercisePages";
 import CreatePost from "./pages/post/CreatePost";
-import FriendsList from "./pages/profile/FriendsList";
-import CreateCommunity from "./pages/community/CreateCommunity";
 import CommunityPage from "./pages/community/CommunityPage";
 
 /* Core CSS required for Ionic components to work properly */
@@ -136,17 +133,7 @@ const App: React.FC = () => {
               <CreatePost />
             </Route>
             <Route path="/home/community" component={CommunityPage} />
-            <Route exact path="/exercise">
-              <ChooseExercise />
-            </Route>
-            <Route
-              exact
-              path="/exercise/:exerciseId"
-              render={(props) => {
-                return <Exercise {...props} />;
-              }}
-            />
-
+            <Route path="/exercise" component={ExercisePages} />
             <Route
               exact
               path="/home/profile/:userId"
