@@ -7,6 +7,7 @@ import {
     IonHeader,
     IonToolbar,
     IonBackButton,
+    IonButton,
     IonTitle,
     IonButtons,
     IonToggle
@@ -21,9 +22,7 @@ function Settings() {
     let mediaDarkmodePref = window.matchMedia('(prefers-color-scheme: dark)').matches;
     //check if the user has a previously stored darkmode preference
     let localDarkmodePref = JSON.parse(localStorage.getItem("darkmode") || "false");
-    console.log(localDarkmodePref);
     const [darkThemeToggleChecked, setDarkThemeToggleChecked] = useState<boolean | undefined>(localDarkmodePref === null ? mediaDarkmodePref : localDarkmodePref);
-    console.log(darkThemeToggleChecked);
     function onDarkThemeToggle() {
         setDarkThemeToggleChecked((currState) => {
             console.log(currState);
@@ -45,7 +44,7 @@ function Settings() {
         <IonContent >
             <p>Darkmode Toggle</p>
             <IonToggle checked={darkThemeToggleChecked} onIonChange={onDarkThemeToggle}></IonToggle>
-
+            <IonButton  routerLink="/profile/friendslist" routerDirection="forward">Friends</IonButton>
         </IonContent>
     </IonPage >
 }
