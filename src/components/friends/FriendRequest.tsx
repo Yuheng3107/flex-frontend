@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-import { IonButton, IonRouterLink } from '@ionic/react';
+import { IonButton, IonRouterLink } from "@ionic/react";
 import { ProfileData, emptyProfileData } from "../../types/stateTypes";
 
-import { acceptFriendRequest, declineFriendRequest } from "../../utils/data/friends";
+import {
+  acceptFriendRequest,
+  declineFriendRequest,
+} from "../../utils/data/friends";
 import { getOtherProfileDataAsync } from "../../utils/data/profile";
 
 import { backend } from "../../App";
@@ -21,24 +24,27 @@ const FriendRequest = ({ profileId }: FriendRequestProps) => {
   const acceptRequest = async () => {
     let response = await acceptFriendRequest(profileId);
     if (response?.status === 200) setRequestState(1);
-  }
+  };
   const declineRequest = async () => {
     let response = await declineFriendRequest(profileId);
     if (response?.status === 200) setRequestState(2);
-  }
+  };
   const getProfileData = async () => {
-    setProfileData(await(getOtherProfileDataAsync(profileId)))
-  }
+    setProfileData(await getOtherProfileDataAsync(profileId));
+  };
   useEffect(() => {
     getProfileData();
     if (profileData?.profile_photo) {
-      setImageUrl(backend.concat(profileData.profile_photo))
+      setImageUrl(profileData.profile_photo);
     }
-  }, [profileData?.profile_photo, requestState, setRequestState])
+  }, [profileData?.profile_photo, requestState, setRequestState]);
 
   return (
     <div className="border border-zinc-500 mt-4 p-2 flex flex-row justify-evenly items-center">
-      <IonRouterLink routerLink={`/home/profile/${profileData.id}`} routerDirection="forward">
+      <IonRouterLink
+        routerLink={`/home/profile/${profileData.id}`}
+        routerDirection="forward"
+      >
         <img
           alt="profile-picture"
           src={imageUrl}
@@ -46,20 +52,25 @@ const FriendRequest = ({ profileId }: FriendRequestProps) => {
         />
       </IonRouterLink>
       <div className="ml-3 flex flex-row items-center">
-        <IonRouterLink routerLink={`/home/profile/${profileData.id}`} routerDirection="forward" id="username" className="font-semibold text-black">
+        <IonRouterLink
+          routerLink={`/home/profile/${profileData.id}`}
+          routerDirection="forward"
+          id="username"
+          className="font-semibold text-black"
+        >
           {profileData?.username}
         </IonRouterLink>
       </div>
-      { requestState === 0 ?
+      {requestState === 0 ? (
         <div>
           <IonButton onClick={acceptRequest}>Accept</IonButton>
           <IonButton onClick={declineRequest}>Decline</IonButton>
         </div>
-      : requestState === 1 ?
+      ) : requestState === 1 ? (
         <div>Request Accepted.</div>
-      :
+      ) : (
         <div>Request Declined.</div>
-      }
+      )}
     </div>
   );
 };

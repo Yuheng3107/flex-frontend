@@ -8,15 +8,15 @@ import SendIcon from "../../assets/svgComponents/SendIcon";
 import React, { useState, useEffect } from "react";
 
 import { backend } from "../../App";
-import { UserPostData, ProfileData, CommunityData } from "../../types/stateTypes";
+import {
+  UserPostData,
+  ProfileData,
+  CommunityData,
+} from "../../types/stateTypes";
 import { timeSince } from "../../utils/generalUtils";
 
 //ionic imports
-import {
-  IonRouterLink,
-  IonContent,
-  IonButton,
-} from "@ionic/react";
+import { IonRouterLink, IonContent, IonButton } from "@ionic/react";
 
 type UserPostProps = {
   userPostData: UserPostData;
@@ -24,21 +24,28 @@ type UserPostProps = {
   communityData: CommunityData;
 };
 
-const PersonTextCard = ({ userPostData, profileData, communityData }: UserPostProps) => {
+const PersonTextCard = ({
+  userPostData,
+  profileData,
+  communityData,
+}: UserPostProps) => {
   const [imageUrl, setImageUrl] = useState("");
   const postDate = new Date(userPostData.posted_at);
 
   useEffect(() => {
     if (profileData?.profile_photo) {
-      setImageUrl(backend.concat(profileData.profile_photo))
+      setImageUrl(profileData.profile_photo);
     }
-  }, [profileData?.profile_photo])
+  }, [profileData?.profile_photo]);
 
   return (
     <div id="card-container" className="border border-zinc-500 mt-4 p-2">
       <div id="top-bar" className=" flex flex-row justify-between mb-2">
         <div className="flex flex-row">
-          <IonRouterLink routerLink={`/home/profile/${profileData.id}`} routerDirection="forward">
+          <IonRouterLink
+            routerLink={`/home/profile/${profileData.id}`}
+            routerDirection="forward"
+          >
             <img
               alt="profile-picture"
               src={imageUrl}
@@ -46,7 +53,12 @@ const PersonTextCard = ({ userPostData, profileData, communityData }: UserPostPr
             />
           </IonRouterLink>
           <div className="ml-3">
-            <IonRouterLink id="username" className="font-semibold text-black" routerLink={`/home/profile/${profileData.id}`} routerDirection="forward">
+            <IonRouterLink
+              id="username"
+              className="font-semibold text-black"
+              routerLink={`/home/profile/${profileData.id}`}
+              routerDirection="forward"
+            >
               {profileData?.username}
             </IonRouterLink>
             <p
@@ -54,18 +66,27 @@ const PersonTextCard = ({ userPostData, profileData, communityData }: UserPostPr
               className="flex flex-row items-center text-sm text-gray-700"
             >
               <span id="post-place">
-                {userPostData?.community === undefined ? 
-                  <IonRouterLink className="text-gray-700" routerLink={`/home/profile/${profileData.id}`} routerDirection="forward">
+                {userPostData?.community === undefined ? (
+                  <IonRouterLink
+                    className="text-gray-700"
+                    routerLink={`/home/profile/${profileData.id}`}
+                    routerDirection="forward"
+                  >
                     Profile
                   </IonRouterLink>
-                : 
-                  <IonRouterLink className="text-gray-700" routerLink={`/home/community/${communityData.id}`} routerDirection="forward">
+                ) : (
+                  <IonRouterLink
+                    className="text-gray-700"
+                    routerLink={`/home/community/${communityData.id}`}
+                    routerDirection="forward"
+                  >
                     {communityData?.name}
                   </IonRouterLink>
-                }</span>
+                )}
+              </span>
               <FilledCircle className="mx-1 h-1.5 w-1.5 aspect-square fill-slate-500" />
               <span id="time-stamp">{timeSince(postDate)}</span>
-            </p>  
+            </p>
           </div>
         </div>
         <button id="menu-button"></button>
@@ -104,6 +125,6 @@ const PersonTextCard = ({ userPostData, profileData, communityData }: UserPostPr
       </div>
     </div>
   );
-}
+};
 
 export default PersonTextCard;

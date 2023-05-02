@@ -15,11 +15,11 @@ const KeyProfileInfoDisplay = ({ profileData }: ProfileInfoProps) => {
 
   useEffect(() => {
     if (profileData?.profile_photo) {
-      setImageUrl(backend.concat(profileData.profile_photo));
+      setImageUrl(profileData.profile_photo);
     }
   }, [profileData?.profile_photo]);
 
-  return  (
+  return (
     <div id="userInfo" className="flex flex-col items-center justify-evenly">
       <img className="rounded-full w-1/3 mt-2 p-1" src={imageUrl} />
       <span id="username" className="text-3xl">
