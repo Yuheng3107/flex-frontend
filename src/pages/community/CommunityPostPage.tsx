@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 
 //utils imports
 import { getAllProfileData, getManyOtherProfileDataAsync } from "../../utils/data/profileData";
-import { getCommentsAsync, getPostAsync } from "../../utils/data/postData";
+import { getCommentsAsync, getCommunityPostAsync } from "../../utils/data/postData";
 import { getCommunityAsync } from "../../utils/data/communityData";
 
 //type imports
@@ -21,6 +21,7 @@ import {
     IonBackButton,
     IonTitle,
     IonButtons,
+    IonButton,
     IonFab,
     IonFabButton,
     IonIcon,
@@ -28,19 +29,15 @@ import {
 import { pencilOutline } from 'ionicons/icons';
 
 //component imports
-import UserProfileTemplate from "../../components/profile/UserProfileTemplate";
 import PersonTextCard from "../../components/Feed/PersonTextCard";
 import Posts from "../../components/Feed/Posts";
-
-//Redux imports
-import { useAppSelector } from '../../store/hooks';
 
 interface PostPageProps
     extends RouteComponentProps<{
         postId: string;
     }> {}
 
-const PostPage: React.FC<PostPageProps> = ({ match }) => {
+const CommunityPostPage: React.FC<PostPageProps> = ({ match }) => {
     // 0 is no friend request sent, 1 is friend request sent, 2 is already friends
     const [profileData, setProfileData] = useState<ProfileData>(emptyProfileData);
     const [postData, setPostData] = useState<UserPostData>(emptyUserPostData);
@@ -53,12 +50,11 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
 
     useEffect(() => {
         //useEffect with empty dependency array means this function will only run once right after the component is mounted
-        if (postData === emptyUserPostData) loadPostData();
-        loadComments();
+        if (postData === emptyUserPostData) loadPostData(); else loadComments();
     },[postData]);
 
     const loadPostData = async () => {
-        let postData = await getPostAsync(Number(match.params.postId));
+        let postData = await getCommunityPostAsync(Number(match.params.postId));
         postData.comments.reverse();
         setPostData(postData);
         console.log(postData);
@@ -77,7 +73,6 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
         let end = (currentCommentSet+1)*10;
         if (end > postData.comments.length) end = postData.comments.length;
         let newComments = await getCommentsAsync(postData.comments.slice(start,end));
-        newComments.reverse();
         console.log(newComments);
 
         let profiles: any[] = [];
@@ -117,13 +112,15 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
                     </div> 
                 :
                     <>
+                    <div>
                         <PersonTextCard postData={postData} profileData={profileData} communityData={communityData}/>
                         <Posts loadData={loadComments} posts={posts}/>
-                        <IonFab slot="fixed" vertical="bottom" horizontal="end">
-                            <IonFabButton routerLink={`/home/post/${match.params.postId}/create`}>
-                                <IonIcon icon={pencilOutline}></IonIcon>
-                            </IonFabButton>
-                        </IonFab>
+                    </div>
+                    <IonFab slot="fixed" vertical="bottom" horizontal="end">
+                        <IonFabButton routerLink={`/home/community/post/${match.params.postId}/create`}>
+                            <IonIcon icon={pencilOutline}></IonIcon>
+                        </IonFabButton>
+                    </IonFab>
                     </>
                 }
             </IonContent>
@@ -132,4 +129,4 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
 }
 
 
-export default PostPage;
+export default CommunityPostPage;

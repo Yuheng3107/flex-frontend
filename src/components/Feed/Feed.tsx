@@ -13,14 +13,17 @@ import { getManyOtherProfileDataAsync } from "../../utils/data/profileData";
 import { getCommunityListAsync } from "../../utils/data/communityData";
 
 import { backend } from "../../App";
-let currentFeedSet = 0;
 function Feed() {
   const profileDataRedux = useAppSelector((state) => state.profile.profileData);
+  const [currentFeedSet, setCurrentFeedSet] = useState(0);
   const [feedPost, setFeedPost] = useState<{ postArray: any[], profileArray: any[], communityArray: any[] }>({
     postArray: [],
     profileArray: [],
     communityArray: [],
   });
+  useEffect(() => {
+    if (profileDataRedux.id !== 0) loadFeedData();
+  },[profileDataRedux]);
   const loadFeedData  = async function () {
     console.log('loadFeedData is running');
     const postArray = await getUserFeedAsync(currentFeedSet);
@@ -52,7 +55,7 @@ function Feed() {
       profileArray: feedPost.profileArray.concat(profileArray),
       communityArray: feedPost.communityArray.concat(communityArray),
     });
-    currentFeedSet += 1;
+    setCurrentFeedSet(currentFeedSet + 1);
   }
 
   return <main className="w-full relative">

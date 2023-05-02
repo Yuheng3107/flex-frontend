@@ -52,6 +52,8 @@ import ExercisePages from "./pages/exercise/ExercisePages";
 import CreatePost from "./pages/post/CreatePost";
 import CommunityPage from "./pages/community/CommunityPage";
 import PostPage from "./pages/post/PostPage";
+import ProfilePages from "./pages/profile/ProfilePages";
+import CreateComment from "./pages/post/CreateComment";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -72,7 +74,6 @@ import OtherUserProfile from "./pages/other users/OtherUserProfile";
 
 //import styles
 import "./theme/variables.css";
-import ProfilePages from "./pages/profile/ProfilePages";
 
 setupIonicReact();
 checkAndToggleDarkTheme();
@@ -155,6 +156,14 @@ const App: React.FC = () => {
                 return <PostPage {...props} />;
               }}
             />
+            <Route
+              exact
+              path="/home/post/:postId/create"
+              render={(props) => {
+                return <CreateComment {...props} />;
+              }}
+            />
+
             <Route path="/profile" component={ProfilePages} />
 
             
