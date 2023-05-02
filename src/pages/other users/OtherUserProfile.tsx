@@ -2,8 +2,8 @@ import { RouteComponentProps } from "react-router";
 import React, { useState, useEffect } from "react";
 
 //utils imports
-import { getAllProfileData } from "../../utils/data/profile";
-import { getUserPostsAsync } from "../../utils/data/posts";
+import { getAllProfileData } from "../../utils/data/profileData";
+import { getUserPostsAsync } from "../../utils/data/postData";
 import { ExerciseStats, emptyExerciseStats, ProfileData, emptyProfileData } from "../../types/stateTypes";
 import { sendFriendRequest, deleteFriendRequest, deleteFriend } from "../../utils/data/friends";
 

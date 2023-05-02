@@ -18,19 +18,23 @@ import {
   IonButton,
 } from "@ionic/react";
 
-type UserPostProps = {
-  userPostData: UserPostData;
+type PostProps = {
+  postData: UserPostData;
   profileData: ProfileData;
   communityData: CommunityData;
 };
 
-const PersonTextCard = ({ userPostData, profileData, communityData }: UserPostProps) => {
+const PersonTextCard = ({ postData, profileData, communityData }: PostProps) => {
   const [imageUrl, setImageUrl] = useState("");
-  const postDate = new Date(userPostData.posted_at);
+  const [mediaUrl, setMediaUrl] = useState("");
+  const postDate = new Date(postData.posted_at);
 
   useEffect(() => {
     if (profileData?.profile_photo) {
-      setImageUrl(backend.concat(profileData.profile_photo))
+      setImageUrl(backend.concat(profileData.profile_photo));
+    }
+    if (postData?.media) {
+      setMediaUrl(backend.concat(postData.media));
     }
   }, [profileData?.profile_photo])
 
@@ -46,7 +50,7 @@ const PersonTextCard = ({ userPostData, profileData, communityData }: UserPostPr
             />
           </IonRouterLink>
           <div className="ml-3">
-            <IonRouterLink id="username" className="font-semibold text-black" routerLink={`/home/profile/${profileData.id}`} routerDirection="forward">
+            <IonRouterLink id="username" className="font-semibold" routerLink={`/home/profile/${profileData.id}`} routerDirection="forward">
               {profileData?.username}
             </IonRouterLink>
             <p
@@ -54,7 +58,7 @@ const PersonTextCard = ({ userPostData, profileData, communityData }: UserPostPr
               className="flex flex-row items-center text-sm text-gray-700"
             >
               <span id="post-place">
-                {userPostData?.community === undefined ? 
+                {postData?.community === undefined ? 
                   <IonRouterLink className="text-gray-700" routerLink={`/home/profile/${profileData.id}`} routerDirection="forward">
                     Profile
                   </IonRouterLink>
@@ -70,31 +74,32 @@ const PersonTextCard = ({ userPostData, profileData, communityData }: UserPostPr
         </div>
         <button id="menu-button"></button>
       </div>
-      <div id="content" className="mb-2">
+      <IonRouterLink routerLink={`/home/post/${postData.id}`} id="content" className="mb-2">
         <p id="title" className="font-semibold text-xl mb-2">
-          {userPostData?.title}
+          {postData?.title}
         </p>
+        {postData?.media ?
+          <img
+            alt="post image"
+            src={mediaUrl}
+            className="w-full"
+          />
+        :
+          ""
+        }
+        
         <p id="main-content" className="text-sm">
-          {userPostData?.text}
+          {postData?.text}
         </p>
-      </div>
+      </IonRouterLink>
       <div
         id="action-bar"
         className="flex flex-row items-center justify-evenly mx-auto"
       >
-        <div className="bg-slate-300 rounded-full grow flex flex-row items-center justify-between">
-          <input
-            type="text"
-            className="bg-transparent py-1 grow"
-            placeholder="  comment"
-          />
-          <button>
-            <SendIcon className="w-8 h-8" />
-          </button>
-        </div>
         <button>
           <LikeIcon className="w-8 h-8" />
         </button>
+        <p>{postData.likes}</p>
         <button>
           <CommentIcon className="w-8 h-8" />
         </button>

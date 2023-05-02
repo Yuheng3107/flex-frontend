@@ -38,20 +38,27 @@ export const invalidProfileData = {
 };
 
 export type UserPostData = {
+  id: number;
   poster: number;
   posted_at: string;
   likes: number;
   text: string;
   title: string;
   community: number;
+  media: string;
+  comments: any[];
 };
 
 export const emptyUserPostData = {
+  id: 0,
   poster: 0,
   posted_at: "",
   likes: 0,
   text: "Lorem Ipsum",
   title: "Ipsum Lorem",
+  community: 0,
+  media: "",
+  comments: [],
 };
 
 export type ExerciseStats = {
