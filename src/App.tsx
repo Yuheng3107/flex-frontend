@@ -76,7 +76,7 @@ import ProfilePages from "./pages/profile/ProfilePages";
 setupIonicReact();
 checkAndToggleDarkTheme();
 
-const backend = "https://flex.fitai.click";
+const backend = "https://fitai.click";
 const exercises = ["zero", "Squats", "Push-ups", "Hamstring Stretch"];
 
 const App: React.FC = () => {
