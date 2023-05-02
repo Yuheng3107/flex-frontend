@@ -7,9 +7,15 @@ import {
   IonItem
 } from "@ionic/react";
 
+//redux imports
+import { useAppSelector } from "../../store/hooks";
+
 import { backend } from "../../App";
 import ExerciseCard from "../../components/Exercise/ExerciseCard";
 import WorkoutCard from "../../components/Exercise/WorkoutCard";
+
+//utils
+import { getExerciseRegimeAsync } from "../../utils/data/getExerciseData";
 
 type ExerciseInfo = {
   id: number;
@@ -29,11 +35,20 @@ type ExerciseInfo = {
 
 const ChooseExercise = () => {
 
-  const [exerciseCardArray, setExerciseCardArray] = useState<ExerciseInfo[]>([])
-
+  const [exerciseCardArray, setExerciseCardArray] = useState<ExerciseInfo[]>([]);
+  const [regimeCardArray, setRegimCardArray] = useState<any[]>([]);
+  const exerciseStatsRedux = useAppSelector(state => state.exerciseStats)
   useEffect(() => {
     console.log("useEffect running");
-    console.log(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1])
+    async function getRegimesData() {
+      let regimeDataArray = [];
+      for (let regimeId of exerciseStatsRedux.exercise_regimes) {
+        let data = await getExerciseRegimeAsync(Number(regimeId));
+        regimeDataArray.push(data);
+      }
+      console.log(regimeDataArray);
+      setRegimCardArray(regimeDataArray);
+    }
     async function getExercises() {
       try {
         const response = await fetch(backend.concat('/exercises/exercise/list'), {
@@ -55,7 +70,8 @@ const ChooseExercise = () => {
     }
 
     getExercises();
-  }, [backend])
+    getRegimesData();
+  }, [backend, exerciseStatsRedux])
 
   let samplePhoto = "https://images.unsplash.com/photo-1607962837359-5e7e89f86776?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
 
@@ -67,7 +83,9 @@ const ChooseExercise = () => {
         </IonItem>
         <section id="workouts-container">
           <p>Workouts</p>
-          <WorkoutCard name={`Cardio`} likes = {42069} media={samplePhoto} exercises={["squats, flutter kicks, rope skips"]} exerciseRegimeId={1} /> 
+          {regimeCardArray.map((regimeInfo) => (
+            <WorkoutCard key={regimeInfo.id} name={regimeInfo.name} likes={regimeInfo.likes} media={regimeInfo.media || samplePhoto} exercises={regimeInfo.exercises} exerciseRegimeId={1} />
+          ))}
         </section>
         <section id="Exercises-container">
           <p>Exercises</p>

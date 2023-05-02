@@ -1,23 +1,17 @@
 //React imports
 import { useState } from "react";
-import { Route } from "react-router";
-
 
 import {
   IonContent,
   IonPage,
-  IonBackButton,
   IonList,
   IonItem,
   IonLabel,
   IonThumbnail,
-  IonRouterOutlet
-
 } from "@ionic/react";
 
 //component imports
 import { RouteComponentProps } from "react-router";
-import ExercisePage from "./Exercise";
 
 import "./Workout.css";
 
