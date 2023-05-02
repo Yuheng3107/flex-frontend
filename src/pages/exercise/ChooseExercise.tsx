@@ -73,7 +73,7 @@ const ChooseExercise = () => {
           <p>Exercises</p>
           <div className="flex flex-row">
             {exerciseCardArray.map((cardInfo) => (
-              <ExerciseCard name={cardInfo.name} likes={cardInfo.likes} media={cardInfo.media} exerciseId={cardInfo.id} />
+              <ExerciseCard key={cardInfo.id} name={cardInfo.name} likes={cardInfo.likes} media={cardInfo.media} exerciseId={cardInfo.id} />
             ))}
           </div>
 
