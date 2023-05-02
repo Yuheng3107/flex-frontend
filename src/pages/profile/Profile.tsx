@@ -39,6 +39,7 @@ const Tab3 = ({ }: ProfileProps) => {
 
   const profileDataRedux = useAppSelector((state) => state.profile.profileData)
   const exerciseStatsRedux = useAppSelector((state) => state.exerciseStats)
+  console.log(profileDataRedux);
 
   useEffect(() => {
     console.log(`the current loginStatus is ${loginStatus}`);
