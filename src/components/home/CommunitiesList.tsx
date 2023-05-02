@@ -2,7 +2,7 @@ import { IonButton } from "@ionic/react";
 import { useEffect, useState, ReactNode } from "react";
 
 //utils
-import { getCommunityListAsync } from "../../utils/data/communities";
+import { getCommunityListAsync } from "../../utils/data/communityData";
 import PushPinIcon from "../../assets/svgComponents/PushPinIcon";
 import VerticalDots from "../../assets/svgComponents/VerticalDotsIcon";
 import { emptyCommunityData } from "../../types/stateTypes";

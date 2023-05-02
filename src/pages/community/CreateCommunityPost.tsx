@@ -17,7 +17,7 @@ import { RouteComponentProps } from "react-router";
 
 import { closeOutline } from "ionicons/icons";
 import TextInput from "../../components/ui/TextInput";
-import { createCommunityPostAsync } from '../../utils/data/posts';
+import { createCommunityPostAsync } from '../../utils/data/postData';
 
 import { backend } from '../../App';
 

@@ -6,7 +6,7 @@ import { profileDataActions } from '../../store/profileDataSlice';
 
 //utils imports
 import checkLoginStatus from "../../utils/checkLogin";
-import { getUserPostsAsync } from "../../utils/data/posts";
+import { getUserPostsAsync } from "../../utils/data/postData";
 
 import { googleLogout } from "@react-oauth/google";
 import { emptyProfileData } from "../../types/stateTypes";

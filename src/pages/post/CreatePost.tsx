@@ -15,7 +15,7 @@ import {
 } from "@ionic/react";
 import { closeOutline } from "ionicons/icons";
 import TextInput from "../../components/ui/TextInput";
-import { createUserPostAsync } from '../../utils/data/posts';
+import { createUserPostAsync } from '../../utils/data/postData';
 
 import { backend } from '../../App';
 
