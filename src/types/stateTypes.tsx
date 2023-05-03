@@ -111,6 +111,22 @@ export type ExerciseData = {
   total_reps: number;
 }
 
+export const emptyExerciseData = {
+  id: 0,
+  likers: [0],
+  likes: 0,
+  media: "",
+  name: "",
+  prefect_reps: 0,
+  posted_at: "",
+  poster: "",
+  shared_id: 0,
+  shared_type: 0,
+  tags: [""],
+  text: "",
+  total_reps: 0,
+}
+
 export type CommunityData = {
   id: number;
   name: string;
