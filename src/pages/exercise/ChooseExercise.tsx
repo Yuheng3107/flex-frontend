@@ -9,13 +9,19 @@ import {
 
 //redux imports
 import { useAppSelector } from "../../store/hooks";
+import { useAppDispatch } from "../../store/hooks";
+import { exerciseDataActions } from "../../store/exerciseDataSlice";
 
+//components
 import { backend } from "../../App";
 import ExerciseCard from "../../components/Exercise/ExerciseCard";
 import WorkoutCard from "../../components/Exercise/WorkoutCard";
 
 //utils
-import { getExerciseRegimeAsync } from "../../utils/data/getExerciseData";
+import { getExerciseListAsync, getExerciseRegimeAsync } from "../../utils/data/getExerciseData";
+
+//types
+import { ObjExerciseRegimesInfo } from "../../store/exerciseDataSlice";
 
 type ExerciseInfo = {
   id: number;
@@ -36,18 +42,27 @@ type ExerciseInfo = {
 const ChooseExercise = () => {
 
   const [exerciseCardArray, setExerciseCardArray] = useState<ExerciseInfo[]>([]);
-  const [regimeCardArray, setRegimCardArray] = useState<any[]>([]);
+  const [regimeCardArray, setRegimeCardArray] = useState<any[]>([]);
   const exerciseStatsRedux = useAppSelector(state => state.exerciseStats)
+  const dispatch = useAppDispatch();
   useEffect(() => {
     console.log("useEffect running");
     async function getRegimesData() {
-      let regimeDataArray = [];
+      let regimesDataArray = [];
+      let regimesDataObject: ObjExerciseRegimesInfo = {};
       for (let regimeId of exerciseStatsRedux.exercise_regimes) {
         let data = await getExerciseRegimeAsync(Number(regimeId));
-        regimeDataArray.push(data);
+        let exercisesData = await getExerciseListAsync(data.exercises);
+        data.exercises = exercisesData;
+        regimesDataArray.push(data);
+
+        // 'keyof...' is to overcome a typescript error
+        regimesDataObject[data.id as keyof typeof regimesDataObject] = data;
       }
-      console.log(regimeDataArray);
-      setRegimCardArray(regimeDataArray);
+      console.log(regimesDataObject);
+      dispatch(exerciseDataActions.setExerciseRegimesInfo(regimesDataObject));
+      setRegimeCardArray(regimesDataArray);
+
     }
     async function getExercises() {
       try {
@@ -84,7 +99,7 @@ const ChooseExercise = () => {
         <section id="workouts-container">
           <p>Workouts</p>
           {regimeCardArray.map((regimeInfo) => (
-            <WorkoutCard key={regimeInfo.id} name={regimeInfo.name} likes={regimeInfo.likes} media={regimeInfo.media || samplePhoto} exercises={regimeInfo.exercises} exerciseRegimeId={1} />
+            <WorkoutCard key={regimeInfo.id} name={regimeInfo.name} likes={regimeInfo.likes} media={regimeInfo.media || samplePhoto} exercises={regimeInfo.exercises} exerciseRegimeId={regimeInfo.id} />
           ))}
         </section>
         <section id="Exercises-container">

@@ -25,12 +25,16 @@ export type WorkoutCardProps = {
 
 function WorkoutCard({ className, name, likes, media, exerciseRegimeId, exercises }: WorkoutCardProps) {
     const history = useHistory();
+    console.log(exercises);
     return <div className={`${className} relative bg-zinc-200 rounded-xl m-3 flex flex-col justify-between h-52 overflow-hidden`} >
         <img className="absolute w-full h-full object-cover z-0 grayscale contrast-75 brightness-75" alt="card background image"
             src={media}></img>
-        <div className="z-10">
-            <h3 className="text-left p-3 pb-0 text-2xl font-semibold text-white m-0">{name}</h3>
-            <p className="text-left px-3 text-white">{exercises}</p>
+        <div className="z-10 p-3">
+            <h3 className="text-left pb-0 text-2xl font-semibold text-white m-0">{name}</h3>
+            {/* <p className="text-left px-3 text-white">{exercises}</p> */}
+            {exercises.map((item: any, index: number, array) => (
+                <span className="text-left text-white">{item.name}{index+1 === array.length ? "" : ", "}</span>
+            ))}
         </div>
 
         <div className="flex flex-row justify-between p-2 items-end z-10">
