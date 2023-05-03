@@ -48,7 +48,7 @@ function ExerciseCard({
         <button
           onClick={(e) => {
             e.preventDefault();
-            history.push(`/exercise/${exerciseId}`);
+            history.push(`/exercise/exercise/${exerciseId}`);
           }}
           className={` bg-blue-400 w-12 h-12 text-zinc-900
                 flex justify-center items-center p-0 aspect-square relative rounded-lg`}

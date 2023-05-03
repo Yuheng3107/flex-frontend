@@ -1,27 +1,33 @@
 //React imports
-import { useState } from "react";
-import { Route } from "react-router";
-
+import { useState, useEffect } from "react";
 
 import {
   IonContent,
   IonPage,
-  IonBackButton,
   IonList,
   IonItem,
   IonLabel,
   IonThumbnail,
-  IonFab,
-  IonFabButton,
-  IonRouterOutlet,
-
+  IonButton
 } from "@ionic/react";
+
+//redux
+import { useAppSelector } from "../../store/hooks";
 
 //component imports
 import { RouteComponentProps } from "react-router";
-import ExercisePage from "./Exercise";
+import WorkoutInfoDisplay from "../../components/Exercise/workout/WorkoutInfoDisplay";
+import VideoFeed from "../../components/Exercise/video";
+//utils
+import { getExerciseRegimeWithExercisesAsync } from "../../utils/data/getExerciseData";
 
-import "./Workout.css";
+//types
+import { ExerciseRegimeInfo, emptyExerciseRegime } from "../../store/exerciseDataSlice";
+
+import { ExerciseData } from "../../types/stateTypes";
+//others
+import { backend } from "../../App";
+
 
 interface WorkoutPageProps extends RouteComponentProps<{
   workoutId: string;
@@ -30,58 +36,55 @@ interface WorkoutPageProps extends RouteComponentProps<{
 }
 
 function Workout({ match }: WorkoutPageProps) {
-  console.log(match.url);
-  const [isExercising, setIsExercising] = useState(false)
-  const [repCountInput, setRepCountInput] = useState<number>(1);
+
+  const [isExercising, setIsExercising] = useState(false);
+  const [exerciseRegimeInfo, setExerciseRegimeInfo] = useState<ExerciseRegimeInfo>(emptyExerciseRegime);
+  const [displaysArr, setDisplaysArr] = useState<(String | ExerciseData)[]>(["mainInfo"]);
+  const [currentDisplayIndex, setCurrentDisplayIndex] = useState<number>(0);
+
+  console.log(displaysArr);
+
+  useEffect(() => {
+    async function loadExerciseRegimInfo() {
+      const data = await getExerciseRegimeWithExercisesAsync(Number(match.params.workoutId));
+      setExerciseRegimeInfo(data);
+      setDisplaysArr(["mainInfo"].concat(data.exercises));
+    }
+    loadExerciseRegimInfo();
+  }, [getExerciseRegimeWithExercisesAsync, setDisplaysArr])
 
   function startExerciseHandler(event: React.MouseEvent<HTMLButtonElement>) {
     setIsExercising(true);
   }
 
-  const repIncrementHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setRepCountInput((prevState) => {
-      return (prevState + 1);
-    })
+  // let samplePhoto = "https://images.unsplash.com/photo-1607962837359-5e7e89f86776?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
+  // let sampleSquatPhoto = "https://images.unsplash.com/photo-1567598508481-65985588e295?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+  
+  //This button is passed to Video.jsx. Once the user completes the exercise, he clicks on this button to go to the next one
+  const nextExerciseButton = <IonButton onClick={() => setCurrentDisplayIndex(prev => prev + 1)}>
+    Next
+  </IonButton >
+  
+  let currentDisplayComponent;
+  if (displaysArr[currentDisplayIndex] === "mainInfo") {
+    currentDisplayComponent = <WorkoutInfoDisplay exerciseRegimeInfo={exerciseRegimeInfo}></WorkoutInfoDisplay>;
+  } else if (displaysArr[currentDisplayIndex] !== null) {
+    currentDisplayComponent = <VideoFeed repCountInput={5} completeExerciseButton={nextExerciseButton}></VideoFeed>
   }
-  const repDecrementHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
-    if (repCountInput > 1) {
-      setRepCountInput((prevState) => {
-        return (prevState - 1);
-      })
-    }
-  }
-  let samplePhoto = "https://images.unsplash.com/photo-1607962837359-5e7e89f86776?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
-  let sampleSquatPhoto = "https://images.unsplash.com/photo-1567598508481-65985588e295?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+
+
+
+
   return (
     <IonPage>
       <IonContent fullscreen>
-        <IonRouterOutlet>
-          <Route exact path={`${match.url}/exercise/:exerciseId`} component={ExercisePage} />
-        </IonRouterOutlet>
         <main className="h-full w-full relative">
-          <section id="top-section" className="relative h-1/4">
-            <div id="workout-info" className="text-white z-20 absolute flex flex-col justify-end h-full p-3">
-              <p id="workout-name" className="text-xl font-semibold">Cardio</p>
-              <p className="text-sm">
-                <span id="workout-duration"></span>
-                <span id="exercise-count">The ID of this workout is {match.params.workoutId}</span>
-              </p>
-            </div>
-            <img id="bg-banner" alt="banner image" src={samplePhoto} className=" z-0 absolute w-full h-full object-cover object-center"></img>
-            <div className="h-full w-full bg-gradient-to-b from-transparent to-black z-10 absolute"></div>
-          </section>
-          <section id="exercises">
-            <IonList>
-              <IonItem>
-                <IonThumbnail slot="start">
-                  <img className="aspect-square object-cover" src={sampleSquatPhoto}></img>
-                </IonThumbnail>
-                <IonLabel>Squats</IonLabel>
-              </IonItem>
-            </IonList>
-          </section>
+          {currentDisplayComponent}
           <div className="absolute bottom-0 w-full flex flex-row justify-center">
-            <button className="py-4 px-6 mb-3 bg-orange-500 text-white rounded-xl inline">Start</button>
+            {displaysArr[currentDisplayIndex] === "mainInfo" &&
+              <IonButton shape="round" onClick={() => { setCurrentDisplayIndex(prev => prev + 1) }}>
+                <span className="text-white">Start</span>
+              </IonButton>}
           </div>
         </main>
 

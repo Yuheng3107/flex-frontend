@@ -44,6 +44,7 @@ const OtherUserProfile: React.FC<OtherUserProfileProps> = ({ match }) => {
     const [friendStatus, setFriendStatus] = useState(0);
 
     const profileDataRedux = useAppSelector((state) => state.profile.profileData)
+    console.log(`other user profile ${match.url}`)
 
     useEffect(() => {
         //useEffect with empty dependency array means this function will only run once right after the component is mounted

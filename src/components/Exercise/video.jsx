@@ -1,19 +1,15 @@
 import React, { Component } from "react";
-import { isMobile, isSafari, isFirefox } from "react-device-detect";
 import Webcam from "react-webcam";
 
 //ionic imports
 import { IonSpinner } from "@ionic/react";
 
 //components
-import Button from "../ui/Button";
 import TextBox from "../ui/TextBox";
 import StartEndButton from "./StartEndButton";
 
 //assets
 import expandIcon from "../../assets/svg/expand-icon.svg";
-import PlayIcon from "../../assets/svgComponents/playIcon";
-import StopIcon from "../../assets/svgComponents/stopIcon";
 
 //MoveNet
 import * as poseDetection from "@tensorflow-models/pose-detection";
@@ -48,6 +44,7 @@ class VideoFeed extends Component {
       generalFeedback: "",
       feedbackLogShowing: false,
       startButton: true,
+      exerciseEnded: false,
       offset: 0,
       percentage: 0,
     };
@@ -76,6 +73,20 @@ class VideoFeed extends Component {
       return { feedbackLogShowing: !prevState.feedbackLogShowing };
     });
   }
+
+
+  determineButtonDisplay() {
+    if (this.state.exerciseEnded) {
+      return this.props.completeExerciseButton;
+    } else {
+      if (this.state.detectorLoading) {
+        return <IonSpinner></IonSpinner>
+      } else {
+        return <StartEndButton detector={this.state.detector} start={this.start} end={this.end} startButton={this.state.startButton} setState={this.setState} parentState={this.state} />
+      }
+    }
+  }
+
 
   render = () => {
     return (
@@ -112,11 +123,12 @@ class VideoFeed extends Component {
           </TextBox>
         </div>
         <div id="button-container" className="absolute bottom-10 w-screen flex justify-center">
-          {this.state.detectorLoading ?
+          {/* {this.state.detectorLoading ?
             <IonSpinner></IonSpinner>
             :
             <StartEndButton detector={this.state.detector} start={this.start} end={this.end} startButton={this.state.startButton} setState={this.setState} parentState={this.state} />
-          }
+          } */}
+          {this.determineButtonDisplay()}
         </div>
 
         <img src="" alt="" ref={this.image} className="hidden" />
@@ -176,10 +188,18 @@ class VideoFeed extends Component {
       // process raw data
       let newFeedback = formCorrection.run(poses);
       if (newFeedback[0] !== "") {
+        let newRepCount = newFeedback[0].slice(-1)[0].match(/\d+/)[0]
         console.log(newFeedback[0][0]);
-        this.setState({
-          repCount: newFeedback[0].slice(-1)[0].match(/\d+/)[0],
-        });
+        if (newRepCount <= this.props.repCountInput) {
+          this.setState({
+            repCount: newRepCount,
+          });
+        }
+        if (newRepCount >= this.props.repCountInput) {
+          this.end();
+          return;
+        }
+
         this.setState({ repFeedback: newFeedback[0].slice(-1) });
         this.setState({ repFeedbackLog: newFeedback[0] });
         read(newFeedback[0][newFeedback[0].slice(-1)]);
@@ -202,6 +222,7 @@ class VideoFeed extends Component {
       repFeedback: completedFeedback[0],
       perfectRepCount: completedFeedback[1],
       generalFeedback: "Exercise ended",
+      exerciseEnded: true
     });
     console.log(completedFeedback);
   };

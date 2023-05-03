@@ -92,6 +92,23 @@ export const emptyExerciseStats = {
     times_completed: 0,
   }
 };
+//An object containing the exercise's details like id, name, and description
+export type ExerciseData = {
+  id: number;
+  likers: number[];
+  likes: number;
+  media: string;
+  name: string;
+  prefect_reps: number;
+  posted_at: string;
+  poster: string;
+  shared_id: number;
+  shared_type: number;
+  tags: string[];
+  text: string;
+  total_reps: number;
+
+}
 
 export type CommunityData = {
   id: number;

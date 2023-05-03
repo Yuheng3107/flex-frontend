@@ -96,7 +96,11 @@ const PersonTextCard = ({
         <button id="menu-button"></button>
       </div>
       <IonRouterLink
-        routerLink={`/home/post/${postData.id}`}
+        routerLink={
+          postData?.community === undefined
+            ? `/home/post/${postData.id}`
+            : `/home/community/post/${postData.id}`
+        }
         id="content"
         className="mb-2"
       >
