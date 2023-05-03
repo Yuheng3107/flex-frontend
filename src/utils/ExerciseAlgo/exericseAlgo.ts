@@ -16,11 +16,11 @@ function getExercise(x: number) {
                 ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""],
             ]],
     };
-    if (x === 0) return exerciseAlgos.side_squat;
-    if (x === 1) return exerciseAlgos.front_squat
-    if (x === 2) return exerciseAlgos.push_up;
-    if (x === 3) return exerciseAlgos.side_hamstring_stretch_left_leg;
-    if (x === 4) return exerciseAlgos.side_hamstring_stretch_right_leg;
+    if (x === 1) return exerciseAlgos.side_squat;
+    if (x === 2) return exerciseAlgos.front_squat
+    if (x === 3) return exerciseAlgos.push_up;
+    if (x === 4) return exerciseAlgos.side_hamstring_stretch_left_leg;
+    if (x === 5) return exerciseAlgos.side_hamstring_stretch_right_leg;
 }
 
 

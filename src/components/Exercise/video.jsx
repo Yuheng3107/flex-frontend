@@ -166,7 +166,7 @@ class VideoFeed extends Component {
     feedback = ["", ""];
 
     // get from backend
-    let exercise = getExercise(0);
+    let exercise = getExercise(this.props.exerciseData.id);
 
     // initialise form correction
     formCorrection.init(
