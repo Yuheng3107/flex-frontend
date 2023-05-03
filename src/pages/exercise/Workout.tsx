@@ -8,6 +8,7 @@ import {
   IonItem,
   IonLabel,
   IonThumbnail,
+  IonButton
 } from "@ionic/react";
 
 //redux
@@ -15,13 +16,17 @@ import { useAppSelector } from "../../store/hooks";
 
 //component imports
 import { RouteComponentProps } from "react-router";
-
+import WorkoutInfoDisplay from "../../components/Exercise/workout/WorkoutInfoDisplay";
 //utils
 import { getExerciseRegimeWithExercisesAsync } from "../../utils/data/getExerciseData";
 
-import "./Workout.css";
+//types
 import { ExerciseRegimeInfo, emptyExerciseRegime } from "../../store/exerciseDataSlice";
+
+//others
 import { backend } from "../../App";
+import { ExerciseData } from "../../types/stateTypes";
+
 
 interface WorkoutPageProps extends RouteComponentProps<{
   workoutId: string;
@@ -31,16 +36,21 @@ interface WorkoutPageProps extends RouteComponentProps<{
 
 function Workout({ match }: WorkoutPageProps) {
 
-  const [isExercising, setIsExercising] = useState(false)
-  const [exerciseRegimeInfo, setExerciseRegimeInfo] = useState<ExerciseRegimeInfo>(emptyExerciseRegime)
+  const [isExercising, setIsExercising] = useState(false);
+  const [exerciseRegimeInfo, setExerciseRegimeInfo] = useState<ExerciseRegimeInfo>(emptyExerciseRegime);
+  const [displaysArr, setDisplaysArr] = useState<(String | ExerciseData)[]>(["mainInfo"]);
+  const [currentDisplayIndex, setCurrentDisplayIndex] = useState<number>(0);
+
+  console.log(displaysArr);
 
   useEffect(() => {
     async function loadExerciseRegimInfo() {
       const data = await getExerciseRegimeWithExercisesAsync(Number(match.params.workoutId));
       setExerciseRegimeInfo(data);
+      setDisplaysArr(["mainInfo"].concat(data.exercises));
     }
     loadExerciseRegimInfo();
-  }, [getExerciseRegimeWithExercisesAsync])
+  }, [getExerciseRegimeWithExercisesAsync, setDisplaysArr])
 
   function startExerciseHandler(event: React.MouseEvent<HTMLButtonElement>) {
     setIsExercising(true);
@@ -48,36 +58,26 @@ function Workout({ match }: WorkoutPageProps) {
 
   let samplePhoto = "https://images.unsplash.com/photo-1607962837359-5e7e89f86776?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
   let sampleSquatPhoto = "https://images.unsplash.com/photo-1567598508481-65985588e295?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+
+  let currentDisplayComponent;
+  if (displaysArr[currentDisplayIndex] === "mainInfo") {
+    currentDisplayComponent = <WorkoutInfoDisplay exerciseRegimeInfo={exerciseRegimeInfo}></WorkoutInfoDisplay>;
+  }
+  // switch (displaysArr[currentDisplayIndex]) {
+  //   case "mainInfo":
+  //     currentDisplayComponent = <WorkoutInfoDisplay exerciseRegimeInfo={exerciseRegimeInfo}></WorkoutInfoDisplay>;
+  //     break;
+  // }
+
   return (
     <IonPage>
       <IonContent fullscreen>
         <main className="h-full w-full relative">
-          <section id="top-section" className="relative h-1/4">
-            <div id="workout-info" className="text-white z-20 absolute flex flex-col justify-end h-full p-3">
-              <p id="workout-name" className="text-xl font-semibold">{exerciseRegimeInfo.name}</p>
-              <p className="text-sm">
-                <span id="workout-duration"></span>
-                <span id="exercise-count">{exerciseRegimeInfo.exercises.length} exercises</span>
-              </p>
-            </div>
-            <img id="bg-banner" alt="banner image" src={samplePhoto} className=" z-0 absolute w-full h-full object-cover object-center"></img>
-            <div className="h-full w-full bg-gradient-to-b from-transparent to-black z-10 absolute"></div>
-          </section>
-          <section id="exercises">
-            <IonList>
-              {exerciseRegimeInfo.exercises.map((item) => {
-                return <IonItem>
-                  <IonThumbnail slot="start">
-                    <img className="aspect-square object-cover" src={backend.concat(item.media)}></img>
-                  </IonThumbnail>
-                  <IonLabel>{item.name}</IonLabel>
-                </IonItem>
-              })}
-
-            </IonList>
-          </section>
+          {currentDisplayComponent}
           <div className="absolute bottom-0 w-full flex flex-row justify-center">
-            <button className="py-4 px-6 mb-3 bg-orange-500 text-white rounded-xl inline">Start</button>
+            <IonButton shape="round" onClick={() => { console.log("clicked") }}>
+              <span className="text-white">Start</span>
+            </IonButton>
           </div>
         </main>
 

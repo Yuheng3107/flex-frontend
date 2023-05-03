@@ -4,14 +4,12 @@
 import { useHistory } from 'react-router-dom';
 
 //icon imports
-import likeIcon from '../../assets/svg/favorite_FILL0_wght300_GRAD0_opsz48.svg'
-import playIcon from '../../assets/svg/play_arrow_FILL1_wght400_GRAD0_opsz48.svg'
+import likeIcon from '../../../assets/svg/favorite_FILL0_wght300_GRAD0_opsz48.svg'
 
 //component imports
-import Button from '../ui/Button';
-import PlayIcon from '../../assets/svgComponents/playIcon';
+import PlayIcon from "../../../assets/svgComponents/playIcon";
 
-import { backend } from '../../App';
+import { backend } from '../../../App';
 
 export type WorkoutCardProps = {
     className?: string;

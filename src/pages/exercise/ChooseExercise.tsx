@@ -15,7 +15,7 @@ import { exerciseDataActions } from "../../store/exerciseDataSlice";
 //components
 import { backend } from "../../App";
 import ExerciseCard from "../../components/Exercise/ExerciseCard";
-import WorkoutCard from "../../components/Exercise/WorkoutCard";
+import WorkoutCard from "../../components/Exercise/workout/WorkoutCard";
 
 //utils
 import { getExerciseListAsync, getExerciseRegimeAsync } from "../../utils/data/getExerciseData";
