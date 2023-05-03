@@ -93,9 +93,6 @@ const ChooseExercise = () => {
   return (
     <IonPage>
       <IonContent fullscreen>
-        <IonItem routerLink="/exercise/placeholder">
-          Start
-        </IonItem>
         <section id="workouts-container">
           <p>Workouts</p>
           {regimeCardArray.map((regimeInfo) => (

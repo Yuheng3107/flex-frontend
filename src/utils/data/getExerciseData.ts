@@ -38,6 +38,24 @@ export const getExerciseListAsync = async function (pkArr: Number[]) {
   }
 }
 
+export async function getAllExercisesAsync() {
+  try {
+    const response = await fetch(backend.concat('/exercises/exercise/list'), {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": String(
+          document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]
+        ),
+      },
+    });
+    const data = await response.json();
+    return data
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 export const getExerciseRegimeAsync = async function (pk: Number) {
   try {
     let res = await fetch(`${backend}/exercises/exercise_regime/${pk}`, {
@@ -74,7 +92,7 @@ export const getExerciseRegimeWithExercisesAsync = async function (pk: Number) {
 
 export const createExerciseRegimAsync = async function (formData: FormData) {
   try {
-    let res = await fetch(`${backend}/feed/user_post/create`, {
+    let res = await fetch(`${backend}/eercises/exercise_regime/create`, {
       method: "POST",
       headers: {
         "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]),

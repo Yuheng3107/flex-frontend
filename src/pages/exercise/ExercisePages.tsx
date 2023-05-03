@@ -7,6 +7,7 @@ import ChooseExercise from "./ChooseExercise";
 //Page component imports
 import ExercisePage from "./Exercise";
 import Workout from "./Workout";
+import CreateWorkout from "./CreateWorkout";
 
 interface ExercisePagesProps extends RouteComponentProps<{
 }> { }
@@ -38,7 +39,7 @@ function ExercisePages({ match }: ExercisePagesProps) {
                 exact
                 path={`${match.url}/workout/create`}
             >
-                What the fuck
+                <CreateWorkout />
             </Route>
         </IonRouterOutlet>
     </IonPage>;
