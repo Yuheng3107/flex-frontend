@@ -1,4 +1,5 @@
-function getExercise(x:number) {
+
+function getExercise(x: number) {
     if (x === -1) return {
         evalPoses: [
             new Float32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,]),
@@ -15,7 +16,16 @@ function getExercise(x:number) {
                 ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""],
             ]],
     };
-    if (x === 0) return {
+    if (x === 0) return exerciseAlgos.side_squat;
+    if (x === 1) return exerciseAlgos.front_squat
+    if (x === 2) return exerciseAlgos.push_up;
+    if (x === 3) return exerciseAlgos.side_hamstring_stretch_left_leg;
+    if (x === 4) return exerciseAlgos.side_hamstring_stretch_right_leg;
+}
+
+
+const exerciseAlgos = {
+    side_squat: {
         evalPoses: [new Float32Array([0, 0, 0, 0, 0, 0, 1.378, 0, 0, 0, 0, 0, 0.639, 0, 0, 0])],
         scoreThreshold: 0.7,
         scoreDeviation: 0.02,
@@ -35,8 +45,8 @@ function getExercise(x:number) {
             ["Leaning forward too much", ""],
             ["", ""], ["", ""], ["", ""],
         ]]
-    };
-    if (x === 1) return {
+    },
+    front_squat: {
         evalPoses: [new Float32Array([0, 0, 0, 0, 0, 0, 0, 0, 2.466, 0, 0, 2.430, 0, 0, 0, 0]), new Float32Array(2), new Float32Array([0, 0, 0, 0, 0, 0, 0, 0, 2.639, 0, 0, 0, 0, 0, 0, 0,])],
         scoreThreshold: 0.9,
         scoreDeviation: 0.02,
@@ -66,8 +76,8 @@ function getExercise(x:number) {
             ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""], ["", ""],
         ]
         ],
-    };
-    if (x === 2) return {
+    },
+    push_up: {
         evalPoses: [
             new Float32Array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.702, 0, 0, 1.650]),
         ],
@@ -89,8 +99,8 @@ function getExercise(x:number) {
                 ["", ""], ["", ""],
                 ["Not going low enough", ""],
             ]],
-    };
-    if (x === 3) return {
+    },
+    side_hamstring_stretch_left_leg: {
         evalPoses: [
             new Float32Array([0, 0, 0, 0, 0, 0, 1.929, 0, 0, 0, 0, 0, 0.659, 0, 0, 0,]),
         ],
@@ -113,8 +123,8 @@ function getExercise(x:number) {
                 ["Leaning forward too much", ""],
                 ["", ""], ["", ""], ["", ""],
             ]],
-    };
-    if (x === 4) return {
+    },
+    side_hamstring_stretch_right_leg: {
         evalPoses: [
             new Float32Array([0, 0, 0, 0, 0, 0, 0, 1.929, 0, 0, 0, 0, 0, 0.659, 0, 0,]),
         ],
@@ -137,7 +147,9 @@ function getExercise(x:number) {
                 ["Leaning forward too much", ""],
                 ["", ""], ["", ""], ["", ""],
             ]],
-    };
+    }
 }
+
+
 
 export default getExercise;
