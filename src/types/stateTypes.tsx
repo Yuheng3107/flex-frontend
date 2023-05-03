@@ -47,6 +47,7 @@ export type UserPostData = {
   community: number;
   media: string;
   comments: any[];
+  has_liked: boolean;
 };
 
 export const emptyUserPostData = {
@@ -59,6 +60,7 @@ export const emptyUserPostData = {
   community: 0,
   media: "",
   comments: [],
+  has_liked: false,
 };
 
 export type ExerciseStats = {
@@ -107,7 +109,6 @@ export type ExerciseData = {
   tags: string[];
   text: string;
   total_reps: number;
-
 }
 
 export type CommunityData = {
