@@ -57,11 +57,34 @@ export const getExerciseRegimeAsync = async function (pk: Number) {
 }
 
 // fills the array of exercises in the ExerciseRegime with the appropriate information
-export const  getExerciseRegimeWithExercisesAsync = async function (pk: Number) {
-  // let regimeData: ExerciseRegimeInfo = emptyExerciseRegime;
-  let regimeData = await getExerciseRegimeAsync(Number(pk));
-  let exercisesData = await getExerciseListAsync(regimeData.exercises);
-  regimeData.exercises = exercisesData;
-  return regimeData;
+export const getExerciseRegimeWithExercisesAsync = async function (pk: Number) {
+  try {
+    // let regimeData: ExerciseRegimeInfo = emptyExerciseRegime;
+    let regimeData = await getExerciseRegimeAsync(Number(pk));
+    let exercisesData = await getExerciseListAsync(regimeData.exercises);
+    regimeData.exercises = exercisesData;
+    return regimeData;
+  } catch (error) {
+    console.log(error);
+  }
 
+
+}
+
+
+export const createExerciseRegimAsync = async function (formData: FormData) {
+  try {
+    let res = await fetch(`${backend}/feed/user_post/create`, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]),
+        "Content-type": "application/json"
+      },
+      credentials: "include",
+      body: formData
+    })
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
 }

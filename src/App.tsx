@@ -135,12 +135,10 @@ const App: React.FC = () => {
             <Route exact path="/home">
               <Home ref={homeMenuRef} />
             </Route>
-        
-            <Route exact path="/home/post/create">
-              <CreatePost />
-            </Route>
+
+
             <Route path="/home/community" component={CommunityPage} />
-            
+
             <Route
               exact
               path="/home/profile/:userId"
@@ -156,9 +154,12 @@ const App: React.FC = () => {
                 return <PostPage {...props} />;
               }}
             />
+            <Route exact path="/home/post/create">
+              <CreatePost />
+            </Route>
             <Route
               exact
-              path="/home/post/:postId/create"
+              path="/home/post/:postId/createcomment"
               render={(props) => {
                 return <CreateComment {...props} />;
               }}
@@ -166,7 +167,7 @@ const App: React.FC = () => {
 
             <Route path="/profile" component={ProfilePages} />
 
-            
+
             <Route path="/exercise" component={ExercisePages} />
           </IonRouterOutlet>
           <IonTabBar slot="bottom" onClick={closeHomeSideMenu}>

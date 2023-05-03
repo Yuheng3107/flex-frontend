@@ -26,6 +26,7 @@ function ExercisePages({ match }: ExercisePagesProps) {
                     return <ExercisePage {...props} />;
                 }}
             />
+
             < Route
                 exact
                 path={`${match.url}/workout/:workoutId`}
@@ -33,6 +34,12 @@ function ExercisePages({ match }: ExercisePagesProps) {
                     return <Workout {...props} />;
                 }}
             />
+            < Route
+                exact
+                path={`${match.url}/workout/create`}
+            >
+                What the fuck
+            </Route>
         </IonRouterOutlet>
     </IonPage>;
 }
