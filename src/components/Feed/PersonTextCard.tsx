@@ -1,11 +1,11 @@
-import filledCircle from "../../assets/svg/circle_FILL1_wght400_GRAD0_opsz48.svg";
 import FilledCircle from "../../assets/svgComponents/FilledCircle";
 import CommentIcon from "../../assets/svgComponents/CommentIcon";
 import LikeIcon from "../../assets/svgComponents/LikeIcon";
+import LikeIconFilled from "../../assets/svgComponents/LikeIconFilled";
 import BookmarkIcon from "../../assets/svgComponents/BookmarkIcon";
-import SendIcon from "../../assets/svgComponents/SendIcon";
 
 import React, { useState, useEffect } from "react";
+import { useAppSelector } from "../../store/hooks";
 
 import { backend } from "../../App";
 import { UserPostData, ProfileData, CommunityData } from "../../types/stateTypes";
@@ -26,6 +26,7 @@ type PostProps = {
 };
 
 const PersonTextCard = ({ postData, profileData, communityData }: PostProps) => {
+  const profileDataRedux = useAppSelector((state) => state.profile.profileData);
   const [imageUrl, setImageUrl] = useState("");
   const [mediaUrl, setMediaUrl] = useState("");
   const [hasLiked, setHasLiked] = useState(false);
@@ -39,10 +40,10 @@ const PersonTextCard = ({ postData, profileData, communityData }: PostProps) => 
     if (postData?.media) {
       setMediaUrl(backend.concat(postData.media));
     }
-    if (postData?.community !== undefined) setPostType(16);
+    if (postData?.community) setPostType(16);
     if (postData?.title === undefined) setPostType(17);
-    setHasLiked(postData.has_liked);
-  }, [profileData?.profile_photo])
+    if (postData.likers.includes(profileDataRedux.id)) setHasLiked(true);
+  }, [profileData?.profile_photo, profileDataRedux])
 
   const likePost = async () => { 
     let response = await likePostAsync(postType,postData.id);
@@ -119,11 +120,11 @@ const PersonTextCard = ({ postData, profileData, communityData }: PostProps) => 
       >
         { hasLiked ?
           <button onClick={unlikePost}>
-            <LikeIcon className="w-8 h-8 fill-red-500" />
+            <LikeIconFilled className="w-8 h-8 fill-red-500" />
           </button>
         :
           <button onClick={likePost}>
-            <LikeIcon className="w-8 h-8 fill-white" />
+            <LikeIcon className="w-8 h-8 fill-red-500" />
           </button>
         }
         <p>{postData.likes}</p>

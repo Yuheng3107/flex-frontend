@@ -42,12 +42,12 @@ export type UserPostData = {
   poster: number;
   posted_at: string;
   likes: number;
+  likers: number[];
   text: string;
   title: string;
   community: number;
   media: string;
   comments: any[];
-  has_liked: boolean;
 };
 
 export const emptyUserPostData = {
@@ -55,12 +55,12 @@ export const emptyUserPostData = {
   poster: 0,
   posted_at: "",
   likes: 0,
+  likers: [],
   text: "Lorem Ipsum",
   title: "Ipsum Lorem",
   community: 0,
   media: "",
   comments: [],
-  has_liked: false,
 };
 
 export type ExerciseStats = {
