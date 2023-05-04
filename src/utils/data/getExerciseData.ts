@@ -88,21 +88,3 @@ export const getExerciseRegimeWithExercisesAsync = async function (pk: Number) {
 
 
 }
-
-
-export const createExerciseRegimAsync = async function (formData: FormData) {
-  try {
-    let res = await fetch(`${backend}/eercises/exercise_regime/create`, {
-      method: "POST",
-      headers: {
-        "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]),
-        "Content-type": "application/json"
-      },
-      credentials: "include",
-      body: formData
-    })
-    return res;
-  } catch (error) {
-    console.log(error);
-  }
-}
