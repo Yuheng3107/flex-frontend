@@ -2,24 +2,7 @@ import { backend } from "../../App";
 
 export const getPostAsync = async function (post_id:number) {
   try {
-    let res = await fetch(`${backend}/feed/user_post/${post_id}`, {
-      method: "GET",
-      credentials: "include", // include cookies in the request
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]),
-      }
-    })
-    let data = await res.json();
-    return data
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-export const getCommunityPostAsync = async function (post_id:number) {
-  try {
-    let res = await fetch(`${backend}/feed/community_post/${post_id}`, {
+    let res = await fetch(`${backend}/feed/feed_post/${post_id}`, {
       method: "GET",
       credentials: "include", // include cookies in the request
       headers: {
@@ -36,7 +19,7 @@ export const getCommunityPostAsync = async function (post_id:number) {
 
 export const getUserPostsAsync = async function (user_id:number, set_no:number) {
   try {
-    let res = await fetch(`${backend}/feed/user_post/latest`, {
+    let res = await fetch(`${backend}/feed/feed_post/latest`, {
       method: "POST",
       credentials: "include", // include cookies in the request
       headers: {
@@ -187,8 +170,8 @@ export const createCommentAsync = async function (parent_type: number, parent_id
 export const likePostAsync = async function (post_type: number, id: number) {
   if (post_type !== 15 && post_type !== 16 && post_type !== 17) return;
   let url:RequestInfo = "";
-  if (post_type === 15) url=`${backend}/feed/user_post/update/likes`;
-  if (post_type === 16) url=`${backend}/feed/community_post/update/likes`;
+  if (post_type === 15) url=`${backend}/feed/feed_post/update/likes`;
+  if (post_type === 16) url=`${backend}/feed/feed_post/update/likes`;
   if (post_type === 17) url=`${backend}/feed/comment/update/likes`;
   try {
     let res = await fetch(url, {
@@ -211,8 +194,8 @@ export const likePostAsync = async function (post_type: number, id: number) {
 export const unlikePostAsync = async function (post_type: number, id: number) {
   if (post_type !== 15 && post_type !== 16 && post_type !== 17) return;
   let url:RequestInfo = "";
-  if (post_type === 15) url=`${backend}/feed/user_post/delete/likes/${id}`;
-  if (post_type === 16) url=`${backend}/feed/community_post/delete/likes/${id}`;
+  if (post_type === 15) url=`${backend}/feed/feed_post/delete/likes/${id}`;
+  if (post_type === 16) url=`${backend}/feed/feed_post/delete/likes/${id}`;
   if (post_type === 17) url=`${backend}/feed/comment/delete/likes/${id}`;
   try {
     let res = await fetch(url, {

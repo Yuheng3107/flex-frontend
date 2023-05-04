@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 
 //utils imports
 import { getAllProfileData, getManyOtherProfileDataAsync } from "../../utils/data/profileData";
-import { getCommentsAsync, getCommunityPostAsync } from "../../utils/data/postData";
+import { getCommentsAsync, getPostAsync } from "../../utils/data/postData";
 import { getCommunityAsync } from "../../utils/data/communityData";
 
 //type imports
@@ -54,7 +54,7 @@ const CommunityPostPage: React.FC<PostPageProps> = ({ match }) => {
     },[postData]);
 
     const loadPostData = async () => {
-        let postData = await getCommunityPostAsync(Number(match.params.postId));
+        let postData = await getPostAsync(Number(match.params.postId));
         postData.comments.reverse();
         setPostData(postData);
         console.log(postData);

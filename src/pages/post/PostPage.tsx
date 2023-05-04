@@ -64,7 +64,7 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
         console.log(postData);
         let data = await getAllProfileData(postData.poster);
         setProfileData(data.profileData);
-        if (postData.community !== undefined) {
+        if (postData?.community) {
             let community = await getCommunityAsync(postData.community);
             setCommunityData(community);
         }

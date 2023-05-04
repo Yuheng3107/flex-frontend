@@ -45,7 +45,7 @@ export type UserPostData = {
   likers: number[];
   text: string;
   title: string;
-  community: number;
+  community: number | null;
   media: string;
   comments: any[];
 };
@@ -58,7 +58,7 @@ export const emptyUserPostData = {
   likers: [],
   text: "Lorem Ipsum",
   title: "Ipsum Lorem",
-  community: 0,
+  community: null,
   media: "",
   comments: [],
 };
