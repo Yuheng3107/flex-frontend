@@ -10,6 +10,7 @@ import React, { useState, useEffect } from "react";
 import { backend } from "../../App";
 import { UserPostData, ProfileData, CommunityData } from "../../types/stateTypes";
 import { timeSince } from "../../utils/generalUtils";
+import { likePostAsync,unlikePostAsync } from "../../utils/data/postData";
 
 //ionic imports
 import {
@@ -27,6 +28,8 @@ type PostProps = {
 const PersonTextCard = ({ postData, profileData, communityData }: PostProps) => {
   const [imageUrl, setImageUrl] = useState("");
   const [mediaUrl, setMediaUrl] = useState("");
+  const [hasLiked, setHasLiked] = useState(false);
+  const [postType, setPostType] = useState(15);
   const postDate = new Date(postData.posted_at);
 
   useEffect(() => {
@@ -36,7 +39,19 @@ const PersonTextCard = ({ postData, profileData, communityData }: PostProps) => 
     if (postData?.media) {
       setMediaUrl(backend.concat(postData.media));
     }
+    if (postData?.community !== undefined) setPostType(16);
+    if (postData?.title === undefined) setPostType(17);
+    setHasLiked(postData.has_liked);
   }, [profileData?.profile_photo])
+
+  const likePost = async () => { 
+    let response = await likePostAsync(postType,postData.id);
+    if (response?.status === 200) setHasLiked(true);
+  }
+  const unlikePost = async () => { 
+    let response = await unlikePostAsync(postType,postData.id);
+    if (response?.status === 200) setHasLiked(false);
+  }
 
   return (
     <div id="card-container" className="border border-zinc-500 mt-4 p-2">
@@ -58,14 +73,15 @@ const PersonTextCard = ({ postData, profileData, communityData }: PostProps) => 
               className="flex flex-row items-center text-sm text-gray-700"
             >
               <span id="post-place">
-                {postData?.community === undefined ? 
+                {postType === 15 ? 
                   <IonRouterLink className="text-gray-700" routerLink={`/home/profile/${profileData.id}`} routerDirection="forward">
                     Profile
                   </IonRouterLink>
-                : 
+                : postType === 16 ?
                   <IonRouterLink className="text-gray-700" routerLink={`/home/community/${communityData.id}`} routerDirection="forward">
                     {communityData?.name}
                   </IonRouterLink>
+                : "Comment"
                 }</span>
               <FilledCircle className="mx-1 h-1.5 w-1.5 aspect-square fill-slate-500" />
               <span id="time-stamp">{timeSince(postDate)}</span>
@@ -74,10 +90,11 @@ const PersonTextCard = ({ postData, profileData, communityData }: PostProps) => 
         </div>
         <button id="menu-button"></button>
       </div>
-      <IonRouterLink routerLink={ postData?.community === undefined ? 
+      <IonRouterLink routerLink={ postType === 15 ? 
         `/home/post/${postData.id}`
-      :
+      : postType === 16?
         `/home/community/post/${postData.id}`
+      : undefined
       } id="content" className="mb-2">
         <p id="title" className="font-semibold text-xl mb-2">
           {postData?.title}
@@ -100,9 +117,15 @@ const PersonTextCard = ({ postData, profileData, communityData }: PostProps) => 
         id="action-bar"
         className="flex flex-row items-center justify-evenly mx-auto"
       >
-        <button>
-          <LikeIcon className="w-8 h-8" />
-        </button>
+        { hasLiked ?
+          <button onClick={unlikePost}>
+            <LikeIcon className="w-8 h-8 fill-red-500" />
+          </button>
+        :
+          <button onClick={likePost}>
+            <LikeIcon className="w-8 h-8 fill-white" />
+          </button>
+        }
         <p>{postData.likes}</p>
         <button>
           <CommentIcon className="w-8 h-8" />

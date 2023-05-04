@@ -183,3 +183,48 @@ export const createCommentAsync = async function (parent_type: number, parent_id
     console.log(error);
   }
 }
+
+export const likePostAsync = async function (post_type: number, id: number) {
+  if (post_type !== 15 && post_type !== 16 && post_type !== 17) return;
+  let url:RequestInfo = "";
+  if (post_type === 15) url=`${backend}/feed/user_post/update/likes`;
+  if (post_type === 16) url=`${backend}/feed/community_post/update/likes`;
+  if (post_type === 17) url=`${backend}/feed/comment/update/likes`;
+  try {
+    let res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]),
+        "Content-type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        id: id,
+      }),
+    })
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const unlikePostAsync = async function (post_type: number, id: number) {
+  if (post_type !== 15 && post_type !== 16 && post_type !== 17) return;
+  let url:RequestInfo = "";
+  if (post_type === 15) url=`${backend}/feed/user_post/delete/likes/${id}`;
+  if (post_type === 16) url=`${backend}/feed/community_post/delete/likes/${id}`;
+  if (post_type === 17) url=`${backend}/feed/comment/delete/likes/${id}`;
+  try {
+    let res = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]),
+        "Content-type": "application/json"
+      },
+      credentials: "include",
+    })
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+}
