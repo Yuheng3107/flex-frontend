@@ -43,7 +43,7 @@ function CreateWorkout() {
     let exerciseSelects = [];
     for (let i = 0; i < numberOfExercises; i++) {
         exerciseSelects.push(<IonItem>
-            <IonLabel position="stacked">Exercises</IonLabel>
+            <IonLabel position="stacked">Exercise {i+1}</IonLabel>
             <IonSelect interface="popover" placeholder="Exercise Exercise">
                 {allExercises.map(item => {
                     return <IonSelectOption value={item.id}>{item.name}</IonSelectOption>
@@ -73,14 +73,6 @@ function CreateWorkout() {
                     <IonItem>
                         <IonLabel position="stacked">Description</IonLabel>
                         <IonInput placeholder="Enter Description"></IonInput>
-                    </IonItem>
-                    <IonItem>
-                        <IonLabel position="stacked">Exercises</IonLabel>
-                        <IonSelect interface="popover" placeholder="Exercise Exercise">
-                            {allExercises.map(item => {
-                                return <IonSelectOption value={item.id}>{item.name}</IonSelectOption>
-                            })}
-                        </IonSelect>
                     </IonItem>
                     {exerciseSelects.map(item => item)}
                     <IonButton onClick={addExerciseHandler} fill="clear">
