@@ -8,11 +8,14 @@
 
 ## Exercise ID (FORM CORRECTION)
 
-0: Side Squat
-1: Front Squat
-2: Push-Ups
-3: Hamstring Stretch Left Leg (side view)
-4: Hamstring Stretch Right Leg (side view)
+1: Side Squat
+2: Front Squat
+3: Push-Ups
+4: Knee Push-Ups
+5: Hamstring Stretch Left Leg (side view)
+6: Hamstring Stretch Right Leg (side view)
+7: Arm Circles
+8: Jump Rope
 
 ## To get list of exercises
 
