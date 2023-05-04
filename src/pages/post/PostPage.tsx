@@ -120,7 +120,7 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
                         <PersonTextCard postData={postData} profileData={profileData} communityData={communityData}/>
                         <Posts loadData={loadComments} posts={posts}/>
                         <IonFab slot="fixed" vertical="bottom" horizontal="end">
-                            <IonFabButton routerLink={`/home/post/${match.params.postId}/create`}>
+                            <IonFabButton routerLink={`/home/post/${match.params.postId}/createcomment`}>
                                 <IonIcon icon={pencilOutline}></IonIcon>
                             </IonFabButton>
                         </IonFab>

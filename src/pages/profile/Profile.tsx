@@ -31,10 +31,10 @@ type ProfileProps = {
   // setUpdateProfileState: (arg: number) => void;
 }
 
-let currentUserPostSet = 0;
 const Tab3 = ({ }: ProfileProps) => {
   const [userPostArray, setUserPostArray] = useState([]);
   const [loginStatus, setLoginStatus] = useState(false);
+  const [currentUserPostSet, setCurrentUserPostSet] = useState(0);
   const dispatch = useAppDispatch();
 
   const profileDataRedux = useAppSelector((state) => state.profile.profileData)
@@ -44,7 +44,8 @@ const Tab3 = ({ }: ProfileProps) => {
   useEffect(() => {
     console.log(`the current loginStatus is ${loginStatus}`);
     checkLoginStatus(loginStatus, setLoginStatus);
-  }, [loginStatus, setLoginStatus, checkLoginStatus, exerciseStatsRedux]);
+    if (profileDataRedux !== emptyProfileData) loadUserPostData();
+  }, [loginStatus, setLoginStatus, checkLoginStatus, exerciseStatsRedux, profileDataRedux]);
 
   const logOut = () => {
     googleLogout();
@@ -57,7 +58,7 @@ const Tab3 = ({ }: ProfileProps) => {
     setUserPostArray(userPostArray.concat(data));
     console.log(`set:${currentUserPostSet}`);
     console.log(data);
-    currentUserPostSet += 1;
+    setCurrentUserPostSet(currentUserPostSet + 1);
   };
 
   return (
@@ -71,9 +72,6 @@ const Tab3 = ({ }: ProfileProps) => {
           :
           <Login setLoginStatus={setLoginStatus} />
         }
-        <IonButton routerLink="/profile/create" routerDirection="forward">
-          Edit Profile
-        </IonButton>
       </IonContent>
     </IonPage>
   );

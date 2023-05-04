@@ -30,11 +30,12 @@ import CommunityInfo from '../../components/community/CommunityInfo';
 interface CommunityDisplayProps extends RouteComponentProps<{
     communityId: string;
 }> { }
-let currentFeedSet = 0;
+
 function CommunityDisplay({ match }: CommunityDisplayProps) {
     const [communityData, setCommunityData] = useState<CommunityData>(emptyCommunityData);
     const [postArray, setPostArray] = useState<any[]>([]);
     const [profileArray, setProfileArray] = useState<any[]>([]);
+    const [currentFeedSet, setCurrentFeedSet] = useState(0);
 
     useEffect(() => {
         async function getCommunityData(pk: number) {
@@ -63,7 +64,7 @@ function CommunityDisplay({ match }: CommunityDisplayProps) {
         for (let i=0;i<newPostArray.length;i++) newProfileArray[i] = profileMap[newPostArray[i].poster];
         setPostArray(postArray.concat(newPostArray));
         setProfileArray(profileArray.concat(newProfileArray));
-        currentFeedSet += 1;
+        setCurrentFeedSet(currentFeedSet + 1);
     }
 
     return <IonPage>

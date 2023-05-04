@@ -15,7 +15,6 @@ type PostProps = {
   loadData: () => void;
 };
 
-let hasLoaded = false;
 const Posts = ({ posts, loadData }: PostProps) => {
   return (
     <div
