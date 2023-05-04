@@ -3,7 +3,8 @@ import { useEffect, useState, useRef } from 'react';
 
 //utils
 import { createUserPostAsync } from '../../utils/data/postData';
-import { createExerciseRegimAsync, getAllExercisesAsync } from '../../utils/data/getExerciseData';
+import { getAllExercisesAsync } from '../../utils/data/getExerciseData';
+import { createExerciseRegimeAsync } from '../../utils/create/exerciseRegimeCreate';
 
 //types
 import { emptyExerciseData } from '../../types/stateTypes';
@@ -30,7 +31,8 @@ import {
     IonSelectOption,
     IonTitle,
     IonFab,
-    IonFabButton
+    IonFabButton,
+    useIonToast
 } from '@ionic/react';
 import { exercises } from '../../App';
 
@@ -43,6 +45,7 @@ function CreateWorkout() {
     const [descriptionInputProps, descriptionInputValue] = useFormInput();
     const mediaInputRef = useRef<HTMLInputElement>(null);
 
+    const [present] = useIonToast();
     useEffect(() => {
         async function fetchAllExercisesInfo() {
             const data = await getAllExercisesAsync();
@@ -57,14 +60,14 @@ function CreateWorkout() {
         exerciseSelects.push(<IonItem key={i} >
             <IonLabel position="stacked">Exercise {i + 1} <button>help</button></IonLabel>
             <IonSelect interface="popover" placeholder="Exercise Exercise"
-            onIonChange={(e)=> {
-                setExercisesArr(prev=>{
-                    let arr = [...prev];
-                    arr[i] = e.target.value;
-                    console.log(arr);
-                    return arr;
-                })
-            }}>
+                onIonChange={(e) => {
+                    setExercisesArr(prev => {
+                        let arr = [...prev];
+                        arr[i] = e.target.value;
+                        console.log(arr);
+                        return arr;
+                    })
+                }}>
                 {allExercises.map(item => {
                     return <IonSelectOption key={item.id} value={item.id}>{item.name}</IonSelectOption>
                 })}
@@ -78,19 +81,45 @@ function CreateWorkout() {
     }
 
     function submitHandler() {
-        let errorFields = []
+        let errorFields = [];
+        const formData = new FormData();
+        const imageFormData = new FormData();
         if (nameInputValue.trim() === "") {
             errorFields.push("name");
         }
         if (descriptionInputValue.trim() === "") {
             errorFields.push("description")
         }
-        if (mediaInputRef.current!.files !== null) {
+        if (mediaInputRef.current!.files !== null) { //type guard to ensure that "files" isn't null
             if (mediaInputRef.current!.files.length <= 0) {
                 errorFields.push("image")
             }
         }
+        if (exercisesArr.every((value) => value !== undefined) === false || exercisesArr.length === 0) {
+            errorFields.push("exercises")
+        }
         console.log(errorFields);
+
+
+        if (errorFields.length > 0) {
+            let errorMessage = `${errorFields} cannot be empty!`
+            present({
+                message: errorMessage,
+                duration: 1000,
+                position: "top"
+            })
+            return;
+        } else {
+            if (mediaInputRef.current!.files !== null && mediaInputRef.current!.files[0] !== undefined) { //type guard to ensure that the file isn't undefined
+                imageFormData.append("media", mediaInputRef.current!.files[0])
+            }
+            let formDataJson = JSON.stringify({
+                name: nameInputValue,
+                text: descriptionInputValue,
+                exercises: exercisesArr
+            })
+            createExerciseRegimeAsync(formDataJson, imageFormData);
+        }
     }
 
     function nameChangeHandler() {
