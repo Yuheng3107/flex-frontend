@@ -143,9 +143,9 @@ export const createCommunityPostAsync = async function (community:number, postTi
   }
 }
 
-export const createCommentAsync = async function (parent_type: number, parent_id: number, postTitleInput:string, postTextInput:string) {
+export const createCommentAsync = async function (parent_type: string, parent_id: number, postTitleInput:string, postTextInput:string) {
   // check for valid parent type
-  if (parent_type !== 15 && parent_type !== 16) return;
+  if (parent_type !== 'feed_post' && parent_type !== 'comment') return;
   try {
     let res = await fetch(`${backend}/feed/comment/create`, {
       method: "POST",
@@ -167,12 +167,11 @@ export const createCommentAsync = async function (parent_type: number, parent_id
   }
 }
 
-export const likePostAsync = async function (post_type: number, id: number) {
-  if (post_type !== 15 && post_type !== 16 && post_type !== 17) return;
+export const likePostAsync = async function (post_type: string, id: number) {
+  if (post_type !== 'user' && post_type !== 'community' && post_type !== 'comment') return;
   let url:RequestInfo = "";
-  if (post_type === 15) url=`${backend}/feed/feed_post/update/likes`;
-  if (post_type === 16) url=`${backend}/feed/feed_post/update/likes`;
-  if (post_type === 17) url=`${backend}/feed/comment/update/likes`;
+  if (post_type === 'user'|| post_type === 'community') url=`${backend}/feed/feed_post/update/likes`;
+  if (post_type === 'comment') url=`${backend}/feed/comment/update/likes`;
   try {
     let res = await fetch(url, {
       method: "POST",
@@ -191,12 +190,11 @@ export const likePostAsync = async function (post_type: number, id: number) {
   }
 }
 
-export const unlikePostAsync = async function (post_type: number, id: number) {
-  if (post_type !== 15 && post_type !== 16 && post_type !== 17) return;
+export const unlikePostAsync = async function (post_type: string, id: number) {
+  if (post_type !== 'user' && post_type !== 'community' && post_type !== 'comment') return;
   let url:RequestInfo = "";
-  if (post_type === 15) url=`${backend}/feed/feed_post/delete/likes/${id}`;
-  if (post_type === 16) url=`${backend}/feed/feed_post/delete/likes/${id}`;
-  if (post_type === 17) url=`${backend}/feed/comment/delete/likes/${id}`;
+  if (post_type === 'user' || post_type === 'community') url=`${backend}/feed/feed_post/delete/likes/${id}`;
+  if (post_type === 'comment') url=`${backend}/feed/comment/delete/likes/${id}`;
   try {
     let res = await fetch(url, {
       method: "DELETE",
