@@ -56,7 +56,6 @@ const ChooseExercise = () => {
         regimesDataObject[data.id as keyof typeof regimesDataObject] = data;
       }
       console.log(regimesDataObject);
-      dispatch(exerciseDataActions.setExerciseRegimesInfo(regimesDataObject));
       setRegimeCardArray(regimesDataArray);
 
     }

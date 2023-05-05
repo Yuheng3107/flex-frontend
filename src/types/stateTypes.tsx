@@ -109,6 +109,7 @@ export type ExerciseData = {
   tags: string[];
   text: string;
   total_reps: number;
+  reps?: ExerciseRegimeInfoUnit;
 }
 
 export const emptyExerciseData = {
@@ -139,7 +140,7 @@ export type CommunityData = {
   member_count: number;
 };
 
-export interface ExerciseRegimeInfo {
+export interface ExerciseRegime {
   exercises: any[];
   id: 0;
   likers: [];
@@ -155,7 +156,7 @@ export interface ExerciseRegimeInfo {
 
 }
 
-export const emptyExerciseRegime: ExerciseRegimeInfo = {
+export const emptyExerciseRegime: ExerciseRegime = {
   exercises: [],
   id: 0,
   likers: [],
@@ -169,20 +170,32 @@ export const emptyExerciseRegime: ExerciseRegimeInfo = {
   text: "",
   times_completed: 0
 }
+
+// Object containing number of reps of each exercise in the regime
+export interface ExerciseRegimeInfoUnit {
+  id: number;
+  order: number;
+  exercises: number[];
+  rep_count: number[];
+}
+export const emptyExerciseRegimeInfoUnit: ExerciseRegimeInfoUnit = { id: 0, order: 0, exercises: [0], rep_count: [0] }
+export type ExerciseRegimeInfo = ExerciseRegimeInfoUnit[];
+export const emptyExerciseRegimeInfo: ExerciseRegimeInfo = [emptyExerciseRegimeInfoUnit];
+
 export interface ObjExerciseRegimesInfo {
   [key: string]: {
-      exercises: any[];
-      id: 0;
-      likers: [];
-      media: "";
-      name: "";
-      posted_at: "";
-      poster: 0;
-      shared_id: 0;
-      shared_type: 0;
-      tags: [];
-      text: "";
-      times_completed: 0
+    exercises: any[];
+    id: 0;
+    likers: [];
+    media: "";
+    name: "";
+    posted_at: "";
+    poster: 0;
+    shared_id: 0;
+    shared_type: 0;
+    tags: [];
+    text: "";
+    times_completed: 0
   }
 }
 

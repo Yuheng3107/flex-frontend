@@ -25,7 +25,7 @@ export const createExerciseRegimeAsync = async (formDataJson: string, imageFormD
         if (res !== undefined && res.ok) {
             res = await updateExerciseRegimeInfoAsync({
                 ...exerciseReps,
-                pk
+                id: pk
             })
             console.log(res);
         }
@@ -63,14 +63,16 @@ export const updateExerciseRegimeImageAsync = async (pk: number, imageFormData: 
 
 export interface RegimeInfoArrays { exercises: number[]; rep_count: number[]; set_count: number[] }
 interface RegimeInfoArgs extends RegimeInfoArrays {
-    pk: number;
+    id: number;
 }
 
 export const updateExerciseRegimeInfoAsync = async (arg: RegimeInfoArgs) => {
+    console.log(arg);
     try {
         let res = await fetch(`${backend}/exercises/exercise_regime_info/update`, {
             method: "POST",
             headers: {
+                "Content-Type": "application/json",
                 "X-CSRFToken": String(
                     document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]
                 ),
