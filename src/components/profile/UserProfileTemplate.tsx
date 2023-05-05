@@ -12,12 +12,12 @@ type UserProfileTemplateProps = {
   profileData: ProfileData;
   exerciseStats: ExerciseStats;
   userPostArray: any[];
+  likeArray: number[];
   loadUserPostData: () => void;
 };
 
-const UserProfileTemplate = ({ profileData, exerciseStats, userPostArray, loadUserPostData }: UserProfileTemplateProps) => {
+const UserProfileTemplate = ({ profileData, exerciseStats, userPostArray, likeArray, loadUserPostData }: UserProfileTemplateProps) => {
   useEffect(() => {
-
   },[])
   const [isTrend, setTrend] = useState(true);
   return (
@@ -32,6 +32,7 @@ const UserProfileTemplate = ({ profileData, exerciseStats, userPostArray, loadUs
             postArray: userPostArray,
             profileArray: [profileData],
             communityArray: [null],
+            likeArray: likeArray,
           }} 
           loadData={loadUserPostData}
           />

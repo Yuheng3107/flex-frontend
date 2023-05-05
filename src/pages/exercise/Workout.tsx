@@ -22,7 +22,7 @@ import VideoFeed from "../../components/Exercise/video";
 import { getExerciseRegimeWithExercisesAsync } from "../../utils/data/getExerciseData";
 
 //types
-import { ExerciseRegimeInfo, emptyExerciseRegime } from "../../store/exerciseDataSlice";
+import { ExerciseRegimeInfo, emptyExerciseRegime } from "../../types/stateTypes";
 
 import { ExerciseData } from "../../types/stateTypes";
 //others
@@ -59,17 +59,25 @@ function Workout({ match }: WorkoutPageProps) {
 
   // let samplePhoto = "https://images.unsplash.com/photo-1607962837359-5e7e89f86776?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
   // let sampleSquatPhoto = "https://images.unsplash.com/photo-1567598508481-65985588e295?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
-  
+
   //This button is passed to Video.jsx. Once the user completes the exercise, he clicks on this button to go to the next one
-  const nextExerciseButton = <IonButton onClick={() => setCurrentDisplayIndex(prev => prev + 1)}>
+  const nextExerciseButton = <IonButton fill="outline" onClick={() => {
+    if (currentDisplayIndex < displaysArr.length - 1) {
+      setCurrentDisplayIndex(prev => prev + 1)
+    } else {
+      setCurrentDisplayIndex(0);
+    }
+  }}>
     Next
   </IonButton >
-  
+
   let currentDisplayComponent;
   if (displaysArr[currentDisplayIndex] === "mainInfo") {
     currentDisplayComponent = <WorkoutInfoDisplay exerciseRegimeInfo={exerciseRegimeInfo}></WorkoutInfoDisplay>;
   } else if (displaysArr[currentDisplayIndex] !== null) {
-    currentDisplayComponent = <VideoFeed repCountInput={5} completeExerciseButton={nextExerciseButton}></VideoFeed>
+    console.log(displaysArr[currentDisplayIndex])
+    currentDisplayComponent = <VideoFeed repCountInput={2} completeExerciseButton={nextExerciseButton}
+      exerciseData={displaysArr[currentDisplayIndex]}></VideoFeed>
   }
 
 

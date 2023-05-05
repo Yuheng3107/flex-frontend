@@ -18,7 +18,7 @@ import img404 from "../../assets/img/404.png"
 
 //utils imports
 import { getCommunityAsync } from '../../utils/data/communityData';
-import { getCommunityPostsAsync } from "../../utils/data/postData";
+import { getCommunityPostsAsync, getLikesAsync } from "../../utils/data/postData";
 import { getManyOtherProfileDataAsync } from "../../utils/data/profileData";
 
 import { backend } from '../../App';
@@ -30,11 +30,13 @@ import CommunityInfo from '../../components/community/CommunityInfo';
 interface CommunityDisplayProps extends RouteComponentProps<{
     communityId: string;
 }> { }
-let currentFeedSet = 0;
+
 function CommunityDisplay({ match }: CommunityDisplayProps) {
     const [communityData, setCommunityData] = useState<CommunityData>(emptyCommunityData);
     const [postArray, setPostArray] = useState<any[]>([]);
     const [profileArray, setProfileArray] = useState<any[]>([]);
+    const [likeArray, setLikeArray] = useState<any[]>([]);
+    const [currentFeedSet, setCurrentFeedSet] = useState(0);
 
     useEffect(() => {
         async function getCommunityData(pk: number) {
@@ -51,8 +53,16 @@ function CommunityDisplay({ match }: CommunityDisplayProps) {
         const newPostArray = await getCommunityPostsAsync(Number(match.params.communityId), currentFeedSet);
         console.log(`set:${currentFeedSet}`)
         console.log(newPostArray);
-        let profiles:any[] = [];
-        for (let i=0;i<newPostArray.length;i++) profiles.push(newPostArray[i].poster);
+
+        // split data
+        let profiles: number[] = [];
+        let postPks: number[] = [];
+        for (let i = 0; i < newPostArray.length; i++) {
+            profiles.push(newPostArray[i].poster);
+            postPks.push(newPostArray[i].id);
+        }
+
+        // profile
         let newProfileArray = await getManyOtherProfileDataAsync(profiles);
         const profileMap = newProfileArray.reduce((acc:any, profile:any) => {
             return {
@@ -61,9 +71,14 @@ function CommunityDisplay({ match }: CommunityDisplayProps) {
             };
           }, {});
         for (let i=0;i<newPostArray.length;i++) newProfileArray[i] = profileMap[newPostArray[i].poster];
+
+        // likes
+        let likes = await getLikesAsync('community',postPks);
+
         setPostArray(postArray.concat(newPostArray));
         setProfileArray(profileArray.concat(newProfileArray));
-        currentFeedSet += 1;
+        setCurrentFeedSet(currentFeedSet + 1);
+        setLikeArray(likeArray.concat(likes));
     }
 
     return <IonPage>
@@ -76,7 +91,7 @@ function CommunityDisplay({ match }: CommunityDisplayProps) {
                 <>
                     <main className="h-full">
                         <CommunityInfo communityData={communityData} />
-                        <CommunityFeed postArray={postArray} profileArray={profileArray} communityData={communityData} loadData={loadFeedData} />
+                        <CommunityFeed postArray={postArray} profileArray={profileArray} communityData={communityData} likeArray={likeArray} loadData={loadFeedData} />
                     </main>
                     <IonFab slot="fixed" vertical="bottom" horizontal="end">
                         <IonFabButton routerLink={`/home/community/${communityData.id}/create`}>

@@ -1,25 +1,9 @@
 import { backend } from "../../App";
+import { PostType } from "../../types/stateTypes";
 
 export const getPostAsync = async function (post_id:number) {
   try {
-    let res = await fetch(`${backend}/feed/user_post/${post_id}`, {
-      method: "GET",
-      credentials: "include", // include cookies in the request
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]),
-      }
-    })
-    let data = await res.json();
-    return data
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-export const getCommunityPostAsync = async function (post_id:number) {
-  try {
-    let res = await fetch(`${backend}/feed/community_post/${post_id}`, {
+    let res = await fetch(`${backend}/feed/feed_post/${post_id}`, {
       method: "GET",
       credentials: "include", // include cookies in the request
       headers: {
@@ -36,7 +20,7 @@ export const getCommunityPostAsync = async function (post_id:number) {
 
 export const getUserPostsAsync = async function (user_id:number, set_no:number) {
   try {
-    let res = await fetch(`${backend}/feed/user_post/latest`, {
+    let res = await fetch(`${backend}/feed/feed_post/latest`, {
       method: "POST",
       credentials: "include", // include cookies in the request
       headers: {
@@ -160,9 +144,8 @@ export const createCommunityPostAsync = async function (community:number, postTi
   }
 }
 
-export const createCommentAsync = async function (parent_type: number, parent_id: number, postTitleInput:string, postTextInput:string) {
+export const createCommentAsync = async function (parent_type: PostType, parent_id: number, postTitleInput:string, postTextInput:string) {
   // check for valid parent type
-  if (parent_type !== 15 && parent_type !== 16) return;
   try {
     let res = await fetch(`${backend}/feed/comment/create`, {
       method: "POST",
@@ -172,13 +155,76 @@ export const createCommentAsync = async function (parent_type: number, parent_id
       },
       credentials: "include",
       body: JSON.stringify({
-        title: postTitleInput,
         text: postTextInput,
-        parent_type: parent_type,
+        parent_type: parent_type === 'comment' ? 'comment' : 'feedpost',
         parent_id: parent_id,
       }),
     })
     return res;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const likePostAsync = async function (post_type: PostType, id: number) {
+  let url:RequestInfo = "";
+  if (post_type === 'user'|| post_type === 'community') url=`${backend}/feed/feed_post/update/likes`;
+  if (post_type === 'comment') url=`${backend}/feed/comment/update/likes`;
+  try {
+    let res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]),
+        "Content-type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        id: id,
+      }),
+    })
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const unlikePostAsync = async function (post_type: PostType, id: number) {
+  let url:RequestInfo = "";
+  if (post_type === 'user' || post_type === 'community') url=`${backend}/feed/feed_post/delete/likes/${id}`;
+  if (post_type === 'comment') url=`${backend}/feed/comment/delete/likes/${id}`;
+  try {
+    let res = await fetch(url, {
+      method: "DELETE",
+      headers: {
+        "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]),
+        "Content-type": "application/json"
+      },
+      credentials: "include",
+    })
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const getLikesAsync = async function (post_type: PostType, ids: number[]) {
+  let url:RequestInfo = "";
+  if (post_type === 'user'|| post_type === 'community') url=`${backend}/feed/feed_post/list/likes`;
+  if (post_type === 'comment') url=`${backend}/feed/comment/list/likes`;
+  try {
+    let res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]),
+        "Content-type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        ids: ids,
+      }),
+    })
+    let data = await res.json();
+    return data;
   } catch (error) {
     console.log(error);
   }

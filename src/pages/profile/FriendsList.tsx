@@ -38,13 +38,15 @@ function FriendsList() {
             </IonToolbar>
         </IonHeader>
         <IonContent>
-
-            <div>Friends</div>
-            <FriendDisplay friends={profileDataRedux.followers} />
-            <div>Incoming Friend Requests</div>
-            <FriendRequestDisplay friend_requests={profileDataRedux.friend_requests} />
-            <div>Sent Friend Requests</div>
-            <SentFriendRequestDisplay friend_requests={profileDataRedux.sent_friend_requests} />
+            <div className="border border-zinc-500 m-4 p-2 flex flex-col text-center">
+                <div className="text-2xl">Friends</div>
+                <FriendDisplay friends={profileDataRedux.followers} />
+                <div className="mt-3 text-xl">Incoming Friend Requests</div>
+                <FriendRequestDisplay friend_requests={profileDataRedux.friend_requests} />
+                <div className="mt-3 text-xl">Sent Friend Requests</div>
+                <SentFriendRequestDisplay friend_requests={profileDataRedux.sent_friend_requests} />    
+            </div>
+            
         </IonContent>
     </IonPage>
 }

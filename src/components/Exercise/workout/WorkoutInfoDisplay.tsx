@@ -10,7 +10,7 @@ import {
 
 //utils
 import { backend } from "../../../App";
-import { ExerciseRegimeInfo } from "../../../store/exerciseDataSlice";
+import { ExerciseRegimeInfo } from "../../../types/stateTypes";
 
 interface WorkoutInfoDisplayProps {
     exerciseRegimeInfo: ExerciseRegimeInfo;

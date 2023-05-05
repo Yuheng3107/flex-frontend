@@ -44,7 +44,7 @@ export type UserPostData = {
   likes: number;
   text: string;
   title: string;
-  community: number;
+  community: number | null;
   media: string;
   comments: any[];
 };
@@ -54,9 +54,9 @@ export const emptyUserPostData = {
   poster: 0,
   posted_at: "",
   likes: 0,
-  text: "Lorem Ipsum",
-  title: "Ipsum Lorem",
-  community: 0,
+  text: "",
+  title: "Loading",
+  community: null,
   media: "",
   comments: [],
 };
@@ -95,7 +95,6 @@ export const emptyExerciseStats = {
 //An object containing the exercise's details like id, name, and description
 export type ExerciseData = {
   id: number;
-  likers: number[];
   likes: number;
   media: string;
   name: string;
@@ -107,7 +106,21 @@ export type ExerciseData = {
   tags: string[];
   text: string;
   total_reps: number;
+}
 
+export const emptyExerciseData = {
+  id: 0,
+  likes: 0,
+  media: "",
+  name: "",
+  prefect_reps: 0,
+  posted_at: "",
+  poster: "",
+  shared_id: 0,
+  shared_type: 0,
+  tags: [""],
+  text: "",
+  total_reps: 0,
 }
 
 export type CommunityData = {
@@ -121,6 +134,54 @@ export type CommunityData = {
   privacy_level: number;
   member_count: number;
 };
+
+export interface ExerciseRegimeInfo {
+  exercises: any[];
+  id: 0;
+  media: "";
+  name: "";
+  posted_at: "";
+  poster: 0;
+  shared_id: 0;
+  shared_type: 0;
+  tags: [];
+  text: "";
+  times_completed: 0
+
+}
+
+export const emptyExerciseRegime: ExerciseRegimeInfo = {
+  exercises: [],
+  id: 0,
+  media: "",
+  name: "",
+  posted_at: "",
+  poster: 0,
+  shared_id: 0,
+  shared_type: 0,
+  tags: [],
+  text: "",
+  times_completed: 0
+}
+export interface ObjExerciseRegimesInfo {
+  [key: string]: {
+      exercises: any[];
+      id: 0;
+      media: "";
+      name: "";
+      posted_at: "";
+      poster: 0;
+      shared_id: 0;
+      shared_type: 0;
+      tags: [];
+      text: "";
+      times_completed: 0
+  }
+}
+
+export const emptyObjExerciseRegimes: ObjExerciseRegimesInfo = {
+  0: emptyExerciseRegime
+}
 
 export const emptyCommunityData = {
   id: 0,
@@ -145,3 +206,5 @@ export const invalidCommunityData = {
   privacy_level: 0,
   member_count: 0,
 };
+
+export type PostType = 'user' | 'community' | 'comment';

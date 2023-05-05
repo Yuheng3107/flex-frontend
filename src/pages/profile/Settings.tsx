@@ -41,10 +41,17 @@ function Settings() {
                 <IonTitle>Settings</IonTitle>
             </IonToolbar>
         </IonHeader>
-        <IonContent >
-            <p>Darkmode Toggle</p>
-            <IonToggle checked={darkThemeToggleChecked} onIonChange={onDarkThemeToggle}></IonToggle>
-            <IonButton  routerLink="/profile/friendslist" routerDirection="forward">Friends</IonButton>
+        <IonContent>
+            <div className="flex flex-col justify-evenly">
+                <div>
+                    <p>Darkmode Toggle</p>
+                    <IonToggle checked={darkThemeToggleChecked} onIonChange={onDarkThemeToggle}></IonToggle>    
+                </div>
+                <IonButton  routerLink="/profile/friendslist" routerDirection="forward">Friends</IonButton>
+                <IonButton routerLink="/profile/create" routerDirection="forward">
+                    Edit Profile
+                </IonButton>    
+            </div>
         </IonContent>
     </IonPage >
 }

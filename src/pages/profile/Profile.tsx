@@ -6,7 +6,7 @@ import { profileDataActions } from '../../store/profileDataSlice';
 
 //utils imports
 import checkLoginStatus from "../../utils/checkLogin";
-import { getUserPostsAsync } from "../../utils/data/postData";
+import { getLikesAsync, getUserPostsAsync } from "../../utils/data/postData";
 
 import { googleLogout } from "@react-oauth/google";
 import { emptyProfileData } from "../../types/stateTypes";
@@ -31,10 +31,11 @@ type ProfileProps = {
   // setUpdateProfileState: (arg: number) => void;
 }
 
-let currentUserPostSet = 0;
 const Tab3 = ({ }: ProfileProps) => {
   const [userPostArray, setUserPostArray] = useState([]);
+  const [likeArray, setLikeArray] = useState<any[]>([]);
   const [loginStatus, setLoginStatus] = useState(false);
+  const [currentUserPostSet, setCurrentUserPostSet] = useState(0);
   const dispatch = useAppDispatch();
 
   const profileDataRedux = useAppSelector((state) => state.profile.profileData)
@@ -44,7 +45,8 @@ const Tab3 = ({ }: ProfileProps) => {
   useEffect(() => {
     console.log(`the current loginStatus is ${loginStatus}`);
     checkLoginStatus(loginStatus, setLoginStatus);
-  }, [loginStatus, setLoginStatus, checkLoginStatus, exerciseStatsRedux]);
+    if (profileDataRedux !== emptyProfileData) loadUserPostData();
+  }, [loginStatus, setLoginStatus, checkLoginStatus, exerciseStatsRedux, profileDataRedux]);
 
   const logOut = () => {
     googleLogout();
@@ -53,11 +55,23 @@ const Tab3 = ({ }: ProfileProps) => {
   };
 
   const loadUserPostData = async () => {
-    let data = await getUserPostsAsync(profileDataRedux.id, currentUserPostSet);
-    setUserPostArray(userPostArray.concat(data));
+    let postArray = await getUserPostsAsync(profileDataRedux.id, currentUserPostSet);
+    
     console.log(`set:${currentUserPostSet}`);
-    console.log(data);
-    currentUserPostSet += 1;
+    console.log(postArray);
+
+    // split data
+    let postPks: number[] = [];
+    for (let i = 0; i < postArray.length; i++) {
+        postPks.push(postArray[i].id);
+    }
+
+    // likes
+    let likes = await getLikesAsync('user', postPks);
+
+    setUserPostArray(userPostArray.concat(postArray));
+    setLikeArray(likeArray.concat(likes));
+    setCurrentUserPostSet(currentUserPostSet + 1);
   };
 
   return (
@@ -67,13 +81,10 @@ const Tab3 = ({ }: ProfileProps) => {
           <IonIcon icon={cog} />
         </IonButton>
         {loginStatus ?
-          <UserProfileTemplate profileData={profileDataRedux} exerciseStats={exerciseStatsRedux} userPostArray={userPostArray} loadUserPostData={loadUserPostData} />
+          <UserProfileTemplate profileData={profileDataRedux} exerciseStats={exerciseStatsRedux} userPostArray={userPostArray} likeArray={likeArray} loadUserPostData={loadUserPostData} />
           :
           <Login setLoginStatus={setLoginStatus} />
         }
-        <IonButton routerLink="/profile/create" routerDirection="forward">
-          Edit Profile
-        </IonButton>
       </IonContent>
     </IonPage>
   );

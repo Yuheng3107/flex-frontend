@@ -7,7 +7,7 @@ interface CommentProps extends RouteComponentProps<{
 }> { }
 function CreateComment({ match }: CommentProps) {
     const makeComment = async (title:string, text: string) => {
-        return await createCommentAsync(15,Number(match.params.postId),title, text);
+        return await createCommentAsync('user',Number(match.params.postId),title, text);
     }
     return <CreatePostForm makePost={makeComment} backUrl={`/home/post/${match.params.postId}`} isComment={true}/>
 }

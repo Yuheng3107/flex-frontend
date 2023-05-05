@@ -70,7 +70,7 @@ let keypoints;
 /**
 * The correct poses. 
 * @type {Array(3,x)}
-* @param three 0: keypose, 1: start->mid, 2: mid->end
+* @param len3 0: keypose, 1: start->mid, 2: mid->end
 * @param x key angles (16)
 */
 let evalPoses;
@@ -80,7 +80,7 @@ let evalPoses;
 * @type {Array(3,x,2)}
 * @param three 0: keypose, 1: start->mid, 2: mid->end
 * @param x key angles (16)
-* @param two too large (0) or too small (1)
+* @param len2 too large (0) or too small (1)
 */
 let glossary;
 
@@ -106,11 +106,18 @@ let angleWeights;
 /**
 * Differences in angle required for feedback to be given
 * @type {Float32Array(3,x,2)}
-* @param three 0: keypose, 1: start->mid, 2: mid->end
+* @param len3 0: keypose, 1: start->mid, 2: mid->end
 * @param x key angles (16)
 * @param two too large (0) or too small (1)
 */
 let angleThresholds;
+
+/**
+ * Number of frames minimum before switching pose 
+ * @type {Number[]}
+ * @param len2 0:rest to key, 1;key to rest
+ */
+let minSwitchPoseCount;
 
 /*--------------------
 FEEDBACK VARIABLES
@@ -136,7 +143,7 @@ let repTimeError;
 /**
 * Number of times angle was too small
 * @type {Array(3,x)} 
-* @param three 0: keypose, 1: start->mid, 2: mid->end
+* @param len3 0: keypose, 1: start->mid, 2: mid->end
 * @param x key angles (16)
 */
 let smallErrorCount;
@@ -144,7 +151,7 @@ let smallErrorCount;
 /**
 * Number of times angle was too large
 * @type {Array(3,x)}
-* @param three 0: keypose, 1: start->mid, 2: mid->end
+* @param len3 0: keypose, 1: start->mid, 2: mid->end
 * @param x key angles (16)
 */
 let largeErrorCount;
@@ -166,7 +173,6 @@ let repFeedback;
 * @type {Number}
 */
 let repCount;
-
 
 
 export { init, run, endExercise };
@@ -217,7 +223,7 @@ function run(poses) {
 * @param {Number} _minRepTime Rep times shorter than this are too short (in ms)
 * @param {Array} _glossary Text descriptions of each mistake
 */
-function init(_evalPoses, _scoreThreshold, _scoreDeviation, _angleWeights, _angleThresholds, _minRepTime, _glossary) {
+function init(_evalPoses, _scoreThreshold, _scoreDeviation, _angleWeights, _angleThresholds, _minRepTime, _glossary, _minSwitchPoseCount) {
   evalPoses = _evalPoses;
   scoreThreshold = _scoreThreshold;
   scoreDeviation = _scoreDeviation;
@@ -225,6 +231,7 @@ function init(_evalPoses, _scoreThreshold, _scoreDeviation, _angleWeights, _angl
   angleThresholds = _angleThresholds;
   minRepTime = _minRepTime;
   glossary = _glossary;
+  minSwitchPoseCount = _minSwitchPoseCount;
   resetAll();
 }
 
@@ -501,7 +508,7 @@ function checkScore(score, curPose) {
     // Currently in rest pose
     if (poseStatus === 0) {
       switchPoseCount += 1;
-      if (switchPoseCount >= 7) {
+      if (switchPoseCount >= minSwitchPoseCount[0]) {
         // switch to key pose
         switchPoseCount = 0;
         poseStatus = 1;
@@ -526,7 +533,7 @@ function checkScore(score, curPose) {
     // Currently in key pose
     if (poseStatus === 1) {
       switchPoseCount += 1;
-      if (switchPoseCount >= 10) {
+      if (switchPoseCount >= minSwitchPoseCount[1]) {
         // End of rep
         switchPoseCount = 0;
         poseStatus = 0;

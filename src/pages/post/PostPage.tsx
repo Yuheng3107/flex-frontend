@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 
 //utils imports
 import { getAllProfileData, getManyOtherProfileDataAsync } from "../../utils/data/profileData";
-import { getCommentsAsync, getPostAsync } from "../../utils/data/postData";
+import { getCommentsAsync, getPostAsync, getLikesAsync } from "../../utils/data/postData";
 import { getCommunityAsync } from "../../utils/data/communityData";
 
 //type imports
@@ -46,10 +46,12 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
     const [postData, setPostData] = useState<UserPostData>(emptyUserPostData);
     const [communityData, setCommunityData] = useState<CommunityData>(emptyCommunityData);
     const [currentCommentSet, setCurrentCommentSet] = useState(0);
+    const [isLiked, setIsLiked] = useState(false);
     const [posts, setPosts] = useState<{
-        postArray: any[];
-        profileArray: any[];
-        communityArray: any[];}>({postArray: [], profileArray: [], communityArray: []});
+        postArray: any[]; profileArray: any[]; communityArray: any[]; likeArray: any[];
+    }>({
+        postArray: [], profileArray: [], communityArray: [], likeArray: [],
+    });
 
     useEffect(() => {
         //useEffect with empty dependency array means this function will only run once right after the component is mounted
@@ -60,14 +62,19 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
     const loadPostData = async () => {
         let postData = await getPostAsync(Number(match.params.postId));
         postData.comments.reverse();
-        setPostData(postData);
+        
         console.log(postData);
         let data = await getAllProfileData(postData.poster);
-        setProfileData(data.profileData);
-        if (postData.community !== undefined) {
+        
+        if (postData?.community) {
             let community = await getCommunityAsync(postData.community);
             setCommunityData(community);
         }
+        let liked = await getLikesAsync('user', [Number(match.params.postId)]);
+
+        setPostData(postData);
+        setProfileData(data.profileData);
+        setIsLiked(liked.includes(Number(match.params.postId)));
     };
 
     const loadComments = async () => {
@@ -76,26 +83,36 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
         if (start >= postData.comments.length) return;
         let end = (currentCommentSet+1)*10;
         if (end > postData.comments.length) end = postData.comments.length;
-        let newComments = await getCommentsAsync(postData.comments.slice(start,end));
-        newComments.reverse();
-        console.log(newComments);
+        let commentArray = await getCommentsAsync(postData.comments.slice(start,end));
+        commentArray.reverse();
+        console.log(commentArray);
 
-        let profiles: any[] = [];
-        for (let i = 0; i < newComments.length; i++) profiles.push(newComments[i].poster);
-        let tempProfileArray = await getManyOtherProfileDataAsync(profiles);
-        const profileMap = tempProfileArray.reduce((acc: any, profile: any) => {
+        // split data
+        let profiles: number[] = [];
+        let postPks: number[] = [];
+        for (let i = 0; i < commentArray.length; i++) {
+            profiles.push(commentArray[i].poster);
+            postPks.push(commentArray[i].id);
+        }
+
+        // profile
+        let profileArray = await getManyOtherProfileDataAsync(profiles);
+        const profileMap = profileArray.reduce((acc: any, profile: any) => {
           return {
             ...acc,
             [profile.id]: profile,
           };
         }, {});
-        for (let i = 0; i < newComments.length; i++) tempProfileArray[i] = profileMap[newComments[i].poster];
-        console.log(tempProfileArray);
+        for (let i = 0; i < commentArray.length; i++) profileArray[i] = profileMap[commentArray[i].poster];
+
+        // likes
+        let likes = await getLikesAsync('comment',postPks);
 
         setPosts({
-            postArray: posts.postArray.concat(newComments),
-            profileArray: posts.profileArray.concat(tempProfileArray),
+            postArray: posts.postArray.concat(commentArray),
+            profileArray: posts.profileArray.concat(profileArray),
             communityArray: [communityData],
+            likeArray: posts.likeArray.concat(likes)
         });
         setCurrentCommentSet(currentCommentSet+1);
     };
@@ -117,10 +134,10 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
                     </div> 
                 :
                     <>
-                        <PersonTextCard postData={postData} profileData={profileData} communityData={communityData}/>
+                        <PersonTextCard postData={postData} profileData={profileData} communityData={communityData} isLiked={isLiked}/>
                         <Posts loadData={loadComments} posts={posts}/>
                         <IonFab slot="fixed" vertical="bottom" horizontal="end">
-                            <IonFabButton routerLink={`/home/post/${match.params.postId}/create`}>
+                            <IonFabButton routerLink={`/home/post/${match.params.postId}/createcomment`}>
                                 <IonIcon icon={pencilOutline}></IonIcon>
                             </IonFabButton>
                         </IonFab>
