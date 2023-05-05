@@ -147,7 +147,8 @@ export interface ExerciseRegime {
   shared_type: 0;
   tags: [];
   text: "";
-  times_completed: 0
+  times_completed: 0;
+  likes: number;
 
 }
 
@@ -162,7 +163,8 @@ export const emptyExerciseRegime: ExerciseRegime = {
   shared_type: 0,
   tags: [],
   text: "",
-  times_completed: 0
+  times_completed: 0,
+  likes: 0
 }
 
 // Object containing number of reps of each exercise in the regime

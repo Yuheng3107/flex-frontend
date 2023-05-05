@@ -30,6 +30,11 @@ export const createExerciseRegimeAsync = async (formDataJson: string, imageFormD
             console.log(res);
         }
 
+        if (res !== undefined && res.ok) {
+            res = await updateExerciseRegimeStatistics([pk])
+            console.log(res);
+        }
+
         return {
             pk: pk,
             res
@@ -51,6 +56,27 @@ export const updateExerciseRegimeImageAsync = async (pk: number, imageFormData: 
             },
             credentials: "include",
             body: imageFormData,
+        })
+        console.log(res);
+        return res
+
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+export const updateExerciseRegimeStatistics = async (arg: number[]) => {
+    try {
+        let res = await fetch(`${backend}/users/user/update/exercise_regimes`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": String(
+                    document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]
+                ),
+            },
+            credentials: "include",
+            body: JSON.stringify({fk_list: arg}),
         })
         console.log(res);
         return res
