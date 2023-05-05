@@ -42,7 +42,6 @@ export type UserPostData = {
   poster: number;
   posted_at: string;
   likes: number;
-  likers: number[];
   text: string;
   title: string;
   community: number | null;
@@ -55,9 +54,8 @@ export const emptyUserPostData = {
   poster: 0,
   posted_at: "",
   likes: 0,
-  likers: [],
-  text: "Lorem Ipsum",
-  title: "Ipsum Lorem",
+  text: "",
+  title: "Loading",
   community: null,
   media: "",
   comments: [],
@@ -97,7 +95,6 @@ export const emptyExerciseStats = {
 //An object containing the exercise's details like id, name, and description
 export type ExerciseData = {
   id: number;
-  likers: number[];
   likes: number;
   media: string;
   name: string;
@@ -113,7 +110,6 @@ export type ExerciseData = {
 
 export const emptyExerciseData = {
   id: 0,
-  likers: [0],
   likes: 0,
   media: "",
   name: "",
@@ -142,7 +138,6 @@ export type CommunityData = {
 export interface ExerciseRegimeInfo {
   exercises: any[];
   id: 0;
-  likers: [];
   media: "";
   name: "";
   posted_at: "";
@@ -158,7 +153,6 @@ export interface ExerciseRegimeInfo {
 export const emptyExerciseRegime: ExerciseRegimeInfo = {
   exercises: [],
   id: 0,
-  likers: [],
   media: "",
   name: "",
   posted_at: "",
@@ -173,7 +167,6 @@ export interface ObjExerciseRegimesInfo {
   [key: string]: {
       exercises: any[];
       id: 0;
-      likers: [];
       media: "";
       name: "";
       posted_at: "";
