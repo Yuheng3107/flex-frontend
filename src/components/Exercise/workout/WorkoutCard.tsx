@@ -24,7 +24,7 @@ export type WorkoutCardProps = {
 function WorkoutCard({ className, name, likes, media, exerciseRegimeId, exercises }: WorkoutCardProps) {
     const history = useHistory();
     console.log(exercises);
-    return <div className={`${className} relative bg-zinc-200 rounded-xl m-3 flex flex-col justify-between h-52 overflow-hidden`} >
+    return <div className={`${className} relative bg-zinc-200 rounded-xl flex flex-col justify-between h-44 overflow-hidden`} >
         <img className="absolute w-full h-full object-cover z-0 grayscale contrast-75 brightness-75" alt="card background image"
             src={media}></img>
         <div className="z-10 p-3">

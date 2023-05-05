@@ -113,6 +113,7 @@ const App: React.FC = () => {
           data.favorite_exercise_regime.exercise_regime
         );
       data = splitProfileData(data);
+      console.log(data);
       dispatch(profileDataActions.setProfileData(data.profileData));
       dispatch(exerciseStatsActions.setExerciseStats(data.exerciseStats));
     }

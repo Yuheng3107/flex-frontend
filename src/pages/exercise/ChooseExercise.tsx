@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
 
+import { useHistory } from "react-router";
+
 //ionic imports
 import {
   IonContent,
   IonPage,
-  IonItem
+  IonItem,
+  IonButton,
+  IonIcon
 } from "@ionic/react";
+
+import { addCircleOutline, addOutline } from "ionicons/icons";
 
 //redux imports
 import { useAppSelector } from "../../store/hooks";
@@ -17,34 +23,22 @@ import { backend } from "../../App";
 import ExerciseCard from "../../components/Exercise/ExerciseCard";
 import WorkoutCard from "../../components/Exercise/workout/WorkoutCard";
 
+import AddIcon from "../../assets/svgComponents/AddIcon";
+
 //utils
 import { getExerciseListAsync, getExerciseRegimeAsync } from "../../utils/data/getExerciseData";
 
 //types
-import { ObjExerciseRegimesInfo } from "../../store/exerciseDataSlice";
-
-type ExerciseInfo = {
-  id: number;
-  likers: number[];
-  likes: number;
-  media: string;
-  name: string;
-  perfect_reps: number;
-  posted_at: "string";
-  poster: number;
-  shared_id: number;
-  shared_type: number;
-  tags: string[];
-  text: string;
-  total_reps: number;
-}
+import { ObjExerciseRegimesInfo } from "../../types/stateTypes";
+import { ExerciseData } from "../../types/stateTypes";
 
 const ChooseExercise = () => {
 
-  const [exerciseCardArray, setExerciseCardArray] = useState<ExerciseInfo[]>([]);
+  const [exerciseCardArray, setExerciseCardArray] = useState<ExerciseData[]>([]);
   const [regimeCardArray, setRegimeCardArray] = useState<any[]>([]);
   const exerciseStatsRedux = useAppSelector(state => state.exerciseStats)
   const dispatch = useAppDispatch();
+  const history = useHistory();
   useEffect(() => {
     console.log("useEffect running");
     async function getRegimesData() {
@@ -52,8 +46,10 @@ const ChooseExercise = () => {
       let regimesDataObject: ObjExerciseRegimesInfo = {};
       for (let regimeId of exerciseStatsRedux.exercise_regimes) {
         let data = await getExerciseRegimeAsync(Number(regimeId));
+        console.log(data);
         let exercisesData = await getExerciseListAsync(data.exercises);
         data.exercises = exercisesData;
+        console.log(data);
         regimesDataArray.push(data);
 
         // 'keyof...' is to overcome a typescript error
@@ -93,21 +89,28 @@ const ChooseExercise = () => {
   return (
     <IonPage>
       <IonContent fullscreen>
-        <section id="workouts-container">
-          <p>Workouts</p>
-          {regimeCardArray.map((regimeInfo) => (
-            <WorkoutCard key={regimeInfo.id} name={regimeInfo.name} likes={regimeInfo.likes} media={regimeInfo.media || samplePhoto} exercises={regimeInfo.exercises} exerciseRegimeId={regimeInfo.id} />
-          ))}
-        </section>
-        <section id="Exercises-container">
-          <p>Exercises</p>
-          <div className="flex flex-row">
-            {exerciseCardArray.map((cardInfo) => (
-              <ExerciseCard key={cardInfo.id} name={cardInfo.name} likes={cardInfo.likes} media={cardInfo.media} exerciseId={cardInfo.id} />
+        <main className="p-4">
+          <section id="workouts-container" className="mb-4">
+            <p className="text-xl mb-2 flex flex-row justify-between items-center">
+              Workouts
+              <button onClick={() => history.push("/exercise/workout/create")}>
+                <IonIcon color="primary" size="large" icon={addCircleOutline}></IonIcon>
+              </button>
+            </p>
+            {regimeCardArray.map((regimeInfo) => (
+              <WorkoutCard key={regimeInfo.id} name={regimeInfo.name} likes={regimeInfo.likes} media={regimeInfo.media || samplePhoto} exercises={regimeInfo.exercises} exerciseRegimeId={regimeInfo.id} />
             ))}
-          </div>
+          </section>
+          <section id="Exercises-container">
+            <p className="text-xl mb-2">Exercises</p>
+            <div className="flex flex-row">
+              {exerciseCardArray.map((cardInfo) => (
+                <ExerciseCard key={cardInfo.id} name={cardInfo.name} likes={cardInfo.likes} media={cardInfo.media} exerciseId={cardInfo.id} />
+              ))}
+            </div>
 
-        </section>
+          </section>
+        </main>
       </IonContent>
     </IonPage>
   );
