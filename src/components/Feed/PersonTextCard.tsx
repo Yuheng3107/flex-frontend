@@ -8,7 +8,7 @@ import React, { useState, useEffect } from "react";
 import { useAppSelector } from "../../store/hooks";
 
 import { backend } from "../../App";
-import { UserPostData, ProfileData, CommunityData } from "../../types/stateTypes";
+import { UserPostData, ProfileData, CommunityData, PostType } from "../../types/stateTypes";
 import { timeSince } from "../../utils/generalUtils";
 import { likePostAsync,unlikePostAsync } from "../../utils/data/postData";
 
@@ -22,15 +22,16 @@ import {
 type PostProps = {
   postData: UserPostData;
   profileData: ProfileData;
-  communityData: CommunityData;
+  communityData: CommunityData | null;
+  isLiked: Boolean;
 };
 
-const PersonTextCard = ({ postData, profileData, communityData }: PostProps) => {
+const PersonTextCard = ({ postData, profileData, communityData, isLiked }: PostProps) => {
   const profileDataRedux = useAppSelector((state) => state.profile.profileData);
-  const [imageUrl, setImageUrl] = useState("");
-  const [mediaUrl, setMediaUrl] = useState("");
+  const [imageUrl, setImageUrl] = useState('');
+  const [mediaUrl, setMediaUrl] = useState('');
   const [hasLiked, setHasLiked] = useState(false);
-  const [postType, setPostType] = useState(15);
+  const [postType, setPostType] = useState<PostType>('user');
   const postDate = new Date(postData.posted_at);
 
   useEffect(() => {
@@ -40,9 +41,9 @@ const PersonTextCard = ({ postData, profileData, communityData }: PostProps) => 
     if (postData?.media) {
       setMediaUrl(backend.concat(postData.media));
     }
-    if (postData?.community) setPostType(16);
-    if (postData?.title === undefined) setPostType(17);
-    if (postData.likers.includes(profileDataRedux.id)) setHasLiked(true);
+    if (isLiked) setHasLiked(true);
+    if (postData?.community) setPostType('community');
+    if (postData?.title === undefined) setPostType('comment');
   }, [profileData?.profile_photo, profileDataRedux])
 
   const likePost = async () => { 
@@ -74,12 +75,12 @@ const PersonTextCard = ({ postData, profileData, communityData }: PostProps) => 
               className="flex flex-row items-center text-sm text-gray-700"
             >
               <span id="post-place">
-                {postType === 15 ? 
+                {postType === 'user' ? 
                   <IonRouterLink className="text-gray-700" routerLink={`/home/profile/${profileData.id}`} routerDirection="forward">
                     Profile
                   </IonRouterLink>
-                : postType === 16 ?
-                  <IonRouterLink className="text-gray-700" routerLink={`/home/community/${communityData.id}`} routerDirection="forward">
+                : postType === 'community' ?
+                  <IonRouterLink className="text-gray-700" routerLink={`/home/community/${communityData?.id}`} routerDirection="forward">
                     {communityData?.name}
                   </IonRouterLink>
                 : "Comment"
@@ -91,9 +92,9 @@ const PersonTextCard = ({ postData, profileData, communityData }: PostProps) => 
         </div>
         <button id="menu-button"></button>
       </div>
-      <IonRouterLink routerLink={ postType === 15 ? 
+      <IonRouterLink routerLink={ postType === 'user' ? 
         `/home/post/${postData.id}`
-      : postType === 16?
+      : postType === 'community'?
         `/home/community/post/${postData.id}`
       : undefined
       } id="content" className="mb-2">

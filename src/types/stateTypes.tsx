@@ -42,7 +42,6 @@ export type UserPostData = {
   poster: number;
   posted_at: string;
   likes: number;
-  likers: number[];
   text: string;
   title: string;
   community: number | null;
@@ -55,9 +54,8 @@ export const emptyUserPostData = {
   poster: 0,
   posted_at: "",
   likes: 0,
-  likers: [],
-  text: "Lorem Ipsum",
-  title: "Ipsum Lorem",
+  text: "",
+  title: "Loading",
   community: null,
   media: "",
   comments: [],
@@ -97,7 +95,6 @@ export const emptyExerciseStats = {
 //An object containing the exercise's details like id, name, and description
 export type ExerciseData = {
   id: number;
-  likers: number[];
   likes: number;
   media: string;
   name: string;
@@ -114,7 +111,6 @@ export type ExerciseData = {
 
 export const emptyExerciseData = {
   id: 0,
-  likers: [0],
   likes: 0,
   media: "",
   name: "",
@@ -143,7 +139,6 @@ export type CommunityData = {
 export interface ExerciseRegime {
   exercises: any[];
   id: 0;
-  likers: [];
   media: "";
   name: "";
   posted_at: "";
@@ -159,7 +154,6 @@ export interface ExerciseRegime {
 export const emptyExerciseRegime: ExerciseRegime = {
   exercises: [],
   id: 0,
-  likers: [],
   media: "",
   name: "",
   posted_at: "",
@@ -184,22 +178,19 @@ export const emptyExerciseRegimeInfo: ExerciseRegimeInfo = [emptyExerciseRegimeI
 
 export interface ObjExerciseRegimesInfo {
   [key: string]: {
-    exercises: any[];
-    id: 0;
-    likers: [];
-    media: "";
-    name: "";
-    posted_at: "";
-    poster: 0;
-    shared_id: 0;
-    shared_type: 0;
-    tags: [];
-    text: "";
-    times_completed: 0
+      exercises: any[];
+      id: 0;
+      media: "";
+      name: "";
+      posted_at: "";
+      poster: 0;
+      shared_id: 0;
+      shared_type: 0;
+      tags: [];
+      text: "";
+      times_completed: 0
   }
 }
-
-
 
 export const emptyObjExerciseRegimes: ObjExerciseRegimesInfo = {
   0: emptyExerciseRegime
@@ -228,3 +219,5 @@ export const invalidCommunityData = {
   privacy_level: 0,
   member_count: 0,
 };
+
+export type PostType = 'user' | 'community' | 'comment';

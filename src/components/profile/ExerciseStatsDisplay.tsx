@@ -69,16 +69,9 @@ const ExerciseStatsDisplay = ({exerciseStats}: ExerciseStatsDisplayProps) => {
             <span className="text-sm font-semibold">{exerciseStats?.favorite_exercise_regime?.times_completed === null ? "0" : exerciseStats?.favorite_exercise_regime?.times_completed}</span>
             <span className="text-xs"> Times</span>
           </div>
-          {/*
-          <div>
-            <span className="text-sm font-semibold">11</span>
-            <span className="text-xs"> hrs </span>
-            <span className="text-sm font-semibold">42</span>
-            <span className="text-xs"> mins</span>
-          </div>
-          */}
         </div>
       </div>
+      {/*
       <div className="flex flex-row justify-evenly mt-2">
         <div
           id="breakdown"
@@ -87,7 +80,9 @@ const ExerciseStatsDisplay = ({exerciseStats}: ExerciseStatsDisplayProps) => {
           <span className="text-xs">Exercise Breakdown</span>
           <span className="text-3xl">IMAGE HERE</span>
         </div>
-      </div>
+      </div>  
+              */}
+      
     </div>
   );
 };
