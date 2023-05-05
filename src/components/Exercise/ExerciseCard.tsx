@@ -22,7 +22,7 @@ export type ExerciseCardProps = {
 
 function ExerciseCard({ className, name, likes, media, exerciseId }: ExerciseCardProps) {
     const history = useHistory();
-    return <div className={`${className} relative bg-zinc-200 rounded-xl m-3 flex flex-col justify-between h-56 w-44 overflow-hidden`} >
+    return <div className={`${className} relative bg-zinc-200 rounded-xl flex flex-col justify-between h-56 w-44 overflow-hidden`} >
         <img className="absolute w-full h-full object-cover z-0 grayscale contrast-75 brightness-75" alt="card background image"
             src={backend.concat(media)}></img>
         <p className="text-left p-3 text-2xl z-10 text-white">{name}</p>

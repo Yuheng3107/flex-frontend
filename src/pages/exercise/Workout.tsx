@@ -22,7 +22,7 @@ import VideoFeed from "../../components/Exercise/video";
 import { getExerciseRegimeWithExercisesAsync } from "../../utils/data/getExerciseData";
 
 //types
-import { ExerciseRegimeInfo, emptyExerciseRegime } from "../../store/exerciseDataSlice";
+import { ExerciseRegimeInfo, emptyExerciseRegime } from "../../types/stateTypes";
 
 import { ExerciseData } from "../../types/stateTypes";
 //others

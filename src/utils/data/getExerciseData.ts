@@ -1,5 +1,5 @@
 import { backend } from "../../App";
-import { ExerciseRegimeInfo, emptyExerciseRegime } from "../../store/exerciseDataSlice";
+import { ExerciseRegimeInfo, emptyExerciseRegime } from "../../types/stateTypes";
 
 export const getExerciseAsync = async function (pk: Number) {
   try {
@@ -38,6 +38,7 @@ export const getExerciseListAsync = async function (pkArr: Number[]) {
   }
 }
 
+//Fetch all the exercises in the db
 export async function getAllExercisesAsync() {
   try {
     const response = await fetch(backend.concat('/exercises/exercise/list'), {

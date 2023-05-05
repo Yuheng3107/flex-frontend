@@ -139,6 +139,59 @@ export type CommunityData = {
   member_count: number;
 };
 
+export interface ExerciseRegimeInfo {
+  exercises: any[];
+  id: 0;
+  likers: [];
+  media: "";
+  name: "";
+  posted_at: "";
+  poster: 0;
+  shared_id: 0;
+  shared_type: 0;
+  tags: [];
+  text: "";
+  times_completed: 0
+
+}
+
+export const emptyExerciseRegime: ExerciseRegimeInfo = {
+  exercises: [],
+  id: 0,
+  likers: [],
+  media: "",
+  name: "",
+  posted_at: "",
+  poster: 0,
+  shared_id: 0,
+  shared_type: 0,
+  tags: [],
+  text: "",
+  times_completed: 0
+}
+export interface ObjExerciseRegimesInfo {
+  [key: string]: {
+      exercises: any[];
+      id: 0;
+      likers: [];
+      media: "";
+      name: "";
+      posted_at: "";
+      poster: 0;
+      shared_id: 0;
+      shared_type: 0;
+      tags: [];
+      text: "";
+      times_completed: 0
+  }
+}
+
+
+
+export const emptyObjExerciseRegimes: ObjExerciseRegimesInfo = {
+  0: emptyExerciseRegime
+}
+
 export const emptyCommunityData = {
   id: 0,
   name: "",
