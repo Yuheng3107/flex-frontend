@@ -13,13 +13,18 @@ export const createExerciseRegimeAsync = async (formDataJson: string, imageFormD
             credentials: "include",
             body: formDataJson,
         })
-        let pk = await res.json();
+        let pk: number = await res.json();
 
-        
         console.log(res);
         console.log(pk);
-        let imageUpdateRes = await updateExerciseRegimeImageAsync(pk, imageFormData);
-        console.log(imageUpdateRes);
+        if (res.ok) {
+            res = await updateExerciseRegimeImageAsync(pk, imageFormData);
+            console.log(res);
+        }
+        return {
+            pk: pk,
+            res
+        }
 
     } catch (err) {
         console.log(err);

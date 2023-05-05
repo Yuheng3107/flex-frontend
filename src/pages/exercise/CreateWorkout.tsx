@@ -35,6 +35,7 @@ import {
     useIonToast
 } from '@ionic/react';
 import { exercises } from '../../App';
+import { useHistory } from 'react-router';
 
 function CreateWorkout() {
     const [allExercises, setAllExercises] = useState([emptyExerciseData]);
@@ -44,6 +45,8 @@ function CreateWorkout() {
     const [nameInputProps, nameInputValue] = useFormInput();
     const [descriptionInputProps, descriptionInputValue] = useFormInput();
     const mediaInputRef = useRef<HTMLInputElement>(null);
+
+    const history = useHistory();
 
     const [present] = useIonToast();
     useEffect(() => {
@@ -58,7 +61,7 @@ function CreateWorkout() {
     let exerciseSelects = [];
     for (let i = 0; i < numberOfExercises; i++) {
         exerciseSelects.push(<IonItem key={i} >
-            <IonLabel position="stacked">Exercise {i + 1} <button>help</button></IonLabel>
+            <IonLabel position="stacked">Exercise {i + 1}</IonLabel>
             <IonSelect interface="popover" placeholder="Exercise Exercise"
                 onIonChange={(e) => {
                     setExercisesArr(prev => {
@@ -80,10 +83,11 @@ function CreateWorkout() {
         setNumberOfExercises(prev => prev + 1);
     }
 
-    function submitHandler() {
+    async function submitHandler() {
         let errorFields = [];
-        const formData = new FormData();
-        const imageFormData = new FormData();
+        let imageTooLarge = false;
+
+        // Check all the fields are filled in
         if (nameInputValue.trim() === "") {
             errorFields.push("name");
         }
@@ -91,6 +95,7 @@ function CreateWorkout() {
             errorFields.push("description")
         }
         if (mediaInputRef.current!.files !== null) { //type guard to ensure that "files" isn't null
+            console.log(mediaInputRef.current!.files)
             if (mediaInputRef.current!.files.length <= 0) {
                 errorFields.push("image")
             }
@@ -100,25 +105,34 @@ function CreateWorkout() {
         }
         console.log(errorFields);
 
-
+        //show toast if there are empty fields
         if (errorFields.length > 0) {
-            let errorMessage = `${errorFields} cannot be empty!`
+            // showing ion toast for missing fields
+            let errorMessage = ""
+            for (let i = 0; i < errorFields.length; i++) errorMessage.concat(`${errorFields[i]}, `)
+            errorMessage.concat("cannot be empty!");
             present({
                 message: errorMessage,
                 duration: 1000,
                 position: "top"
             })
             return;
-        } else {
-            if (mediaInputRef.current!.files !== null && mediaInputRef.current!.files[0] !== undefined) { //type guard to ensure that the file isn't undefined
-                imageFormData.append("media", mediaInputRef.current!.files[0])
-            }
-            let formDataJson = JSON.stringify({
-                name: nameInputValue,
-                text: descriptionInputValue,
-                exercises: exercisesArr
-            })
-            createExerciseRegimeAsync(formDataJson, imageFormData);
+        }
+
+        //make imageFormData
+        const imageFormData = new FormData();
+        if (mediaInputRef.current!.files !== null && mediaInputRef.current!.files[0] !== undefined) { //type guard to ensure that the file isn't undefined
+            imageFormData.append("media", mediaInputRef.current!.files[0])
+        }
+        //make JSON for other fields
+        let formDataJson = JSON.stringify({
+            name: nameInputValue,
+            text: descriptionInputValue,
+            exercises: exercisesArr
+        })
+        let results = await createExerciseRegimeAsync(formDataJson, imageFormData);
+        if (results !== undefined && results.res !== undefined && results.res.ok) {
+            history.push(`/exercise/workout/${results.pk}`);
         }
     }
 
@@ -147,11 +161,22 @@ function CreateWorkout() {
                         </IonItem>
                         <IonItem>
                             <IonLabel position="stacked">Description</IonLabel>
-                            <input className="bg-transparent focus:outline-none w-full" type="text" placeholder="Enter Name" {...descriptionInputProps} />
+                            <input className="bg-transparent focus:outline-none w-full" type="text" placeholder="Enter Description" {...descriptionInputProps} />
                         </IonItem>
                         <IonItem>
                             <IonLabel position="stacked">Banner Image</IonLabel>
-                            <input type="file" ref={mediaInputRef} onChange={(e) => console.log(mediaInputRef.current?.files)} />
+                            <input type="file" ref={mediaInputRef} onChange={(e) => {
+                                if (mediaInputRef.current!.files !== null && mediaInputRef.current!.files.length > 0) {
+                                    if (mediaInputRef.current!.files[0].size > 10000000) {
+                                        e.target.value = "";
+                                        present({
+                                            message: "Image cannot be larger than 10mb!",
+                                            duration: 1000,
+                                            position: "top"
+                                        })
+                                    }
+                                };
+                            }} />
                         </IonItem>
                         {exerciseSelects.map(item => item)}
                         <IonButton disabled={numberOfExercises >= 30 ? true : false} onClick={addExerciseHandler} fill="clear">
