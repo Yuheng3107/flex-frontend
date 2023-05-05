@@ -13,7 +13,7 @@ import { emptyExerciseData } from '../../types/stateTypes';
 import { useFormInput } from '../../customHooks/useFormInput';
 
 //ionic
-import { add, checkmarkCircleOutline, checkmarkOutline } from 'ionicons/icons';
+import { add, caretBackOutline, caretForwardOutline, checkmarkOutline } from 'ionicons/icons';
 import {
     IonPage,
     IonContent,
@@ -41,6 +41,7 @@ function CreateWorkout() {
     const [allExercises, setAllExercises] = useState([emptyExerciseData]);
     const [numberOfExercises, setNumberOfExercises] = useState(1);
     const [exercisesArr, setExercisesArr] = useState<number[]>([]);
+    const [exercisesRepsArr, setExercisesRepsArr] = useState<number[]>([1]);
 
     const [nameInputProps, nameInputValue] = useFormInput();
     const [descriptionInputProps, descriptionInputValue] = useFormInput();
@@ -60,27 +61,56 @@ function CreateWorkout() {
 
     let exerciseSelects = [];
     for (let i = 0; i < numberOfExercises; i++) {
-        exerciseSelects.push(<IonItem key={i} >
-            <IonLabel position="stacked">Exercise {i + 1}</IonLabel>
-            <IonSelect interface="popover" placeholder="Exercise Exercise"
-                onIonChange={(e) => {
-                    setExercisesArr(prev => {
+        exerciseSelects.push(<div className="flex flex-row w-full">
+            <div className="w-3/4">
+                <IonItem key={i} >
+                    <IonLabel position="stacked">Exercise {i + 1}</IonLabel>
+                    <IonSelect interface="popover" placeholder="Exercise"
+                        onIonChange={(e) => {
+                            setExercisesArr(prev => {
+                                let arr = [...prev];
+                                arr[i] = e.target.value;
+                                console.log(arr);
+                                return arr;
+                            })
+                        }}>
+                        {allExercises.map(item => {
+                            return <IonSelectOption key={item.id} value={item.id}>{item.name}</IonSelectOption>
+                        })}
+                        {/* <IonSelectOption key={-1} value={-1}>Remove</IonSelectOption> */}
+                    </IonSelect>
+                </IonItem>
+            </div>
+
+            <div className="flex flex-row items-end justify-center pb-2 w-1/4 ml-2">
+                <button type="button" className="px-1 py-2 bg-gray-200 rounded-md flex justify-center items-center" onClick={() => {
+                    if (exercisesRepsArr[i] >= 2) setExercisesRepsArr(prev => {
                         let arr = [...prev];
-                        arr[i] = e.target.value;
+                        arr[i] = arr[i] - 1;
                         console.log(arr);
                         return arr;
                     })
                 }}>
-                {allExercises.map(item => {
-                    return <IonSelectOption key={item.id} value={item.id}>{item.name}</IonSelectOption>
-                })}
-                {/* <IonSelectOption key={-1} value={-1}>Remove</IonSelectOption> */}
-            </IonSelect>
-        </IonItem>);
+                    <IonIcon size="small" icon={caretBackOutline}></IonIcon>
+                </button>
+                <span className="text-2xl mx-3">{exercisesRepsArr[i]}</span>
+                <button type="button" className="px-1 py-2 bg-gray-200 rounded-md flex justify-center items-center" onClick={() => {
+                    setExercisesRepsArr(prev => {
+                        let arr = [...prev];
+                        arr[i] = arr[i] + 1;
+                        console.log(arr);
+                        return arr;
+                    })
+                }}>
+                    <IonIcon size="small" icon={caretForwardOutline}></IonIcon>
+                </button>
+            </div>
+        </div>)
     }
 
     function addExerciseHandler() {
         setNumberOfExercises(prev => prev + 1);
+        setExercisesRepsArr(prev => [...prev, 1])
     }
 
     async function submitHandler() {
@@ -130,7 +160,10 @@ function CreateWorkout() {
             text: descriptionInputValue,
             exercises: exercisesArr
         })
-        let results = await createExerciseRegimeAsync(formDataJson, imageFormData);
+
+        let set_count = [];
+        for (let el of exercisesArr) set_count.push(0);
+        let results = await createExerciseRegimeAsync(formDataJson, imageFormData, { exercises: exercisesArr, rep_count: exercisesRepsArr, set_count: set_count });
         if (results !== undefined && results.res !== undefined && results.res.ok) {
             history.push(`/exercise/workout/${results.pk}`);
         }

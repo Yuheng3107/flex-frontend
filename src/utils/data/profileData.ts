@@ -120,7 +120,7 @@ export const getFavoriteExerciseRegimeAsync = async function (pk:Number) {
   }
 }
 
-//Gets the user's normal profile data plus favorite exercise and exercise regime
+//Gets the user's normal profile data plus favorite exercise and exercise regimes
 //Used for other people's profile, not for the user himself
 export const getAllProfileData = async function (pk:Number) {
   let data = await getOtherProfileDataAsync(pk);
