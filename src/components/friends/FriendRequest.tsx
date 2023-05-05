@@ -49,17 +49,18 @@ const FriendRequest = ({ profileId }: FriendRequestProps) => {
         <IonRouterLink routerLink={`/home/profile/${profileData.id}`} routerDirection="forward" id="username" className="font-semibold text-black">
           {profileData?.username}
         </IonRouterLink>
+        { requestState === 0 ?
+          <div>
+            <IonButton onClick={acceptRequest} className="text-xs">Accept</IonButton>
+            <IonButton onClick={declineRequest} className="text-xs">Decline</IonButton>
+          </div>
+        : requestState === 1 ?
+          <div>  Request Accepted.</div>
+        :
+          <div>  Request Declined.</div>
+        }
       </div>
-      { requestState === 0 ?
-        <div>
-          <IonButton onClick={acceptRequest}>Accept</IonButton>
-          <IonButton onClick={declineRequest}>Decline</IonButton>
-        </div>
-      : requestState === 1 ?
-        <div>Request Accepted.</div>
-      :
-        <div>Request Declined.</div>
-      }
+      
     </div>
   );
 };

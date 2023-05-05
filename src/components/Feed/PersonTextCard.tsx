@@ -129,12 +129,15 @@ const PersonTextCard = ({ postData, profileData, communityData, isLiked }: PostP
           </button>
         }
         <p>{postData.likes}</p>
+        {/*
         <button>
           <CommentIcon className="w-8 h-8" />
         </button>
         <button>
           <BookmarkIcon className="w-8 h-8" />
         </button>
+         */}
+        
       </div>
     </div>
   );

@@ -27,5 +27,4 @@ function CommunityFeed({ postArray, profileArray, communityData, likeArray, load
     </main>
 }
 
-
 export default CommunityFeed;

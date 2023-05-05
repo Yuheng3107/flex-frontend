@@ -50,9 +50,9 @@ const SentFriendRequest = ({ profileId }: SentFriendRequestProps) => {
           </IonRouterLink>
         </div>
       { requestSent ?
-        <IonButton onClick={deleteRequest}>Delete</IonButton>
+        <IonButton  className="text-xs" onClick={deleteRequest}>Delete</IonButton>
       :
-        <IonButton onClick={sendRequest}>Resend</IonButton>
+        <IonButton  className="text-xs" onClick={sendRequest}>Resend</IonButton>
       }
     </div>
   );

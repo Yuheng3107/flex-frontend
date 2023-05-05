@@ -45,7 +45,7 @@ function FriendCard({ profileId }:FriendCardProps) {
             {profileData?.username}
           </IonRouterLink>
         </div>
-        <IonButton onClick={removeFriend}>{ isFriend ? "Remove Friend" : "Friend Removed"}</IonButton>
+        <IonButton  className="text-xs" onClick={removeFriend}>{ isFriend ? "Remove Friend" : "Friend Removed"}</IonButton>
       </div>
     );
 }
