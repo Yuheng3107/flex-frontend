@@ -8,7 +8,7 @@ import React, { useState, useEffect } from "react";
 import { useAppSelector } from "../../store/hooks";
 
 import { backend } from "../../App";
-import { UserPostData, ProfileData, CommunityData } from "../../types/stateTypes";
+import { UserPostData, ProfileData, CommunityData, PostType } from "../../types/stateTypes";
 import { timeSince } from "../../utils/generalUtils";
 import { likePostAsync,unlikePostAsync } from "../../utils/data/postData";
 
@@ -23,14 +23,15 @@ type PostProps = {
   postData: UserPostData;
   profileData: ProfileData;
   communityData: CommunityData | null;
+  isLiked: Boolean;
 };
 
-const PersonTextCard = ({ postData, profileData, communityData }: PostProps) => {
+const PersonTextCard = ({ postData, profileData, communityData, isLiked }: PostProps) => {
   const profileDataRedux = useAppSelector((state) => state.profile.profileData);
   const [imageUrl, setImageUrl] = useState('');
   const [mediaUrl, setMediaUrl] = useState('');
   const [hasLiked, setHasLiked] = useState(false);
-  const [postType, setPostType] = useState('user');
+  const [postType, setPostType] = useState<PostType>('user');
   const postDate = new Date(postData.posted_at);
 
   useEffect(() => {
@@ -40,9 +41,9 @@ const PersonTextCard = ({ postData, profileData, communityData }: PostProps) => 
     if (postData?.media) {
       setMediaUrl(backend.concat(postData.media));
     }
+    if (isLiked) setHasLiked(true);
     if (postData?.community) setPostType('community');
     if (postData?.title === undefined) setPostType('comment');
-    if (postData.likers.includes(profileDataRedux.id)) setHasLiked(true);
   }, [profileData?.profile_photo, profileDataRedux])
 
   const likePost = async () => { 

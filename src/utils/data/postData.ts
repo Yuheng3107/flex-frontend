@@ -1,4 +1,5 @@
 import { backend } from "../../App";
+import { PostType } from "../../types/stateTypes";
 
 export const getPostAsync = async function (post_id:number) {
   try {
@@ -143,9 +144,8 @@ export const createCommunityPostAsync = async function (community:number, postTi
   }
 }
 
-export const createCommentAsync = async function (parent_type: string, parent_id: number, postTitleInput:string, postTextInput:string) {
+export const createCommentAsync = async function (parent_type: PostType, parent_id: number, postTitleInput:string, postTextInput:string) {
   // check for valid parent type
-  if (parent_type !== 'feed_post' && parent_type !== 'comment') return;
   try {
     let res = await fetch(`${backend}/feed/comment/create`, {
       method: "POST",
@@ -155,9 +155,8 @@ export const createCommentAsync = async function (parent_type: string, parent_id
       },
       credentials: "include",
       body: JSON.stringify({
-        title: postTitleInput,
         text: postTextInput,
-        parent_type: parent_type,
+        parent_type: parent_type === 'comment' ? 'comment' : 'feedpost',
         parent_id: parent_id,
       }),
     })
@@ -167,8 +166,7 @@ export const createCommentAsync = async function (parent_type: string, parent_id
   }
 }
 
-export const likePostAsync = async function (post_type: string, id: number) {
-  if (post_type !== 'user' && post_type !== 'community' && post_type !== 'comment') return;
+export const likePostAsync = async function (post_type: PostType, id: number) {
   let url:RequestInfo = "";
   if (post_type === 'user'|| post_type === 'community') url=`${backend}/feed/feed_post/update/likes`;
   if (post_type === 'comment') url=`${backend}/feed/comment/update/likes`;
@@ -190,8 +188,7 @@ export const likePostAsync = async function (post_type: string, id: number) {
   }
 }
 
-export const unlikePostAsync = async function (post_type: string, id: number) {
-  if (post_type !== 'user' && post_type !== 'community' && post_type !== 'comment') return;
+export const unlikePostAsync = async function (post_type: PostType, id: number) {
   let url:RequestInfo = "";
   if (post_type === 'user' || post_type === 'community') url=`${backend}/feed/feed_post/delete/likes/${id}`;
   if (post_type === 'comment') url=`${backend}/feed/comment/delete/likes/${id}`;
@@ -205,6 +202,29 @@ export const unlikePostAsync = async function (post_type: string, id: number) {
       credentials: "include",
     })
     return res;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const getLikesAsync = async function (post_type: PostType, ids: number[]) {
+  let url:RequestInfo = "";
+  if (post_type === 'user'|| post_type === 'community') url=`${backend}/feed/feed_post/list/likes`;
+  if (post_type === 'comment') url=`${backend}/feed/comment/list/likes`;
+  try {
+    let res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]),
+        "Content-type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        ids: ids,
+      }),
+    })
+    let data = await res.json();
+    return data;
   } catch (error) {
     console.log(error);
   }

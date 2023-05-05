@@ -11,6 +11,7 @@ type PostProps = {
     postArray: any[],
     profileArray: any[],
     communityArray: any[],
+    likeArray: any[],
   };
   loadData: () => void;
 };
@@ -27,9 +28,10 @@ const Posts = ({ posts, loadData }: PostProps) => {
         posts.postArray.map((item, i) => (
           <PersonTextCard 
             postData={item} 
-            profileData={posts.profileArray.length === 1 ? posts.profileArray[0]:posts.profileArray[i]} 
+            profileData={posts.profileArray.length === 1 ? posts.profileArray[0]:posts.profileArray[i] } 
             communityData={posts.communityArray.length === 1 ? posts.communityArray[0]:posts.communityArray[i] } 
             key={item.id}
+            isLiked={posts.likeArray.includes(item.id) }
           />
       ))}
       <IonButton onClick={loadData}>Load Posts</IonButton>

@@ -186,8 +186,6 @@ export interface ObjExerciseRegimesInfo {
   }
 }
 
-
-
 export const emptyObjExerciseRegimes: ObjExerciseRegimesInfo = {
   0: emptyExerciseRegime
 }
@@ -215,3 +213,5 @@ export const invalidCommunityData = {
   privacy_level: 0,
   member_count: 0,
 };
+
+export type PostType = 'user' | 'community' | 'comment';
