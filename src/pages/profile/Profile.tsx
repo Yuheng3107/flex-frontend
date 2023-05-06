@@ -6,10 +6,10 @@ import { profileDataActions } from '../../store/profileDataSlice';
 
 //utils imports
 import checkLoginStatus from "../../utils/checkLogin";
-import { getLikesAsync, getUserPostsAsync } from "../../utils/data/postData";
+import { getAllPostData, getLikesAsync, getUserPostsAsync } from "../../utils/data/postData";
 
 import { googleLogout } from "@react-oauth/google";
-import { emptyProfileData } from "../../types/stateTypes";
+import { PostArray, emptyPostArray, emptyProfileData } from "../../types/stateTypes";
 
 
 //ionic imports
@@ -32,8 +32,7 @@ type ProfileProps = {
 }
 
 const Tab3 = ({ }: ProfileProps) => {
-  const [userPostArray, setUserPostArray] = useState([]);
-  const [likeArray, setLikeArray] = useState<any[]>([]);
+  const [posts, setPosts] = useState<PostArray>(emptyPostArray);;
   const [loginStatus, setLoginStatus] = useState(false);
   const [currentUserPostSet, setCurrentUserPostSet] = useState(0);
   const dispatch = useAppDispatch();
@@ -60,17 +59,7 @@ const Tab3 = ({ }: ProfileProps) => {
     console.log(`set:${currentUserPostSet}`);
     console.log(postArray);
 
-    // split data
-    let postPks: number[] = [];
-    for (let i = 0; i < postArray.length; i++) {
-        postPks.push(postArray[i].id);
-    }
-
-    // likes
-    let likes = await getLikesAsync('user', postPks);
-
-    setUserPostArray(userPostArray.concat(postArray));
-    setLikeArray(likeArray.concat(likes));
+    setPosts(await getAllPostData('user', postArray, posts, profileDataRedux, null))
     setCurrentUserPostSet(currentUserPostSet + 1);
   };
 
@@ -81,7 +70,7 @@ const Tab3 = ({ }: ProfileProps) => {
           <IonIcon icon={cog} />
         </IonButton>
         {loginStatus ?
-          <UserProfileTemplate profileData={profileDataRedux} exerciseStats={exerciseStatsRedux} userPostArray={userPostArray} likeArray={likeArray} loadUserPostData={loadUserPostData} />
+          <UserProfileTemplate profileData={profileDataRedux} exerciseStats={exerciseStatsRedux} posts={posts} loadUserPostData={loadUserPostData} />
           :
           <Login setLoginStatus={setLoginStatus} />
         }

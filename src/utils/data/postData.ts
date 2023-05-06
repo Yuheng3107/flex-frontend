@@ -1,5 +1,7 @@
 import { backend } from "../../App";
-import { PostType } from "../../types/stateTypes";
+import { PostType, PostArray, ProfileData, CommunityData } from "../../types/stateTypes";
+import { getManyOtherProfileDataAsync } from "./profileData";
+import { getCommunityListAsync } from "./communityData";
 
 export const getPostAsync = async function (post_id:number) {
   try {
@@ -232,4 +234,54 @@ export const getLikesAsync = async function (post_type: PostType, ids: number[])
     let data = await res.json();
     return data;
   } catch (error) { console.log(error); };
+}
+
+export const getAllPostData = async function (post_type: PostType, newPosts: any[], currentPosts: PostArray, profileData: ProfileData | undefined, communityData: CommunityData | undefined | null) {
+  console.log(currentPosts);
+
+  // profile
+  let profileArray:any[] = [];
+  if (profileData === undefined) {
+    let profiles: number[] = [];
+    for (let i = 0; i < newPosts.length; i++) profiles.push(newPosts[i].poster);
+
+    profileArray = await getManyOtherProfileDataAsync(profiles);
+    const profileMap = profileArray.reduce((acc: any, profile: any) => {
+      return {
+        ...acc,
+        [profile.id]: profile,
+      };
+    }, {});
+    for (let i = 0; i < newPosts.length; i++) profileArray[i] = profileMap[newPosts[i].poster];  
+  }
+  
+  // community
+  let communityArray:any[] = [];
+  if (communityData === undefined || communityData === null) {
+    let communities: any[] = [];
+    for (let i = 0; i < newPosts.length; i++) { if (newPosts[i].community !== undefined) communities.push(newPosts[i].community); }
+
+    communityArray = await getCommunityListAsync(communities);
+    const communityMap = communityArray.reduce((acc: any, community: any) => {
+      return {
+        ...acc,
+        [community.id]: community,
+      };
+    }, {});
+    for (let i = 0; i < newPosts.length; i++) communityArray[i] = communityMap[newPosts[i].community];    
+  }
+
+  // likes
+  let postPks: number[] = [];
+  for (let i = 0; i < newPosts.length; i++) postPks.push(newPosts[i].id);
+  let likes = await getLikesAsync(post_type,postPks);
+
+  let data = {
+    postArray: currentPosts.postArray.concat(newPosts),
+    profileArray: profileData !== undefined ? [profileData] : currentPosts.profileArray.concat(profileArray),
+    communityArray: communityData !== undefined ? [communityData] : currentPosts.communityArray.concat(communityArray),
+    likeArray: currentPosts.likeArray.concat(likes)
+  }
+  console.log(data);
+  return (data);
 }

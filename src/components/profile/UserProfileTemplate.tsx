@@ -6,17 +6,16 @@ import ToggleBar from "./ToggleBar";
 import KeyProfileInfoDisplay from "./KeyProfileInfoDisplay";
 import ExerciseStatsDisplay from "./ExerciseStatsDisplay";
 import Posts from "../Feed/Posts";
-import { ProfileData, ExerciseStats } from "../../types/stateTypes";
+import { ProfileData, ExerciseStats, PostArray } from "../../types/stateTypes";
 
 type UserProfileTemplateProps = {
   profileData: ProfileData;
   exerciseStats: ExerciseStats;
-  userPostArray: any[];
-  likeArray: number[];
+  posts: PostArray;
   loadUserPostData: () => void;
 };
 
-const UserProfileTemplate = ({ profileData, exerciseStats, userPostArray, likeArray, loadUserPostData }: UserProfileTemplateProps) => {
+const UserProfileTemplate = ({ profileData, exerciseStats, posts, loadUserPostData }: UserProfileTemplateProps) => {
   useEffect(() => {
   },[])
   const [isTrend, setTrend] = useState(true);
@@ -28,12 +27,7 @@ const UserProfileTemplate = ({ profileData, exerciseStats, userPostArray, likeAr
         <ExerciseStatsDisplay exerciseStats={exerciseStats} />
         :
         <Posts 
-          posts={{
-            postArray: userPostArray,
-            profileArray: [profileData],
-            communityArray: [null],
-            likeArray: likeArray,
-          }} 
+          posts={posts}
           loadData={loadUserPostData}
           />
       }

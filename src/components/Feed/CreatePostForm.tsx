@@ -28,13 +28,13 @@ function CreatePostForm({ makePost, backUrl, isComment }: CreatePostProps ) {
     const [postTitleInput, setPostTitleInput] = useState("");
     const [postTextInput, setPostTextInput] = useState("");
     const history = useHistory();
-    const mediaInputRef = useRef<HTMLInputElement>(null);
+    const mediaInputRef = useRef<HTMLInputElement | null>(null);
 
     const [present] = useIonToast();
 
     const submitHandler = async() => {
         const imageFormData = new FormData();
-        if (mediaInputRef.current!.files !== null && mediaInputRef.current!.files[0] !== undefined) { //type guard to ensure that the file isn't undefined
+        if (mediaInputRef.current !== null && mediaInputRef.current!.files !== null && mediaInputRef.current!.files[0] !== undefined) { //type guard to ensure that the file isn't undefined
             imageFormData.append("media", mediaInputRef.current!.files[0])
         }
         let response = await makePost(postTitleInput, postTextInput, imageFormData);

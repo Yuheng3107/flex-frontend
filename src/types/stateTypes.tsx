@@ -223,3 +223,17 @@ export const invalidCommunityData = {
 };
 
 export type PostType = 'user' | 'community' | 'comment';
+
+export type PostArray = {
+  postArray: any[]; 
+  profileArray: any[]; 
+  communityArray: any[]; 
+  likeArray: any[];
+}
+
+export const emptyPostArray  = {
+  postArray: [], 
+  profileArray: [], 
+  communityArray: [], 
+  likeArray: [],
+}

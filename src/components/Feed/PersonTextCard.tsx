@@ -61,7 +61,7 @@ const PersonTextCard = ({ postData, profileData, communityData, isLiked }: PostP
         <div className="flex flex-row">
           <IonRouterLink routerLink={`/home/profile/${profileData.id}`} routerDirection="forward">
             <img
-              alt="profpic"
+              alt="prof pic"
               src={imageUrl}
               className="h-12 w-12 rounded-full object-cover"
             />
