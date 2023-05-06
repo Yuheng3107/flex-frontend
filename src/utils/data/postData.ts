@@ -236,6 +236,15 @@ export const getLikesAsync = async function (post_type: PostType, ids: number[])
   } catch (error) { console.log(error); };
 }
 
+/**
+ * Gets all the post data u cld ever want from a list of type UserPost
+ * @param post_type user, community, comment (user and community are the same actually)
+ * @param newPosts the list of now posts
+ * @param currentPosts the current posts displayed by the component
+ * @param profileData undefined if you want it to get the data, profileData if all posts are by one profile
+ * @param communityData undefined if you want it to get the data, null if all posts are user posts, communityData if all posts are in one community
+ * @returns 
+ */
 export const getAllPostData = async function (post_type: PostType, newPosts: any[], currentPosts: PostArray, profileData: ProfileData | undefined, communityData: CommunityData | undefined | null) {
   console.log(currentPosts);
 
