@@ -70,7 +70,7 @@ const PersonTextCard = ({
             routerDirection="forward"
           >
             <img
-              alt="profpic"
+              alt="prof pic"
               src={imageUrl}
               className="h-12 w-12 rounded-full object-cover"
             />
@@ -154,12 +154,15 @@ const PersonTextCard = ({
           </button>
         )}
         <p>{postData.likes}</p>
+        {/*
         <button>
           <CommentIcon className="w-8 h-8" />
         </button>
         <button>
           <BookmarkIcon className="w-8 h-8" />
         </button>
+         */}
+        
       </div>
     </div>
   );

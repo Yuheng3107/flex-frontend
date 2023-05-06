@@ -6,8 +6,8 @@ interface CreateCommunityPostProps extends RouteComponentProps<{
     communityId: string;
 }> { }
 function CreateCommunityPost({ match }: CreateCommunityPostProps) {
-    const makeCommunityPost = async (title:string, text: string) => {
-        return await createCommunityPostAsync(Number(match.params.communityId),title, text);
+    const makeCommunityPost = async (title:string, text: string, media:FormData) => {
+        return await createCommunityPostAsync(Number(match.params.communityId),title, text, media);
     }
     return <CreatePostForm makePost={makeCommunityPost} backUrl={`/home/community/${match.params.communityId}`} isComment={false}/>
 }

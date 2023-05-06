@@ -3,8 +3,8 @@ import React, { useState, useEffect } from "react";
 
 //utils imports
 import { getAllProfileData } from "../../utils/data/profileData";
-import { getUserPostsAsync, getLikesAsync } from "../../utils/data/postData";
-import { ExerciseStats, emptyExerciseStats, ProfileData, emptyProfileData } from "../../types/stateTypes";
+import { getUserPostsAsync, getLikesAsync, getAllPostData } from "../../utils/data/postData";
+import { ExerciseStats, emptyExerciseStats, ProfileData, emptyProfileData, PostArray, emptyPostArray } from "../../types/stateTypes";
 import { sendFriendRequest, deleteFriendRequest, deleteFriend } from "../../utils/data/friends";
 
 //img imports
@@ -36,8 +36,7 @@ interface OtherUserProfileProps
 const OtherUserProfile: React.FC<OtherUserProfileProps> = ({ match }) => {
     const [profileData, setProfileData] = useState<ProfileData>(emptyProfileData);
     const [exerciseStats, setExerciseStats] = useState<ExerciseStats>(emptyExerciseStats);
-    const [userPostArray, setUserPostArray] = useState<any[]>([]);
-    const [likeArray, setLikeArray] = useState<any[]>([]);
+    const [posts, setPosts] = useState<PostArray>(emptyPostArray);
     // 0 is no friend request sent, 1 is friend request sent, 2 is already friends
     const [friendStatus, setFriendStatus] = useState(0);
     const [currentUserPostSet, setCurrentUserPostSet] = useState(0);
@@ -62,16 +61,7 @@ const OtherUserProfile: React.FC<OtherUserProfileProps> = ({ match }) => {
         let postArray = await getUserPostsAsync(Number(match.params.userId), currentUserPostSet);
         console.log(`set:${currentUserPostSet}`);
         console.log(postArray);
-        // split data
-        let postPks: number[] = [];
-        for (let i = 0; i < postArray.length; i++) {
-            postPks.push(postArray[i].id);
-        }
-
-        // likes
-        let likes = await getLikesAsync('user', postPks);
-        setUserPostArray(userPostArray.concat(postArray));
-        setLikeArray(likeArray.concat(likes));
+        setPosts(await getAllPostData('user', postArray, posts, profileData, null))
         setCurrentUserPostSet(currentUserPostSet + 1);
     };
 
@@ -107,13 +97,13 @@ const OtherUserProfile: React.FC<OtherUserProfileProps> = ({ match }) => {
                     </div> 
                 :
                     <div>
-                        <UserProfileTemplate profileData={profileData} exerciseStats={exerciseStats} userPostArray={userPostArray} likeArray={likeArray} loadUserPostData={loadUserPostData}/>
+                        <UserProfileTemplate profileData={profileData} exerciseStats={exerciseStats} posts={posts} loadUserPostData={loadUserPostData}/>
                         {friendStatus === 0 ?
-                            <IonButton onClick={friendRequest}>Send Friend Request</IonButton>
+                            <IonButton onClick={friendRequest}>Request</IonButton>
                         : friendStatus === 1 ?
-                            <IonButton onClick={removeFriendRequest}>Remove Friend Request</IonButton>
+                            <IonButton onClick={removeFriendRequest}>Remove Request</IonButton>
                         : 
-                            <IonButton onClick={removeFriend}>Remove Friend</IonButton>
+                            <IonButton onClick={removeFriend}>Unfriend</IonButton>
                         }
                     </div>
                 }

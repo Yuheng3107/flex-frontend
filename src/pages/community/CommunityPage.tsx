@@ -8,7 +8,7 @@ import { Route, RouteComponentProps } from "react-router";
 import CreateCommunity from "./CreateCommunity";
 import CommunityDisplay from "./CommunityDisplay";
 import CreateCommunityPost from "./CreateCommunityPost";
-import CommunityPostPage from "./CommunityPostPage";
+import PostPage from "../post/PostPage";
 import CreateCommunityComment from "./CreateCommunityComment";
 
 interface CommunityPageProps extends RouteComponentProps<{
@@ -28,7 +28,7 @@ function CommunityPage({ match }: CommunityPageProps) {
                 return <CreateCommunityPost {...props} />;
             }} />
             <Route exact path={`${match.url}/post/:postId`} render={(props) => {
-                return <CommunityPostPage {...props} />;
+                return <PostPage {...props} />;
               }}
             />
             <Route exact path={`${match.url}/post/:postId/create`} render={(props) => {

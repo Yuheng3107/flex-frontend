@@ -19,15 +19,14 @@ import {
 import { chevronBackOutline, pencilOutline } from 'ionicons/icons';
 //Redux imports
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
-import { profileDataActions } from '../../store/profileDataSlice';
 
 
 //Component imports
 import Feed from '../../components/Feed/Feed';
-import SearchBar from '../../components/Feed/SearchBar';
 import CommunitiesList from '../../components/home/CommunitiesList';
-import { Link } from "react-router-dom";
-import AddIcon from "../../assets/svgComponents/AddIcon";
+
+//svg imports
+import SearchIcon from "../../assets/svgComponents/SearchIcon";
 type Ref = HTMLIonMenuElement
 type HomeProps = {
 
@@ -64,7 +63,10 @@ const Home = forwardRef<Ref, HomeProps>(function (props, ref) {
         <IonToolbar>
           <IonButtons slot="start">
             <IonMenuButton></IonMenuButton>
-            <SearchBar />
+            <SearchIcon className="w-6 aspect-square" />
+            <IonButton routerLink='/home/search/post'>Posts</IonButton>
+            <IonButton routerLink='/home/search/user'>Users</IonButton>
+            <IonButton routerLink='/home/search/community'>Community</IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>

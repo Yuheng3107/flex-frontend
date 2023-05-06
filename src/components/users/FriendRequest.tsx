@@ -4,29 +4,30 @@ import { IonButton, IonRouterLink } from "@ionic/react";
 import { ProfileData, emptyProfileData } from "../../types/stateTypes";
 
 import {
-  sendFriendRequest,
-  deleteFriendRequest,
+  acceptFriendRequest,
+  declineFriendRequest,
 } from "../../utils/data/friends";
 import { getOtherProfileDataAsync } from "../../utils/data/profileData";
 
 import { backend } from "../../App";
 
-type SentFriendRequestProps = {
+type FriendRequestProps = {
   profileId: number;
 };
 
-const SentFriendRequest = ({ profileId }: SentFriendRequestProps) => {
+const FriendRequest = ({ profileId }: FriendRequestProps) => {
   const [imageUrl, setImageUrl] = useState("");
   const [profileData, setProfileData] = useState<ProfileData>(emptyProfileData);
-  const [requestSent, setRequestSent] = useState(true);
+  // 0 is pending, 1 is accepted, 2 is declined
+  const [requestState, setRequestState] = useState(0);
 
-  const sendRequest = async () => {
-    let response = await sendFriendRequest(profileId);
-    if (response?.status === 200) setRequestSent(true);
+  const acceptRequest = async () => {
+    let response = await acceptFriendRequest(profileId);
+    if (response?.status === 200) setRequestState(1);
   };
-  const deleteRequest = async () => {
-    let response = await deleteFriendRequest(profileId);
-    if (response?.status === 200) setRequestSent(false);
+  const declineRequest = async () => {
+    let response = await declineFriendRequest(profileId);
+    if (response?.status === 200) setRequestState(2);
   };
   const getProfileData = async () => {
     setProfileData(await getOtherProfileDataAsync(profileId));
@@ -36,7 +37,7 @@ const SentFriendRequest = ({ profileId }: SentFriendRequestProps) => {
     if (profileData?.profile_photo) {
       setImageUrl(profileData.profile_photo);
     }
-  }, [profileData?.profile_photo, requestSent, setRequestSent]);
+  }, [profileData?.profile_photo, requestState, setRequestState]);
 
   return (
     <div className="border border-zinc-500 mt-4 p-2 flex flex-row justify-evenly items-center">
@@ -59,14 +60,33 @@ const SentFriendRequest = ({ profileId }: SentFriendRequestProps) => {
         >
           {profileData?.username}
         </IonRouterLink>
+        { requestState === 0 ?
+          <div>
+            <IonButton onClick={acceptRequest} className="text-xs">Accept</IonButton>
+            <IonButton onClick={declineRequest} className="text-xs">Decline</IonButton>
+          </div>
+        : requestState === 1 ?
+          <div>  Request Accepted.</div>
+        :
+          <div>  Request Declined.</div>
+        }
       </div>
-      {requestSent ? (
-        <IonButton onClick={deleteRequest}>Delete</IonButton>
+<<<<<<< HEAD:src/components/friends/FriendRequest.tsx
+      {requestState === 0 ? (
+        <div>
+          <IonButton onClick={acceptRequest}>Accept</IonButton>
+          <IonButton onClick={declineRequest}>Decline</IonButton>
+        </div>
+      ) : requestState === 1 ? (
+        <div>Request Accepted.</div>
       ) : (
-        <IonButton onClick={sendRequest}>Resend</IonButton>
+        <div>Request Declined.</div>
       )}
+=======
+      
+>>>>>>> dev:src/components/users/FriendRequest.tsx
     </div>
   );
 };
 
-export default SentFriendRequest;
+export default FriendRequest;

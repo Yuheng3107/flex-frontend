@@ -17,6 +17,11 @@ export const getCommunityAsync = async function (pk:Number) {
   }
 }
 
+/**
+ * Gets a list of community info
+ * @param pks array of pks
+ * @returns commmunityData[]
+ */
 export const getCommunityListAsync = async function (pks:Number[]) {
   try {
     let res = await fetch(`${backend}/community/community/list`, {
@@ -35,6 +40,29 @@ export const getCommunityListAsync = async function (pks:Number[]) {
   } catch (error) {
     console.log(error);
   }
+}
+
+/**
+ * Search for communities
+ * @param content search string
+ * @returns communityData[]
+ */
+export const getSearchCommunitiesAsync = async function (content: string) {
+  try {
+    let res = await fetch(`${backend}/community/community/search`, {
+      method: "POST",
+      credentials: "include", // include cookies in the request
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1] ),
+      },
+      body: JSON.stringify({
+        content: content,
+      })
+    })
+    let data = await res.json();
+    return data;
+  } catch (error) { console.log(error); };
 }
 
 export const joinCommunityAsync = async function (pk:Number) {

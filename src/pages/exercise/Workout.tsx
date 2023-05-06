@@ -19,14 +19,15 @@ import { RouteComponentProps } from "react-router";
 import WorkoutInfoDisplay from "../../components/Exercise/workout/WorkoutInfoDisplay";
 import VideoFeed from "../../components/Exercise/video";
 //utils
-import { getExerciseRegimeWithExercisesAsync } from "../../utils/data/getExerciseData";
+import { getExerciseRegimeWithExercisesAsync, getExerciseRegimeInfoAsync, getExerciseRegimeAsync, getExerciseListAsync } from "../../utils/data/getExerciseData";
 
 //types
-import { ExerciseRegimeInfo, emptyExerciseRegime } from "../../types/stateTypes";
+import { ExerciseRegime, ExerciseRegimeInfo, ExerciseRegimeInfoUnit, emptyExerciseRegime, emptyExerciseRegimeInfo } from "../../types/stateTypes";
 
 import { ExerciseData } from "../../types/stateTypes";
 //others
 import { backend } from "../../App";
+import getExercise from "../../utils/ExerciseAlgo/exericseAlgo";
 
 
 interface WorkoutPageProps extends RouteComponentProps<{
@@ -38,16 +39,22 @@ interface WorkoutPageProps extends RouteComponentProps<{
 function Workout({ match }: WorkoutPageProps) {
 
   const [isExercising, setIsExercising] = useState(false);
-  const [exerciseRegimeInfo, setExerciseRegimeInfo] = useState<ExerciseRegimeInfo>(emptyExerciseRegime);
-  const [displaysArr, setDisplaysArr] = useState<(String | ExerciseData)[]>(["mainInfo"]);
+  const [exerciseRegime, setExerciseRegime] = useState<ExerciseRegime>(emptyExerciseRegime);
+  const [regimeInfo, setRegimeInfo] = useState<ExerciseRegimeInfo>(emptyExerciseRegimeInfo);
+  const [displaysArr, setDisplaysArr] = useState<(string | ExerciseData)[]>(["mainInfo"]);
   const [currentDisplayIndex, setCurrentDisplayIndex] = useState<number>(0);
 
   console.log(displaysArr);
 
   useEffect(() => {
+    function sortRegimeInfoArray(arr: any[]) {
+
+    }
     async function loadExerciseRegimInfo() {
-      const data = await getExerciseRegimeWithExercisesAsync(Number(match.params.workoutId));
-      setExerciseRegimeInfo(data);
+      let regimeId = Number(match.params.workoutId);
+      const data = await getExerciseRegimeWithExercisesAsync(regimeId);
+      console.log(data);
+      setExerciseRegime(data);
       setDisplaysArr(["mainInfo"].concat(data.exercises));
     }
     loadExerciseRegimInfo();
@@ -71,13 +78,21 @@ function Workout({ match }: WorkoutPageProps) {
     Next
   </IonButton >
 
+  //typeguard function to check if the argument is of type ExerciseData
+  function typeIsExerciseData(data: string | ExerciseData): data is ExerciseData {
+    return (data as ExerciseData).reps !== undefined;
+  }
+  let currentDisplayElement = displaysArr[currentDisplayIndex];
   let currentDisplayComponent;
-  if (displaysArr[currentDisplayIndex] === "mainInfo") {
-    currentDisplayComponent = <WorkoutInfoDisplay exerciseRegimeInfo={exerciseRegimeInfo}></WorkoutInfoDisplay>;
-  } else if (displaysArr[currentDisplayIndex] !== null) {
+  if (currentDisplayElement === "mainInfo") {
+    currentDisplayComponent = <WorkoutInfoDisplay exerciseRegime={exerciseRegime}></WorkoutInfoDisplay>;
+  } else if (currentDisplayElement !== null) {
     console.log(displaysArr[currentDisplayIndex])
-    currentDisplayComponent = <VideoFeed repCountInput={2} completeExerciseButton={nextExerciseButton}
-      exerciseData={displaysArr[currentDisplayIndex]}></VideoFeed>
+    if (typeIsExerciseData(currentDisplayElement) && currentDisplayElement.reps !== undefined) {
+      currentDisplayComponent = <VideoFeed repCountInput={currentDisplayElement.reps.rep_count} completeExerciseButton={nextExerciseButton}
+        exerciseData={displaysArr[currentDisplayIndex]}></VideoFeed>
+    }
+
   }
 
 

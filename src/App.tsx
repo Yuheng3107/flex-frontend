@@ -13,20 +13,10 @@ import {
   getFavoriteExerciseAsync,
   getFavoriteExerciseRegimeAsync,
   splitProfileData,
-  getAllProfileData,
 } from "./utils/data/profileData";
 import { getExerciseRegimeAsync } from "./utils/data/getExerciseData";
 import { checkAndToggleDarkTheme } from "./utils/darkMode";
 import { toggleDarkTheme } from "./utils/darkMode";
-
-
-//type import
-import {
-  ProfileData,
-  emptyProfileData,
-  ExerciseStats,
-  emptyExerciseStats,
-} from "./types/stateTypes";
 
 // tailwind imports
 import "./theme/tailwind.css";
@@ -70,10 +60,15 @@ import "@ionic/react/css/text-alignment.css";
 import "@ionic/react/css/text-transformation.css";
 import "@ionic/react/css/flex-utils.css";
 import "@ionic/react/css/display.css";
-import OtherUserProfile from "./pages/other users/OtherUserProfile";
 
 //import styles
 import "./theme/variables.css";
+
+//import pages
+import OtherUserProfile from "./pages/other users/OtherUserProfile";
+import SearchPosts from "./pages/Home/SearchPosts";
+import SearchUsers from "./pages/Home/SearchUsers";
+import SearchCommunities from "./pages/Home/SearchCommunities";
 
 setupIonicReact();
 checkAndToggleDarkTheme();
@@ -139,31 +134,34 @@ const App: React.FC = () => {
 
             <Route path="/home/community" component={CommunityPage} />
 
-            <Route
-              exact
-              path="/home/profile/:userId"
+            <Route exact path="/home/profile/:userId"
               render={(props) => {
                 return <OtherUserProfile {...props} />;
               }}
             />
 
-            <Route
-              exact
-              path="/home/post/:postId"
+            <Route exact path="/home/post/:postId"
               render={(props) => {
                 return <PostPage {...props} />;
               }}
             />
-            <Route exact path="/home/post/create">
+            <Route path="/home/post/create">
               <CreatePost />
             </Route>
-            <Route
-              exact
-              path="/home/post/:postId/createcomment"
+            <Route exact path="/home/post/:postId/createcomment"
               render={(props) => {
                 return <CreateComment {...props} />;
               }}
             />
+            <Route path="/home/search/post">
+              <SearchPosts />
+            </Route>
+            <Route path="/home/search/user">
+              <SearchUsers />
+            </Route>
+            <Route path="/home/search/community">
+              <SearchCommunities />
+            </Route>
 
             <Route path="/profile" component={ProfilePages} />
 

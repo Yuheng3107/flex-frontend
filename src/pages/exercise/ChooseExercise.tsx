@@ -43,20 +43,16 @@ const ChooseExercise = () => {
     console.log("useEffect running");
     async function getRegimesData() {
       let regimesDataArray = [];
-      let regimesDataObject: ObjExerciseRegimesInfo = {};
       for (let regimeId of exerciseStatsRedux.exercise_regimes) {
         let data = await getExerciseRegimeAsync(Number(regimeId));
         console.log(data);
         let exercisesData = await getExerciseListAsync(data.exercises);
+        //Notes exercisesData is a list of ExerciseData WITHOUT duplicates!
         data.exercises = exercisesData;
         console.log(data);
         regimesDataArray.push(data);
 
-        // 'keyof...' is to overcome a typescript error
-        regimesDataObject[data.id as keyof typeof regimesDataObject] = data;
       }
-      console.log(regimesDataObject);
-      dispatch(exerciseDataActions.setExerciseRegimesInfo(regimesDataObject));
       setRegimeCardArray(regimesDataArray);
 
     }
@@ -97,8 +93,8 @@ const ChooseExercise = () => {
                 <IonIcon color="primary" size="large" icon={addCircleOutline}></IonIcon>
               </button>
             </p>
-            {regimeCardArray.map((regimeInfo) => (
-              <WorkoutCard key={regimeInfo.id} name={regimeInfo.name} likes={regimeInfo.likes} media={regimeInfo.media || samplePhoto} exercises={regimeInfo.exercises} exerciseRegimeId={regimeInfo.id} />
+            {regimeCardArray.map((regimeData) => (
+              <WorkoutCard key={regimeData.id} regimeData={regimeData}  />
             ))}
           </section>
           <section id="Exercises-container">

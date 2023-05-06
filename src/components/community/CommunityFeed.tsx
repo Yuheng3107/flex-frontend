@@ -1,31 +1,16 @@
 
-import React, { useState, useEffect } from "react";
-
 import Posts from "../Feed/Posts";
 
-import { CommunityData } from "../../types/stateTypes";
-
-import { backend } from "../../App";
-import { Link } from "react-router-dom";
-
+import { PostArray } from "../../types/stateTypes";
 
 type CommunityFeedProps = {
-    postArray: any[];
-    profileArray: any[];
-    communityData: CommunityData;
-    likeArray: number[];
+    posts: PostArray;
     loadData: () => void;
 }
-function CommunityFeed({ postArray, profileArray, communityData, likeArray, loadData }: CommunityFeedProps) {
+function CommunityFeed({ posts, loadData }: CommunityFeedProps) {
     return <main className="w-full relative">
-        <Posts posts={{
-            postArray: postArray,
-            profileArray: profileArray,
-            communityArray: [communityData],
-            likeArray: likeArray
-        }} loadData={loadData} />
+        <Posts posts={posts} loadData={loadData} />
     </main>
 }
-
 
 export default CommunityFeed;

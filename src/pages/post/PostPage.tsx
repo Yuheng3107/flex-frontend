@@ -2,12 +2,12 @@ import { RouteComponentProps } from "react-router";
 import React, { useState, useEffect } from "react";
 
 //utils imports
-import { getAllProfileData, getManyOtherProfileDataAsync } from "../../utils/data/profileData";
-import { getCommentsAsync, getPostAsync, getLikesAsync } from "../../utils/data/postData";
+import { getAllProfileData } from "../../utils/data/profileData";
+import { getCommentsAsync, getPostAsync, getLikesAsync, getAllPostData } from "../../utils/data/postData";
 import { getCommunityAsync } from "../../utils/data/communityData";
 
 //type imports
-import { UserPostData, emptyUserPostData, ProfileData, emptyProfileData, emptyCommunityData, CommunityData } from "../../types/stateTypes";
+import { UserPostData, emptyUserPostData, ProfileData, emptyProfileData, emptyCommunityData, CommunityData, PostArray, emptyPostArray } from "../../types/stateTypes";
 
 //img imports
 import img404 from "../../assets/img/404.png"
@@ -28,12 +28,8 @@ import {
 import { pencilOutline } from 'ionicons/icons';
 
 //component imports
-import UserProfileTemplate from "../../components/profile/UserProfileTemplate";
 import PersonTextCard from "../../components/Feed/PersonTextCard";
 import Posts from "../../components/Feed/Posts";
-
-//Redux imports
-import { useAppSelector } from '../../store/hooks';
 
 interface PostPageProps
     extends RouteComponentProps<{
@@ -41,22 +37,15 @@ interface PostPageProps
     }> {}
 
 const PostPage: React.FC<PostPageProps> = ({ match }) => {
-    // 0 is no friend request sent, 1 is friend request sent, 2 is already friends
     const [profileData, setProfileData] = useState<ProfileData>(emptyProfileData);
     const [postData, setPostData] = useState<UserPostData>(emptyUserPostData);
     const [communityData, setCommunityData] = useState<CommunityData>(emptyCommunityData);
     const [currentCommentSet, setCurrentCommentSet] = useState(0);
     const [isLiked, setIsLiked] = useState(false);
-    const [posts, setPosts] = useState<{
-        postArray: any[]; profileArray: any[]; communityArray: any[]; likeArray: any[];
-    }>({
-        postArray: [], profileArray: [], communityArray: [], likeArray: [],
-    });
+    const [posts, setPosts] = useState<PostArray>(emptyPostArray);
 
     useEffect(() => {
-        //useEffect with empty dependency array means this function will only run once right after the component is mounted
-        if (postData === emptyUserPostData) loadPostData();
-        loadComments();
+        if (postData === emptyUserPostData) loadPostData(); else loadComments();
     },[postData]);
 
     const loadPostData = async () => {
@@ -85,35 +74,10 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
         if (end > postData.comments.length) end = postData.comments.length;
         let commentArray = await getCommentsAsync(postData.comments.slice(start,end));
         commentArray.reverse();
+
         console.log(commentArray);
 
-        // split data
-        let profiles: number[] = [];
-        let postPks: number[] = [];
-        for (let i = 0; i < commentArray.length; i++) {
-            profiles.push(commentArray[i].poster);
-            postPks.push(commentArray[i].id);
-        }
-
-        // profile
-        let profileArray = await getManyOtherProfileDataAsync(profiles);
-        const profileMap = profileArray.reduce((acc: any, profile: any) => {
-          return {
-            ...acc,
-            [profile.id]: profile,
-          };
-        }, {});
-        for (let i = 0; i < commentArray.length; i++) profileArray[i] = profileMap[commentArray[i].poster];
-
-        // likes
-        let likes = await getLikesAsync('comment',postPks);
-
-        setPosts({
-            postArray: posts.postArray.concat(commentArray),
-            profileArray: posts.profileArray.concat(profileArray),
-            communityArray: [communityData],
-            likeArray: posts.likeArray.concat(likes)
-        });
+        setPosts(await getAllPostData('comment', commentArray, posts, undefined, communityData));
         setCurrentCommentSet(currentCommentSet+1);
     };
 
