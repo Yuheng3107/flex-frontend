@@ -23,7 +23,7 @@ const Posts = ({ posts, loadData }: PostProps) => {
       className="flex flex-col justify-start w-full h-full px-5"
     >
       {posts.postArray.length === 0 ? 
-        <div className="text-center">No More Posts</div>
+        <div className="text-center">No Posts</div>
       :
         posts.postArray.map((item, i) => (
           <PersonTextCard 
