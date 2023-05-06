@@ -26,7 +26,7 @@ const SearchPosts = ({  }) => {
     const loadPosts = async (content: string) => {
         let postArray:any[] = await getSearchPostsAsync(content);
         console.log(postArray);
-        if (typeof postArray !== "number") setPosts(await getAllPostData('comment', postArray, posts, undefined, undefined));
+        if (typeof postArray !== "string") setPosts(await getAllPostData('comment', postArray, posts, undefined, undefined));
     };
 
     return (

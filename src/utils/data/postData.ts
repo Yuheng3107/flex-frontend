@@ -102,7 +102,7 @@ export const getUserFeedAsync = async function (set_no: number) {
  */
 export const getSearchPostsAsync = async function (content: string) {
   try {
-    let res = await fetch(`${backend}/feed/feed`, {
+    let res = await fetch(`${backend}/feed/feed_post/search`, {
       method: "POST",
       credentials: "include", // include cookies in the request
       headers: {
