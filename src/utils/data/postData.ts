@@ -14,7 +14,7 @@ export const getPostAsync = async function (post_id:number) {
       }
     })
     let data = await res.json();
-    return data
+    return data;
   } catch (error) { console.log(error); };
 }
 
@@ -33,7 +33,7 @@ export const getUserPostsAsync = async function (user_id:number, set_no:number) 
       })
     })
     let data = await res.json();
-    return data
+    return data;
   } catch (error) { console.log(error); };
 }
 
@@ -52,7 +52,7 @@ export const getCommunityPostsAsync = async function (community_id:number, set_n
       })
     })
     let data = await res.json();
-    return data
+    return data;
   } catch (error) { console.log(error); };
 }
 
@@ -70,7 +70,7 @@ export const getCommentsAsync = async function (comments: any[]) {
       })
     })
     let data = await res.json();
-    return data
+    return data;
   } catch (error) { console.log(error); };
 }
 
@@ -91,7 +91,30 @@ export const getUserFeedAsync = async function (set_no: number) {
     data.sort( function(a:any,b:any) {
       return new Date(b.posted_at) > new Date(a.posted_at);
     });
-    return data
+    return data;
+  } catch (error) { console.log(error); };
+}
+
+/**
+ * Search for posts
+ * @param content search string
+ * @returns userPost[]
+ */
+export const getSearchPostsAsync = async function (content: string) {
+  try {
+    let res = await fetch(`${backend}/feed/feed`, {
+      method: "POST",
+      credentials: "include", // include cookies in the request
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1] ),
+      },
+      body: JSON.stringify({
+        content: content,
+      })
+    })
+    let data = await res.json();
+    return data;
   } catch (error) { console.log(error); };
 }
 
@@ -238,7 +261,7 @@ export const getLikesAsync = async function (post_type: PostType, ids: number[])
 
 /**
  * Gets all the post data u cld ever want from a list of type UserPost
- * @param post_type user, community, comment (user and community are the same actually)
+ * @param post_type user, community, comment (user === community)
  * @param newPosts the list of now posts
  * @param currentPosts the current posts displayed by the component
  * @param profileData undefined if you want it to get the data, profileData if all posts are by one profile
@@ -246,8 +269,6 @@ export const getLikesAsync = async function (post_type: PostType, ids: number[])
  * @returns 
  */
 export const getAllPostData = async function (post_type: PostType, newPosts: any[], currentPosts: PostArray, profileData: ProfileData | undefined, communityData: CommunityData | undefined | null) {
-  console.log(currentPosts);
-
   // profile
   let profileArray:any[] = [];
   if (profileData === undefined) {
@@ -285,7 +306,7 @@ export const getAllPostData = async function (post_type: PostType, newPosts: any
   for (let i = 0; i < newPosts.length; i++) postPks.push(newPosts[i].id);
   let likes = await getLikesAsync(post_type,postPks);
 
-  let data = {
+  let data:PostArray = {
     postArray: currentPosts.postArray.concat(newPosts),
     profileArray: profileData !== undefined ? [profileData] : currentPosts.profileArray.concat(profileArray),
     communityArray: communityData !== undefined ? [communityData] : currentPosts.communityArray.concat(communityArray),

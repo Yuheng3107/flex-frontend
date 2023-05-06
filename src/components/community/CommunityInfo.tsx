@@ -11,10 +11,6 @@ import { CommunityData } from "../../types/stateTypes";
 import { backend } from "../../App";
 import ShareIcon from '../../assets/svgComponents/ShareIcon';
 
-//testing
-const banner = "https://images.unsplash.com/photo-1574623452334-1e0ac2b3ccb4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
-const image = "https://images.unsplash.com/photo-1580692475446-c2fabbbbf835?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
-
 type CommunityInfoProps = {
     communityData: CommunityData;
 }
@@ -42,9 +38,9 @@ function CommunityInfo({ communityData }: CommunityInfoProps) {
 
     return <div className="flex flex-col">
         <div className="w-full h-36 object-cover relative">
-            <img src={bannerUrl ? banner : bannerUrl} className="w-full h-36 object-cover absolute" alt="" />
+            <img src={bannerUrl} className="w-full h-36 object-cover absolute" alt="" />
             <div className=" absolute w-full h-full left-0 top-0 bg-gradient-to-t from-gray-900 z-0"></div>
-            <img alt="community-picture" src={communityPhotoUrl ? image : communityPhotoUrl}
+            <img alt="community-picture" src={communityPhotoUrl}
                 className="absolute h-36 left-4 -bottom-[4.5rem] aspect-square rounded-full object-cover border border-zinc-500" />
             <div id='name-and-members' className="text-gray-100 absolute left-1/2 bottom-2">
                 <p id="community-name" className="text-2xl font-semibold">{communityData.name}</p>

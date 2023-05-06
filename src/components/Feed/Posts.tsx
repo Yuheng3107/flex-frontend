@@ -13,7 +13,7 @@ type PostProps = {
     communityArray: any[],
     likeArray: any[],
   };
-  loadData: () => void;
+  loadData: (() => any )| undefined;
 };
 
 const Posts = ({ posts, loadData }: PostProps) => {
@@ -34,10 +34,12 @@ const Posts = ({ posts, loadData }: PostProps) => {
             isLiked={posts.likeArray.includes(item.id) }
           />
       ))}
-      <IonButton onClick={loadData}>Load Posts</IonButton>
+      { loadData === undefined ? "" :
+        <IonButton onClick={loadData}>Load Posts</IonButton>
+      }
       <IonInfiniteScroll
         onIonInfinite={(ev) => {
-          loadData();
+          if (loadData !== undefined) loadData();
           setTimeout(() => ev.target.complete(), 500);
         }}
       >

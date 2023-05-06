@@ -99,11 +99,11 @@ const OtherUserProfile: React.FC<OtherUserProfileProps> = ({ match }) => {
                     <div>
                         <UserProfileTemplate profileData={profileData} exerciseStats={exerciseStats} posts={posts} loadUserPostData={loadUserPostData}/>
                         {friendStatus === 0 ?
-                            <IonButton onClick={friendRequest}>Send Friend Request</IonButton>
+                            <IonButton onClick={friendRequest}>Request</IonButton>
                         : friendStatus === 1 ?
-                            <IonButton onClick={removeFriendRequest}>Remove Friend Request</IonButton>
+                            <IonButton onClick={removeFriendRequest}>Remove Request</IonButton>
                         : 
-                            <IonButton onClick={removeFriend}>Remove Friend</IonButton>
+                            <IonButton onClick={removeFriend}>Unfriend</IonButton>
                         }
                     </div>
                 }

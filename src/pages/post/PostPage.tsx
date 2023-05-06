@@ -37,7 +37,6 @@ interface PostPageProps
     }> {}
 
 const PostPage: React.FC<PostPageProps> = ({ match }) => {
-    // 0 is no friend request sent, 1 is friend request sent, 2 is already friends
     const [profileData, setProfileData] = useState<ProfileData>(emptyProfileData);
     const [postData, setPostData] = useState<UserPostData>(emptyUserPostData);
     const [communityData, setCommunityData] = useState<CommunityData>(emptyCommunityData);
@@ -46,9 +45,7 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
     const [posts, setPosts] = useState<PostArray>(emptyPostArray);
 
     useEffect(() => {
-        //useEffect with empty dependency array means this function will only run once right after the component is mounted
-        if (postData === emptyUserPostData) loadPostData();
-        loadComments();
+        if (postData === emptyUserPostData) loadPostData(); else loadComments();
     },[postData]);
 
     const loadPostData = async () => {

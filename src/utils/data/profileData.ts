@@ -2,7 +2,10 @@ import { backend } from "../../App";
 import { getExerciseRegimeAsync } from "./getExerciseData";
 import { invalidProfileData, emptyExerciseStats } from "../../types/stateTypes";
 
-//async implementation of getProfileData
+/**
+ * gets own user's profile data
+ * @returns user's id
+ */
 export const getProfileDataAsync = async function () {
   try {
     let res = await fetch(`${backend}/users/user`, {
@@ -21,7 +24,11 @@ export const getProfileDataAsync = async function () {
   }
 }
 
-//Get the profile Data of another user (requires that user's id)
+/**
+ * Get the profile Data of another user 
+ * @param pk user's id
+ * @returns profileData
+ */
 export const getOtherProfileDataAsync = async function (pk:Number) {
   try {
     let res = await fetch(`${backend}/users/user/${pk}`, {
@@ -39,6 +46,10 @@ export const getOtherProfileDataAsync = async function (pk:Number) {
   }
 }
 
+/**
+ * gets many other user's profile data
+ * @returns profileData[]
+ */
 export const getManyOtherProfileDataAsync = async function (pks:Number[]) {
   try {
     let res = await fetch(`${backend}/users/user/list`, {
@@ -59,7 +70,10 @@ export const getManyOtherProfileDataAsync = async function (pks:Number[]) {
   }
 }
 
-// Get the user's own profile data
+/**
+ * Get the user's own profile data
+ * @param updateFunction no clue whats it for
+ */
 export const getProfileData =  (updateFunction:any) =>{
   fetch(`${backend}/users/user`, {
     method: "GET",
@@ -115,13 +129,37 @@ export const getFavoriteExerciseRegimeAsync = async function (pk:Number) {
     })
     let data = await res.json();
     return data
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) { console.log(error); };
 }
 
-//Gets the user's normal profile data plus favorite exercise and exercise regimes
-//Used for other people's profile, not for the user himself
+/**
+ * Search for users
+ * @param content search string
+ * @returns profileData[]
+ */
+export const getSearchUsersAsync = async function (content: string) {
+  try {
+    let res = await fetch(`${backend}/users/user/search`, {
+      method: "POST",
+      credentials: "include", // include cookies in the request
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1] ),
+      },
+      body: JSON.stringify({
+        content: content,
+      })
+    })
+    let data = await res.json();
+    return data;
+  } catch (error) { console.log(error); };
+}
+
+/**
+ * Gets the user's normal profile data plus favorite exercise and exercise regimes. Used for other people's profile, not for the user himself
+ * @param pk id of user
+ * @returns profileData + exerciseStats
+ */
 export const getAllProfileData = async function (pk:Number) {
   let data = await getOtherProfileDataAsync(pk);
   if (data === undefined) return ({
@@ -137,7 +175,11 @@ export const getAllProfileData = async function (pk:Number) {
   return splitProfileData(data);
 }
 
-//Utility function, takes the "data" object and returns an object with "profileData" and "exerciseStats" properties
+/**
+ * Utility function, takes the "data" object and returns an object with "profileData" and "exerciseStats" properties
+ * @param data the unsplit data
+ * @returns profileData + exerciseStats
+ */
 export const splitProfileData = function (data:any) {
   return ({
     profileData: {
