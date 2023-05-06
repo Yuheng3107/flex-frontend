@@ -60,18 +60,21 @@ const FriendRequest = ({ profileId }: FriendRequestProps) => {
         >
           {profileData?.username}
         </IonRouterLink>
-        { requestState === 0 ?
+        {requestState === 0 ? (
           <div>
-            <IonButton onClick={acceptRequest} className="text-xs">Accept</IonButton>
-            <IonButton onClick={declineRequest} className="text-xs">Decline</IonButton>
+            <IonButton onClick={acceptRequest} className="text-xs">
+              Accept
+            </IonButton>
+            <IonButton onClick={declineRequest} className="text-xs">
+              Decline
+            </IonButton>
           </div>
-        : requestState === 1 ?
-          <div>  Request Accepted.</div>
-        :
-          <div>  Request Declined.</div>
-        }
+        ) : requestState === 1 ? (
+          <div> Request Accepted.</div>
+        ) : (
+          <div> Request Declined.</div>
+        )}
       </div>
-<<<<<<< HEAD:src/components/friends/FriendRequest.tsx
       {requestState === 0 ? (
         <div>
           <IonButton onClick={acceptRequest}>Accept</IonButton>
@@ -82,9 +85,6 @@ const FriendRequest = ({ profileId }: FriendRequestProps) => {
       ) : (
         <div>Request Declined.</div>
       )}
-=======
-      
->>>>>>> dev:src/components/users/FriendRequest.tsx
     </div>
   );
 };
