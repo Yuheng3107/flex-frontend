@@ -52,7 +52,7 @@ class VideoFeed extends Component {
     this.webcam = React.createRef();
     this.toggleFeedbackLog = this.toggleFeedbackLog.bind(this);
   }
-
+  
   componentDidMount = async () => {
     const detectorConfig = {
       modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING,
@@ -166,8 +166,7 @@ class VideoFeed extends Component {
     feedback = ["", ""];
 
     // get from backend
-    let exercise = getExercise(this.props.exerciseData.id);
-
+    let exercise = getExercise(Number(this.props.exerciseId));
     // initialise form correction
     formCorrection.init(
       exercise.evalPoses,
