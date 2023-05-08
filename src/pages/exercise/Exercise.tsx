@@ -42,7 +42,7 @@ const ExercisePage: React.FC<ExercisePageProps> = ({ match }) => {
   return (
     <IonPage>
       <IonContent fullscreen>
-        {isExercising ? <VideoFeed repCountInput={repCountInput} /> :
+        {isExercising ? <VideoFeed repCountInput={repCountInput} exerciseId={match.params.exerciseId} /> :
           <ExerciseOptions startExerciseHandler={startExerciseHandler}
             repDecrementHandler={repDecrementHandler} repIncrementHandler={repIncrementHandler}
             repCountInput={repCountInput} />}
