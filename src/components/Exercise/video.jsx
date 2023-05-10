@@ -22,6 +22,9 @@ import * as formCorrection from "../../utils/formCorrection";
 import getExercise from "../../utils/ExerciseAlgo/exericseAlgo";
 import RepCountCircle from "./RepCountCircle";
 
+// draw lines
+import { RendererCanvas2d } from "./workout/renderer_canvas2d";
+
 let feedback = new Array();
 let isActive = false;
 let frameCount = 0;
@@ -50,9 +53,10 @@ class VideoFeed extends Component {
     };
 
     this.webcam = React.createRef();
+    this.canvas = React.createRef();
     this.toggleFeedbackLog = this.toggleFeedbackLog.bind(this);
   }
-  
+
   componentDidMount = async () => {
     const detectorConfig = {
       modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING,
@@ -63,8 +67,8 @@ class VideoFeed extends Component {
     );
     this.setState({
       detector: detectorObject,
-      detectorLoading: false
-    })
+      detectorLoading: false,
+    });
   };
 
   toggleFeedbackLog() {
@@ -74,27 +78,38 @@ class VideoFeed extends Component {
     });
   }
 
-
   determineButtonDisplay() {
     if (this.state.exerciseEnded) {
       return this.props.completeExerciseButton;
     } else {
       if (this.state.detectorLoading) {
-        return <IonSpinner></IonSpinner>
+        return <IonSpinner></IonSpinner>;
       } else {
-        return <StartEndButton detector={this.state.detector} start={this.start} end={this.end} startButton={this.state.startButton} setState={this.setState} parentState={this.state} />
+        return (
+          <StartEndButton
+            detector={this.state.detector}
+            start={this.start}
+            end={this.end}
+            startButton={this.state.startButton}
+            setState={this.setState}
+            parentState={this.state}
+          />
+        );
       }
     }
   }
-
 
   render = () => {
     return (
       <div className="relative h-full">
         <Webcam videoConstraints={{ facingMode: "user" }} ref={this.webcam} />
+        <canvas ref={this.canvas}></canvas>
+        <div id="scatter-gl-container" style={{ display: "none" }}></div>
         <div className="exercise-feedback flex flex-col items-center p-5 w-full">
-
-          <RepCountCircle repCount={this.state.repCount} repCountInput={this.props.repCountInput} />
+          <RepCountCircle
+            repCount={this.state.repCount}
+            repCountInput={this.props.repCountInput}
+          />
 
           <TextBox className="flex flex-col justify-between bg-zinc-100 pt-3 pb-0 w-4/5 mt-3">
             {this.state.feedbackLogShowing}
@@ -122,7 +137,10 @@ class VideoFeed extends Component {
             {this.state.generalFeedback}
           </TextBox>
         </div>
-        <div id="button-container" className="absolute bottom-10 w-screen flex justify-center">
+        <div
+          id="button-container"
+          className="absolute bottom-10 w-screen flex justify-center"
+        >
           {/* {this.state.detectorLoading ?
             <IonSpinner></IonSpinner>
             :
@@ -146,7 +164,7 @@ class VideoFeed extends Component {
   start = async () => {
     if (this.state.detector === null) {
       window.alert("loading!");
-      return
+      return;
     }
     console.log("start");
     this.setState({
@@ -175,19 +193,26 @@ class VideoFeed extends Component {
       exercise.angleWeights,
       exercise.angleThresholds,
       exercise.minRepTime,
-      exercise.glossary
+      exercise.glossary,
+      exercise.minSwitchPoseCount
     );
+
+    // initialise the renderer canvas
 
     // wait 3s before starting exercise
     // await delay(3000);
 
     while (isActive) {
-      let poses = await this.state.detector.estimatePoses(this.webcam.current.video);
+      let poses = await this.state.detector.estimatePoses(
+        this.webcam.current.video
+      );
       await delay(1);
+      // add lines
+      this.rendererCanvas.draw([this.webcam.current.video, poses, false]);
       // process raw data
       let newFeedback = formCorrection.run(poses);
       if (newFeedback[0] !== "") {
-        let newRepCount = newFeedback[0].slice(-1)[0].match(/\d+/)[0]
+        let newRepCount = newFeedback[0].slice(-1)[0].match(/\d+/)[0];
         console.log(newFeedback[0][0]);
         if (newRepCount <= this.props.repCountInput) {
           this.setState({
@@ -221,7 +246,7 @@ class VideoFeed extends Component {
       repFeedback: completedFeedback[0],
       perfectRepCount: completedFeedback[1],
       generalFeedback: "Exercise ended",
-      exerciseEnded: true
+      exerciseEnded: true,
     });
     console.log(completedFeedback);
   };
@@ -239,6 +264,13 @@ class VideoFeed extends Component {
         img.width,
         img.height,
       ];
+      // set explicit width and height for canvas
+      [this.canvas.current.width, this.canvas.current.height] = [
+        img.width,
+        img.height,
+      ];
+
+      this.rendererCanvas = new RendererCanvas2d(this.canvas.current);
     };
   };
 }
