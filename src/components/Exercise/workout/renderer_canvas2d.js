@@ -148,16 +148,25 @@ export class RendererCanvas2d {
     this.ctx.lineWidth = params.DEFAULT_LINE_WIDTH;
 
     for (const i of keypointInd.middle) {
+      if (Number(i) < 5) {
+        continue;
+      }
       this.drawKeypoint(keypoints[i]);
     }
 
     this.ctx.fillStyle = "Green";
     for (const i of keypointInd.left) {
+      if (Number(i) < 5) {
+        continue;
+      }
       this.drawKeypoint(keypoints[i]);
     }
 
     this.ctx.fillStyle = "Orange";
     for (const i of keypointInd.right) {
+      if (Number(i) < 5) {
+        continue;
+      }
       this.drawKeypoint(keypoints[i]);
     }
   }
@@ -187,9 +196,11 @@ export class RendererCanvas2d {
     this.ctx.lineWidth = params.DEFAULT_LINE_WIDTH;
 
     posedetection.util.getAdjacentPairs("MoveNet").forEach(([i, j]) => {
+      if (i < 5 || j < 5) {
+        return;
+      }
       const kp1 = keypoints[i];
       const kp2 = keypoints[j];
-
       // If score is null, just show the keypoint.
       const score1 = kp1.score != null ? kp1.score : 1;
       const score2 = kp2.score != null ? kp2.score : 1;
