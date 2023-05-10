@@ -73,7 +73,7 @@ import SearchCommunities from "./pages/Home/SearchCommunities";
 setupIonicReact();
 checkAndToggleDarkTheme();
 
-const backend = "https://fitai.click";
+const backend = "http://localhost:8000";
 const exercises = ["zero", "Squats", "Push-ups", "Hamstring Stretch"];
 
 const App: React.FC = () => {
@@ -131,16 +131,19 @@ const App: React.FC = () => {
               <Home ref={homeMenuRef} />
             </Route>
 
-
             <Route path="/home/community" component={CommunityPage} />
 
-            <Route exact path="/home/profile/:userId"
+            <Route
+              exact
+              path="/home/profile/:userId"
               render={(props) => {
                 return <OtherUserProfile {...props} />;
               }}
             />
 
-            <Route exact path="/home/post/:postId"
+            <Route
+              exact
+              path="/home/post/:postId"
               render={(props) => {
                 return <PostPage {...props} />;
               }}
@@ -148,7 +151,9 @@ const App: React.FC = () => {
             <Route path="/home/post/create">
               <CreatePost />
             </Route>
-            <Route exact path="/home/post/:postId/createcomment"
+            <Route
+              exact
+              path="/home/post/:postId/createcomment"
               render={(props) => {
                 return <CreateComment {...props} />;
               }}
@@ -164,7 +169,6 @@ const App: React.FC = () => {
             </Route>
 
             <Route path="/profile" component={ProfilePages} />
-
 
             <Route path="/exercise" component={ExercisePages} />
           </IonRouterOutlet>
