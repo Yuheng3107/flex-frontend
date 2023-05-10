@@ -73,8 +73,7 @@ import SearchCommunities from "./pages/Home/SearchCommunities";
 setupIonicReact();
 checkAndToggleDarkTheme();
 
-// const backend = "https://flex.fitai.click";
-const backend = "http://localhost:8000";
+const backend = "https://fitai.click";
 const exercises = ["zero", "Squats", "Push-ups", "Hamstring Stretch"];
 
 const App: React.FC = () => {
@@ -188,7 +187,7 @@ const App: React.FC = () => {
               {/* <IonIcon aria-hidden="true" icon={backend.concat(profileData.profile_photo)} /> */}
               <img
                 className={`rounded-full border border-neutral-800 h-9`}
-                src={backend.concat(profileDataRedux.profile_photo)}
+                src={profileDataRedux.profile_photo}
               />
             </IonTabButton>
           </IonTabBar>
