@@ -117,6 +117,7 @@ export class RendererCanvas2d {
    */
   drawResults(poses) {
     for (const pose of poses) {
+      // for multiple poses
       this.drawResult(pose);
     }
   }
@@ -127,6 +128,7 @@ export class RendererCanvas2d {
    */
   drawResult(pose) {
     if (pose.keypoints != null) {
+      // pose.keypoints.splice(0, 5);
       this.drawKeypoints(pose.keypoints);
       this.drawSkeleton(pose.keypoints, pose.id);
     }
