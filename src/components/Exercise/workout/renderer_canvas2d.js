@@ -179,10 +179,7 @@ export class RendererCanvas2d {
    */
   drawSkeleton(keypoints, poseId) {
     // Each poseId is mapped to a color in the color palette.
-    const color =
-      params.STATE.modelConfig.enableTracking && poseId != null
-        ? COLOR_PALETTE[poseId % 20]
-        : "White";
+    const color = "White";
     this.ctx.fillStyle = color;
     this.ctx.strokeStyle = color;
     this.ctx.lineWidth = params.DEFAULT_LINE_WIDTH;
