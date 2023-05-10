@@ -15,7 +15,6 @@ type Props = {
 function ExerciseOptions({ startExerciseHandler, repIncrementHandler, repDecrementHandler, repCountInput }: Props) {
 
     return <div className="h-full flex flex-col justify-between">
-        <span>These are the exercise options</span>
         <div id="rep-select-container" className="flex justify-center">
             <div id="rep-count-container" className="relative">
                 <svg className="w-32 h-32 -rotate-90" viewBox="0 0 200 200">

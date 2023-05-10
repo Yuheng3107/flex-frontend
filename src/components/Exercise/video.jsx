@@ -91,7 +91,10 @@ class VideoFeed extends Component {
   render = () => {
     return (
       <div className="relative h-full">
-        <Webcam videoConstraints={{ facingMode: "user" }} ref={this.webcam} />
+        <div className="h-4/5 bg-black flex justify-center items-center object-cover">
+        <Webcam mirrored="true" videoConstraints={{ facingMode: "user" }} ref={this.webcam} className=""/>
+          
+        </div>
         <div className="exercise-feedback flex flex-col items-center p-5 w-full">
 
           <RepCountCircle repCount={this.state.repCount} repCountInput={this.props.repCountInput} />
@@ -118,7 +121,7 @@ class VideoFeed extends Component {
             )}
           </TextBox>
 
-          <TextBox className="bg-zinc-100 p-3 w-4/5 mt-3">
+          <TextBox className="bg-zinc-100 p-3 w-4/5 mt-3 mb-10">
             {this.state.generalFeedback}
           </TextBox>
         </div>
