@@ -89,10 +89,6 @@ export class RendererCanvas2d {
     // Because the image from camera is mirrored, need to flip horizontally.
     this.ctx.translate(videoWidth, 0);
     this.ctx.scale(-1, 1);
-
-    this.scatterGLEl.style.display = params.STATE.modelConfig.render3D
-      ? "inline-block"
-      : "none";
   }
 
   draw(rendererParams) {
@@ -230,6 +226,7 @@ export class RendererCanvas2d {
         // hide anchor points and low-confident points.
         return "#ffffff";
       }
+
       if (i === 0) {
         return "#ff0000" /* Red */;
       }
