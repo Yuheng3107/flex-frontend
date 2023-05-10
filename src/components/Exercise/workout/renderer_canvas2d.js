@@ -99,7 +99,7 @@ export class RendererCanvas2d {
     // different model. If during model change, the result is from an old model,
     // which shouldn't be rendered.
     if (poses && poses.length > 0 && !isModelChanged) {
-      this.drawResults(poses);
+      this.drawResults(poses, video.height, video.width);
     }
   }
 
@@ -115,10 +115,10 @@ export class RendererCanvas2d {
    * Draw the keypoints and skeleton on the video.
    * @param poses A list of poses to render.
    */
-  drawResults(poses) {
+  drawResults(poses, videoHeight, videoWidth) {
     for (const pose of poses) {
       // for multiple poses
-      this.drawResult(pose);
+      this.drawResult(pose, videoHeight, videoWidth);
     }
   }
 
@@ -126,9 +126,19 @@ export class RendererCanvas2d {
    * Draw the keypoints and skeleton on the video.
    * @param pose A pose with keypoints to render.
    */
-  drawResult(pose) {
+  drawResult(pose, videoHeight, videoWidth) {
     if (pose.keypoints != null) {
-      // pose.keypoints.splice(0, 5);
+      pose.keypoints = posedetection.calculators.keypointsToNormalizedKeypoints(
+        pose.keypoints,
+        {
+          height: 320,
+          width: 640,
+        }
+      );
+      pose.keypoints.forEach((keypoint) => {
+        keypoint.x = keypoint.x * videoWidth;
+        keypoint.y = keypoint.y * videoHeight;
+      });
       this.drawKeypoints(pose.keypoints);
       this.drawSkeleton(pose.keypoints, pose.id);
     }
@@ -205,7 +215,6 @@ export class RendererCanvas2d {
       const score1 = kp1.score != null ? kp1.score : 1;
       const score2 = kp2.score != null ? kp2.score : 1;
       const scoreThreshold = params.STATE.modelConfig.scoreThreshold || 0;
-
       if (score1 >= scoreThreshold && score2 >= scoreThreshold) {
         this.ctx.beginPath();
         this.ctx.moveTo(kp1.x, kp1.y);
