@@ -29,7 +29,13 @@ export const STATE = {
   camera: { targetFPS: 60 },
   backend: "",
   flags: {},
-  modelConfig: {},
+  modelConfig: {
+    maxPoses: 1,
+    type: "lightning",
+    scoreThreshold: 0.3,
+    customModel: "",
+    enableTracking: false,
+  },
   model: "MoveNet",
 };
 export const BLAZEPOSE_CONFIG = {
