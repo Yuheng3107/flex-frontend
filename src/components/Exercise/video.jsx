@@ -138,7 +138,7 @@ class VideoFeed extends Component {
             )}
           </TextBox>
 
-          <TextBox className="bg-zinc-100 p-3 w-4/5 mt-3">
+          <TextBox className="bg-zinc-100 p-3 w-4/5 mt-3 mb-10">
             {this.state.generalFeedback}
           </TextBox>
         </div>
