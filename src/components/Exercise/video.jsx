@@ -102,9 +102,14 @@ class VideoFeed extends Component {
   render = () => {
     return (
       <div className="relative h-full">
-        <Webcam videoConstraints={{ facingMode: "user" }} ref={this.webcam} />
         <canvas ref={this.canvas}></canvas>
-        <div id="scatter-gl-container" style={{ display: "none" }}></div>
+        <Webcam
+          videoConstraints={{ facingMode: "user" }}
+          ref={this.webcam}
+          style={{ visibility: "hidden" }}
+        />
+
+        <div id="scatter-gl-container" style={{ visibility: "hidden" }}></div>
         <div className="exercise-feedback flex flex-col items-center p-5 w-full">
           <RepCountCircle
             repCount={this.state.repCount}

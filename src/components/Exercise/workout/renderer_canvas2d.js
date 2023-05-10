@@ -90,9 +90,6 @@ export class RendererCanvas2d {
     this.ctx.translate(videoWidth, 0);
     this.ctx.scale(-1, 1);
 
-    this.scatterGLEl.style = `width: ${videoWidth}px; height: ${videoHeight}px;`;
-    this.scatterGL.resize();
-
     this.scatterGLEl.style.display = params.STATE.modelConfig.render3D
       ? "inline-block"
       : "none";
