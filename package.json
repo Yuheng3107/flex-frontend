@@ -93,6 +93,8 @@
   },
   "description": "An Ionic project",
   "jest": {
-    "transformIgnorePatterns": ["/node_modules/(?!@ionic/core|@stencil/core|ionicons)"]
+    "transformIgnorePatterns": [
+      "/node_modules/(?!@ionic/core|@stencil/core|ionicons)"
+    ]
   }
 }
