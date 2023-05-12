@@ -131,10 +131,11 @@ export class RendererCanvas2d {
       pose.keypoints = posedetection.calculators.keypointsToNormalizedKeypoints(
         pose.keypoints,
         {
-          height: 320,
+          height: 480,
           width: 640,
         }
       );
+
       pose.keypoints.forEach((keypoint) => {
         keypoint.x = keypoint.x * videoWidth;
         keypoint.y = keypoint.y * videoHeight;
@@ -206,7 +207,7 @@ export class RendererCanvas2d {
     this.ctx.lineWidth = params.DEFAULT_LINE_WIDTH;
 
     posedetection.util.getAdjacentPairs("MoveNet").forEach(([i, j]) => {
-      if (i < 5 || j < 5) {
+      if (i < 5 && j < 5) {
         return;
       }
       const kp1 = keypoints[i];
