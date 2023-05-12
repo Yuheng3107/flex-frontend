@@ -34,7 +34,7 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { accessibility, home } from "ionicons/icons";
+import { accessibility, home, person } from "ionicons/icons";
 
 //Pages Components imports
 import Home from "./pages/Home/Home";
@@ -73,7 +73,6 @@ import SearchCommunities from "./pages/Home/SearchCommunities";
 setupIonicReact();
 checkAndToggleDarkTheme();
 
-// const backend = "https://flex.fitai.click";
 const backend = "http://localhost:8000";
 const exercises = ["zero", "Squats", "Push-ups", "Hamstring Stretch"];
 
@@ -132,16 +131,19 @@ const App: React.FC = () => {
               <Home ref={homeMenuRef} />
             </Route>
 
-
             <Route path="/home/community" component={CommunityPage} />
 
-            <Route exact path="/home/profile/:userId"
+            <Route
+              exact
+              path="/home/profile/:userId"
               render={(props) => {
                 return <OtherUserProfile {...props} />;
               }}
             />
 
-            <Route exact path="/home/post/:postId"
+            <Route
+              exact
+              path="/home/post/:postId"
               render={(props) => {
                 return <PostPage {...props} />;
               }}
@@ -149,7 +151,9 @@ const App: React.FC = () => {
             <Route path="/home/post/create">
               <CreatePost />
             </Route>
-            <Route exact path="/home/post/:postId/createcomment"
+            <Route
+              exact
+              path="/home/post/:postId/createcomment"
               render={(props) => {
                 return <CreateComment {...props} />;
               }}
@@ -165,7 +169,6 @@ const App: React.FC = () => {
             </Route>
 
             <Route path="/profile" component={ProfilePages} />
-
 
             <Route path="/exercise" component={ExercisePages} />
           </IonRouterOutlet>
@@ -184,12 +187,12 @@ const App: React.FC = () => {
               {/* </div> */}
             </IonTabButton>
             <IonTabButton tab="profile" href="/profile">
-              {/* <IonIcon className="fill-red-600 stroke-red-600" aria-hidden="true" src={personUnfilled} /> */}
               {/* <IonIcon aria-hidden="true" icon={backend.concat(profileData.profile_photo)} /> */}
-              <img
+              {profileDataRedux.profile_photo ? <img
                 className={`rounded-full border border-neutral-800 h-9`}
-                src={backend.concat(profileDataRedux.profile_photo)}
-              />
+                src={profileDataRedux.profile_photo}
+              /> : <IonIcon className="" aria-hidden="true" src={person} />}
+
             </IonTabButton>
           </IonTabBar>
         </IonTabs>

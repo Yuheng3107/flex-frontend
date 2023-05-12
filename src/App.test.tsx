@@ -1,12 +1,10 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import App from "./App";
-
+import VideoFeed from "./components/Exercise/video";
 const backend = "https://fitai.click";
 
 test("renders without crashing", () => {
-  const { baseElement } = render(<App />);
+  const submitForm = (arg: string) => { console.log(arg) };
+  const { baseElement } = render(<VideoFeed />);
   expect(baseElement).toBeDefined();
 });
-
-export { backend };
