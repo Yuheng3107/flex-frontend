@@ -156,6 +156,23 @@ export const getSearchUsersAsync = async function (content: string) {
 }
 
 /**
+ * Logs user out
+ * @returns res
+ */
+export const logoutAsyc = async function () {
+  try {
+    let res = await fetch(`${backend}/users/user/logout`, {
+      method: "GET",
+      credentials: "include", // include cookies in the request
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1] ),
+      },
+    })
+    return res;
+  } catch (error) { console.log(error); };
+}
+/**
  * Gets the user's normal profile data plus favorite exercise and exercise regimes. Used for other people's profile, not for the user himself
  * @param pk id of user
  * @returns profileData + exerciseStats

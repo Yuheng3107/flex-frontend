@@ -141,13 +141,13 @@ class VideoFeed extends Component {
             )}
           </TextBox>
 
-          <TextBox className="bg-zinc-100 p-3 w-4/5 mt-3 mb-10">
+          <TextBox className="bg-zinc-100 p-3 w-4/5 mt-3">
             {this.state.generalFeedback}
           </TextBox>
         </div>
         <div
           id="button-container"
-          className="absolute bottom-10 w-screen flex justify-center"
+          className="flex justify-center pb-20"
         >
           {/* {this.state.detectorLoading ?
             <IonSpinner></IonSpinner>
