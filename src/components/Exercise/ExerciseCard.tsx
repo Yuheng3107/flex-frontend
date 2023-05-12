@@ -41,7 +41,6 @@ function ExerciseCard({ className, name, likes, media, exerciseId }: ExerciseCar
             {/* <img src={playIcon} alt="like icon" className="absolute w-8 h-8 aspect-square" /> */}
             <PlayIcon className="absolute h-8 w-8 fill-white" />
         </button>
-
     </div>
     </div >
 }
