@@ -1,10 +1,7 @@
 //React imports
 import { useState } from "react";
 
-import {
-  IonContent,
-  IonPage,
-} from "@ionic/react";
+import { IonContent, IonPage } from "@ionic/react";
 
 //component imports
 import ExerciseOptions from "../../components/Exercise/ExerciseOptions";
@@ -14,12 +11,11 @@ import { RouteComponentProps } from "react-router";
 interface ExercisePageProps
   extends RouteComponentProps<{
     exerciseId: string;
-  }> { }
+  }> {}
 
 const ExercisePage: React.FC<ExercisePageProps> = ({ match }) => {
-
   console.log(match.params.exerciseId);
-  const [isExercising, setIsExercising] = useState(false)
+  const [isExercising, setIsExercising] = useState(false);
   const [repCountInput, setRepCountInput] = useState<number>(1);
 
   function startExerciseHandler(event: React.MouseEvent<HTMLButtonElement>) {
@@ -28,28 +24,35 @@ const ExercisePage: React.FC<ExercisePageProps> = ({ match }) => {
 
   const repIncrementHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     setRepCountInput((prevState) => {
-      return (prevState + 1);
-    })
-  }
+      return prevState + 1;
+    });
+  };
   const repDecrementHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     if (repCountInput > 1) {
       setRepCountInput((prevState) => {
-        return (prevState - 1);
-      })
+        return prevState - 1;
+      });
     }
-  }
+  };
 
   return (
     <IonPage>
       <IonContent fullscreen>
         <main className="w-full h-full">
-          {isExercising ? <VideoFeed repCountInput={repCountInput} exerciseId={match.params.exerciseId} /> :
-            <ExerciseOptions startExerciseHandler={startExerciseHandler}
-              repDecrementHandler={repDecrementHandler} repIncrementHandler={repIncrementHandler}
-              repCountInput={repCountInput} />}
+          {isExercising ? (
+            <VideoFeed
+              repCountInput={repCountInput}
+              exerciseId={match.params.exerciseId}
+            />
+          ) : (
+            <ExerciseOptions
+              startExerciseHandler={startExerciseHandler}
+              repDecrementHandler={repDecrementHandler}
+              repIncrementHandler={repIncrementHandler}
+              repCountInput={repCountInput}
+            />
+          )}
         </main>
-
-
       </IonContent>
     </IonPage>
   );
