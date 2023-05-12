@@ -99,7 +99,7 @@ const ChooseExercise = () => {
           </section>
           <section id="Exercises-container">
             <p className="text-xl mb-2">Exercises</p>
-            <div className="flex flex-row">
+            <div className="flex flex-col">
               {exerciseCardArray.map((cardInfo) => (
                 <ExerciseCard key={cardInfo.id} name={cardInfo.name} likes={cardInfo.likes} media={cardInfo.media} exerciseId={cardInfo.id} />
               ))}
