@@ -50,6 +50,7 @@ class VideoFeed extends Component {
       exerciseEnded: false,
       offset: 0,
       percentage: 0,
+      maxRepCount: 3,
     };
 
     this.webcam = React.createRef();
@@ -79,22 +80,22 @@ class VideoFeed extends Component {
   }
 
   determineButtonDisplay() {
+    const startEndButton = <StartEndButton
+      detector={this.state.detector}
+      start={this.start}
+      end={this.end}
+      startButton={this.state.startButton}
+      setState={this.setState}
+      parentState={this.state}
+    />
     if (this.state.exerciseEnded) {
-      return this.props.completeExerciseButton;
+      if (this.props.completeExerciseButton) return this.props.completeExerciseButton;
+      else return (startEndButton);
     } else {
       if (this.state.detectorLoading) {
         return <IonSpinner></IonSpinner>;
       } else {
-        return (
-          <StartEndButton
-            detector={this.state.detector}
-            start={this.start}
-            end={this.end}
-            startButton={this.state.startButton}
-            setState={this.setState}
-            parentState={this.state}
-          />
-        );
+        return (startEndButton);
       }
     }
   }
@@ -116,7 +117,7 @@ class VideoFeed extends Component {
         <div className="exercise-feedback flex flex-col items-center p-5 w-full">
           <RepCountCircle
             repCount={this.state.repCount}
-            repCountInput={this.props.repCountInput}
+            repCountInput={this.state.maxRepCount}
           />
 
           <TextBox className="flex flex-col justify-between bg-zinc-100 pt-3 pb-0 w-4/5 mt-3">
@@ -183,6 +184,7 @@ class VideoFeed extends Component {
     );
     console.log("start");
     this.setState({
+      maxRepCount: 3,
       repFeedback: "",
       repCount: 3,
       generalFeedback: "Exercise begins in 3s, please get into position.",
@@ -201,6 +203,7 @@ class VideoFeed extends Component {
     });
     await delay(1000);
     this.setState({
+      maxRepCount: this.props.repCountInput,
       repCount: 0,
       generalFeedback: "Exercise begin!",
     });
