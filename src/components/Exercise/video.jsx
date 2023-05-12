@@ -102,14 +102,17 @@ class VideoFeed extends Component {
   render = () => {
     return (
       <div className="relative h-full">
-        <canvas ref={this.canvas}></canvas>
-        <Webcam
-          videoConstraints={{ facingMode: "user" }}
-          ref={this.webcam}
-          style={{ visibility: "hidden" }}
-        />
+        <div className="relative" id="video-feed">
+          <canvas ref={this.canvas} className="absolute z-10"></canvas>
+          <Webcam
+            videoConstraints={{ facingMode: "user" }}
+            mirrored={true}
+            ref={this.webcam}
+          />
 
-        <div id="scatter-gl-container" style={{ visibility: "hidden" }}></div>
+          <div id="scatter-gl-container" className="hidden"></div>
+        </div>
+
         <div className="exercise-feedback flex flex-col items-center p-5 w-full">
           <RepCountCircle
             repCount={this.state.repCount}
@@ -231,7 +234,7 @@ class VideoFeed extends Component {
 
         this.setState({ repFeedback: newFeedback[0].slice(-1) });
         this.setState({ repFeedbackLog: newFeedback[0] });
-        read(newFeedback[0][newFeedback[0].slice(-1)]);
+        read([newFeedback[0].slice(-1)]);
       }
       if (newFeedback[1] != feedback[1])
         this.setState({ generalFeedback: newFeedback[1] });
@@ -289,9 +292,10 @@ async function delay(ms) {
 }
 
 const read = (content) => {
+  console.log('this code is running');
   if (textToSpeech()) {
     let speech = new SpeechSynthesisUtterance(content);
-    synth.speak(speech);
+    window.speechSynthesis.speak(speech);
   }
   // can enable error to pop up if no text to speech
 };

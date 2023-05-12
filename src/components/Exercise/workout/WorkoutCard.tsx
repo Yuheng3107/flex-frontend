@@ -17,8 +17,8 @@ export type WorkoutCardProps = {
     regimeData: ExerciseRegime;
 }
 
-
 function WorkoutCard({ className, regimeData }: WorkoutCardProps) {
+    console.log(regimeData);
     const history = useHistory();
     return <div className={`${className} relative bg-zinc-200 rounded-xl flex flex-col justify-between h-44 overflow-hidden`} >
         <img className="absolute w-full h-full object-cover z-0 grayscale contrast-75 brightness-75" alt="card background image"

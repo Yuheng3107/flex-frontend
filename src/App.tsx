@@ -34,7 +34,7 @@ import {
   setupIonicReact,
 } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
-import { accessibility, home } from "ionicons/icons";
+import { accessibility, home, person } from "ionicons/icons";
 
 //Pages Components imports
 import Home from "./pages/Home/Home";
@@ -187,12 +187,12 @@ const App: React.FC = () => {
               {/* </div> */}
             </IonTabButton>
             <IonTabButton tab="profile" href="/profile">
-              {/* <IonIcon className="fill-red-600 stroke-red-600" aria-hidden="true" src={personUnfilled} /> */}
               {/* <IonIcon aria-hidden="true" icon={backend.concat(profileData.profile_photo)} /> */}
-              <img
+              {profileDataRedux.profile_photo ? <img
                 className={`rounded-full border border-neutral-800 h-9`}
                 src={profileDataRedux.profile_photo}
-              />
+              /> : <IonIcon className="" aria-hidden="true" src={person} />}
+
             </IonTabButton>
           </IonTabBar>
         </IonTabs>
