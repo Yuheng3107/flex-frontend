@@ -174,15 +174,36 @@ class VideoFeed extends Component {
       window.alert("loading!");
       return;
     }
+    this.setState({
+      generalFeedback: "Loading...",
+    });
+    await delay(1);
+    await this.state.detector.estimatePoses(
+      this.webcam.current.video
+    );
     console.log("start");
     this.setState({
       repFeedback: "",
-      generalFeedback: "Loading...",
+      repCount: 3,
+      generalFeedback: "Exercise begins in 3s, please get into position.",
     });
 
-    //allow the feedback to update to loading
-    await delay(1);
-
+    //allow the feedback to update to loading, and user to get into position
+    await delay(1000);
+    this.setState({
+      repCount: 2,
+      generalFeedback: "Exercise begins in 2s, please get into position.",
+    });
+    await delay(1000);
+    this.setState({
+      repCount: 1,
+      generalFeedback: "Exercise begins in 1s, please get into position.",
+    });
+    await delay(1000);
+    this.setState({
+      repCount: 0,
+      generalFeedback: "Exercise begin!",
+    });
     // assign img height
     this.assignImgHeight();
 
@@ -206,9 +227,6 @@ class VideoFeed extends Component {
     );
 
     // initialise the renderer canvas
-
-    // wait 3s before starting exercise
-    // await delay(3000);
 
     while (isActive) {
       let poses = await this.state.detector.estimatePoses(
