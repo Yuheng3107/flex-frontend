@@ -15,9 +15,6 @@ import {
     useIonToast,
 } from "@ionic/react";
 import { closeOutline } from "ionicons/icons";
-import TextInput from "../ui/TextInput";
-
-import { backend } from '../../App';
 
 type CreatePostProps = {
     makePost: (title:string, text:string, media:FormData) => any;

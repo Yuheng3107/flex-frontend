@@ -1,4 +1,6 @@
-import React, { SyntheticEvent, useRef, useEffect, useState } from 'react';
+//React imports
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 
 //Ionic Imports
 import {
@@ -15,6 +17,7 @@ import {
 
 //utils
 import { toggleDarkTheme } from '../../utils/darkMode';
+import { logoutAsyc } from '../../utils/data/profileData';
 
 // Functional Component
 function Settings() {
@@ -23,6 +26,7 @@ function Settings() {
     //check if the user has a previously stored darkmode preference
     let localDarkmodePref = JSON.parse(localStorage.getItem("darkmode") || "false");
     const [darkThemeToggleChecked, setDarkThemeToggleChecked] = useState<boolean | undefined>(localDarkmodePref === null ? mediaDarkmodePref : localDarkmodePref);
+    const history = useHistory();
     function onDarkThemeToggle() {
         setDarkThemeToggleChecked((currState) => {
             console.log(currState);
@@ -30,6 +34,12 @@ function Settings() {
             toggleDarkTheme(!currState);
             return !currState
         });
+    }
+
+    const logout = async function () {
+        let response = await logoutAsyc();
+        if (response?.status === 200) history.push("/profile")
+        window.location.reload();
     }
 
     return <IonPage>
@@ -50,7 +60,10 @@ function Settings() {
                 <IonButton  routerLink="/profile/friendslist" routerDirection="forward">Friends</IonButton>
                 <IonButton routerLink="/profile/create" routerDirection="forward">
                     Edit Profile
-                </IonButton>    
+                </IonButton>
+                <IonButton onClick={logout}>
+                    Logout
+                </IonButton>
             </div>
         </IonContent>
     </IonPage >
