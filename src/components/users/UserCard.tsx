@@ -23,10 +23,6 @@ function UserCard({ profileData }:UserCardProps) {
     const [imageUrl, setImageUrl] = useState("");
     const [friendStatus, setFriendStatus] = useState(0);
     const profileDataRedux = useAppSelector((state) => state.profile.profileData)
-
-    useEffect(() => {
-      if (profileDataRedux.followers.includes(profileData.id)) setFriendStatus(2);
-    },[profileDataRedux]);
   
     const friendRequest = async () => {
         let response = await sendFriendRequest(profileData.id);
@@ -44,10 +40,11 @@ function UserCard({ profileData }:UserCardProps) {
     }
 
     useEffect(() => {
+      if (profileDataRedux.followers.includes(profileData.id)) setFriendStatus(2);
       if (profileData?.profile_photo) {
         setImageUrl(backend.concat(profileData.profile_photo))
       }
-    }, [profileData?.profile_photo, friendStatus, setFriendStatus])
+    }, [profileData?.profile_photo, friendStatus, setFriendStatus, profileDataRedux])
   
     return (
       <div className="border border-zinc-500 mt-4 p-2 flex flex-col justify-evenly items-center">
