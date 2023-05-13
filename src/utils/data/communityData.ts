@@ -106,15 +106,16 @@ export const leaveCommunityAsync = async function (pk:Number) {
  * Creates a community
  * @param name community name
  * @param description community description
+ * @param photo community main photo (in the circle)
+ * @param banner community banner
  */
-export const createCommunityAsync = async function (name:string, description: string) {
+export const createCommunityAsync = async function (name:string, description:string, photo:FormData, banner:FormData) {
+  if (photo.has('media') === false || banner.has('media') === false) {return console.log("missing media")}
   try {
     let res = await fetch(`${backend}/community/community/create`, {
       method: "POST",
       headers: {
-          "X-CSRFToken": String(
-              document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]
-          ),
+          "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]),
           "Content-type": "application/json"
       },
       credentials: "include",
@@ -125,6 +126,32 @@ export const createCommunityAsync = async function (name:string, description: st
       }),
     })
     console.log(res);
+    let pk: number = await res.json();
+    if (res.ok === false) return res;
+    // photo
+    try {
+      let res2 = await fetch(`${backend}/community/community/update/community_photo/${pk}`, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]),
+        },
+        credentials: "include",
+        body: photo,
+      })
+      console.log(res2);
+    } catch (error) { console.log(error); };
+    // banner
+    try {
+      let res3 = await fetch(`${backend}/community/community/update/banner/${pk}`, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]),
+        },
+        credentials: "include",
+        body: photo,
+      })
+      console.log(res3);
+    } catch (error) { console.log(error); };
     return res;
   } catch (error) {console.log(error)}; 
 }
