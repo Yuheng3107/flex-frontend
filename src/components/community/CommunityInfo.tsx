@@ -22,8 +22,8 @@ function CommunityInfo({ communityData }: CommunityInfoProps) {
     const profileDataRedux = useAppSelector((state) => state.profile.profileData)
 
     useEffect(() => {
-        if (communityData?.banner !== null) setBannerUrl(backend.concat(communityData.banner))
-        if (communityData?.community_photo !== null) setCommunityPhotoUrl(backend.concat(communityData.community_photo))
+        if (communityData?.banner !== null) setBannerUrl(communityData.banner)
+        if (communityData?.community_photo !== null) setCommunityPhotoUrl(communityData.community_photo)
         if (profileDataRedux.communities.includes(communityData.id)) setIsMember(true);
     });
 

@@ -42,7 +42,7 @@ function UserCard({ profileData }:UserCardProps) {
     useEffect(() => {
       if (profileDataRedux.followers.includes(profileData.id)) setFriendStatus(2);
       if (profileData?.profile_photo) {
-        setImageUrl(backend.concat(profileData.profile_photo))
+        setImageUrl(profileData.profile_photo)
       }
     }, [profileData?.profile_photo, friendStatus, setFriendStatus, profileDataRedux])
   
