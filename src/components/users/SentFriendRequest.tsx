@@ -61,21 +61,6 @@ const SentFriendRequest = ({ profileId }: SentFriendRequestProps) => {
         </IonRouterLink>
       </div>
       {requestSent ? (
-        <IonButton onClick={deleteRequest}>Delete</IonButton>
-      ) : (
-        <IonButton onClick={sendRequest}>Resend</IonButton>
-      )}
-      <div className="ml-3 flex flex-row items-center">
-        <IonRouterLink
-          routerLink={`/home/profile/${profileData.id}`}
-          routerDirection="forward"
-          id="username"
-          className="font-semibold text-black"
-        >
-          {profileData?.username}
-        </IonRouterLink>
-      </div>
-      {requestSent ? (
         <IonButton className="text-xs" onClick={deleteRequest}>
           Delete
         </IonButton>
