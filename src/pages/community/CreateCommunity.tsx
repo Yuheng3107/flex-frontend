@@ -68,7 +68,7 @@ function CreateCommunity() {
                 <IonButtons slot="end">
                     <IonButton className="mr-1 rounded-lg bg-sky-400 py-2 px-3 text-white"
                         onClick={submitHandler}>
-                        Post
+                        Create
                     </IonButton>
                 </IonButtons>
             </IonToolbar>
