@@ -101,3 +101,31 @@ export const leaveCommunityAsync = async function (pk:Number) {
     console.log(error);
   }
 }
+
+/**
+ * Creates a community
+ * @param name community name
+ * @param description community description
+ */
+export const createCommunityAsync = async function (name:string, description: string) {
+  try {
+    let res = await fetch(`${backend}/community/community/create`, {
+      method: "POST",
+      headers: {
+          "X-CSRFToken": String(
+              document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]
+          ),
+          "Content-type": "application/json"
+      },
+      credentials: "include",
+      body: JSON.stringify({
+          name: name,
+          description: description,
+          privacy_level: 1,
+      }),
+    })
+    console.log(res);
+    return res;
+  } catch (error) {console.log(error)}; 
+}
+

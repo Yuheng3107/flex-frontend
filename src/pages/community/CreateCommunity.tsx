@@ -4,11 +4,15 @@ import React, { useState } from 'react';
 import { IonPage, IonContent, useIonToast } from '@ionic/react';
 
 import { backend } from '../../App';
+import { useHistory } from "react-router-dom";
+import { createCommunityAsync } from '../../utils/data/communityData';
 
 function CreateCommunity() {
     const [communityNameInput, setCommunityNameInput] = useState("");
     const [communityDescriptionInput, setCommunityDescriptionInput] = useState("");
+    
     const [toast] = useIonToast();
+    const history = useHistory();
 
     function presentToast(message: string) {
         toast({
@@ -18,7 +22,7 @@ function CreateCommunity() {
         })
     }
 
-    function createCommunityHandler(event: React.FormEvent) {
+    async function createCommunityHandler(event: React.FormEvent) {
         event.preventDefault();
 
         if (communityNameInput.trim() === "" && communityDescriptionInput.trim() === "") {
@@ -32,28 +36,8 @@ function CreateCommunity() {
             return
         }
         
-        fetch(`${backend}/community/community/create`, {
-            method: "POST",
-            headers: {
-                "X-CSRFToken": String(
-                    document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]
-                ),
-                "Content-type": "application/json"
-            },
-            credentials: "include",
-            body: JSON.stringify({
-                name: communityNameInput,
-                description: communityDescriptionInput,
-                privacy_level: 1,
-            }),
-        }).then((response) => {
-            console.log(response);
-            return response.json();
-        }).then((data) => {
-            console.log(data);
-        }).catch((err) => {
-            console.log(err);
-        });
+        let response = await createCommunityAsync(communityNameInput, communityDescriptionInput);
+        if (response?.status === 201) history.push('/home');
     }
 
     return <IonPage>
