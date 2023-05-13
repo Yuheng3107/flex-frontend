@@ -187,7 +187,7 @@ const App: React.FC = () => {
               {/* </div> */}
             </IonTabButton>
             <IonTabButton tab="profile" href="/profile">
-              {/* <IonIcon aria-hidden="true" icon={backend.concat(profileData.profile_photo)} /> */}
+              {/* <IonIcon aria-hidden="true" icon={profileData.profile_photo} /> */}
               {profileDataRedux.profile_photo ? (
                 <img
                   className={`rounded-full border border-neutral-800 h-9`}

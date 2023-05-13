@@ -29,7 +29,7 @@ function WorkoutInfoDisplay({ exerciseRegime }: WorkoutInfoDisplayProps) {
                     <span id="exercise-count">{exerciseRegime.exercises.length} exercises</span>
                 </p>
             </div>
-            <img id="bg-banner" alt="banner image" src={backend.concat(exerciseRegime.media)} className=" z-0 absolute w-full h-full object-cover object-center"></img>
+            <img id="bg-banner" alt="banner image" src={exerciseRegime.media} className=" z-0 absolute w-full h-full object-cover object-center"></img>
             <div className="h-full w-full bg-gradient-to-b from-transparent to-black z-10 absolute"></div>
         </section>
         <section id="exercises">
@@ -37,7 +37,7 @@ function WorkoutInfoDisplay({ exerciseRegime }: WorkoutInfoDisplayProps) {
                 {exerciseRegime.exercises.map((item, index) => {
                     return <IonItem key={index}>
                         <IonThumbnail slot="start">
-                            <img className="aspect-square object-cover" src={backend.concat(item.media)}></img>
+                            <img className="aspect-square object-cover" src={item.media}></img>
                         </IonThumbnail>
                         <div>
                             <p>{item.name}</p>

@@ -14,7 +14,7 @@ function CommunityShortInfo({ communityData }: CommunityInfoProps) {
     const [communityPhotoUrl, setCommunityPhotoUrl] = useState("");
 
     useEffect(() => {
-        if (communityData?.community_photo !== null) setCommunityPhotoUrl(backend.concat(communityData.community_photo))
+        if (communityData?.community_photo !== null) setCommunityPhotoUrl(communityData.community_photo)
     });
 
     return <IonRouterLink className="flex flex-row justify-between h-12 item-center border-b border-b-stone-600" routerLink={`/home/community/${communityData.id}`}>

@@ -15,7 +15,7 @@ const KeyProfileInfoDisplay = ({ profileData }: ProfileInfoProps) => {
 
   useEffect(() => {
     if (profileData?.profile_photo) {
-      setImageUrl(backend.concat(profileData.profile_photo));
+      setImageUrl(profileData.profile_photo);
     }
   }, [profileData?.profile_photo]);
 

@@ -22,7 +22,7 @@ function WorkoutCard({ className, regimeData }: WorkoutCardProps) {
     const history = useHistory();
     return <div className={`${className} relative bg-zinc-200 rounded-xl flex flex-col justify-between h-44 overflow-hidden`} >
         <img className="absolute w-full h-full object-cover z-0 grayscale contrast-75 brightness-75" alt="card background image"
-            src={backend.concat(regimeData.media)}></img>
+            src={regimeData.media}></img>
         <div className="z-10 p-3">
             <h3 className="text-left pb-0 text-2xl font-semibold text-white m-0">{regimeData.name}</h3>
             {/* <p className="text-left px-3 text-white">{exercises}</p> */}
