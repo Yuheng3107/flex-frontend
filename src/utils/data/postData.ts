@@ -170,9 +170,7 @@ const updateFeedPostMediaAsync = async function (pk: number, media: FormData) {
     let res = await fetch(`${backend}/feed/feed_post/update/media/${pk}`, {
       method: "POST",
       headers: {
-          "X-CSRFToken": String(
-              document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]
-          ),
+          "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]),
       },
       credentials: "include",
       body: media,

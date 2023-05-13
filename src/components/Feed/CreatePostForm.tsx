@@ -57,7 +57,6 @@ function CreatePostForm({ makePost, backUrl, isComment }: CreatePostProps ) {
             </IonToolbar>
         </IonHeader>
         <IonContent>
-            <div></div>
             <main className="flex flex-col h-3/4">
                 { isComment ? "" :
                 <input value={postTitleInput} type="text" placeholder="Post Title"
@@ -76,7 +75,7 @@ function CreatePostForm({ makePost, backUrl, isComment }: CreatePostProps ) {
                 { isComment ? "" : <>
                 <hr className="border-t border-t-slate-300" />
                 <p className="bg-transparent block p-4 text-xl focus:outline-0">Upload Optional Media</p>
-                <input className="bg-transparent block px-4 pb-1 text-lg font-light focus:outline-0" type="file" ref={mediaInputRef} onChange={(e) => {
+                <input className="bg-transparent block px-4 pb-5 text-lg font-light focus:outline-0" type="file" ref={mediaInputRef} onChange={(e) => {
                     if (mediaInputRef.current!.files !== null && mediaInputRef.current!.files.length > 0) {
                         if (mediaInputRef.current!.files[0].size > 10000000) {
                             e.target.value = "";
@@ -90,7 +89,6 @@ function CreatePostForm({ makePost, backUrl, isComment }: CreatePostProps ) {
                 }} />
                 </>}
             </main>
-
         </IonContent>
     </IonPage>
 }
