@@ -75,16 +75,6 @@ const FriendRequest = ({ profileId }: FriendRequestProps) => {
           <div> Request Declined.</div>
         )}
       </div>
-      {requestState === 0 ? (
-        <div>
-          <IonButton onClick={acceptRequest}>Accept</IonButton>
-          <IonButton onClick={declineRequest}>Decline</IonButton>
-        </div>
-      ) : requestState === 1 ? (
-        <div>Request Accepted.</div>
-      ) : (
-        <div>Request Declined.</div>
-      )}
     </div>
   );
 };
