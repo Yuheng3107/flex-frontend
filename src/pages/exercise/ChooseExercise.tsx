@@ -8,7 +8,9 @@ import {
   IonPage,
   IonItem,
   IonButton,
-  IonIcon
+  IonIcon,
+  IonFab,
+  IonFabButton,
 } from "@ionic/react";
 
 import { addCircleOutline, addOutline } from "ionicons/icons";
@@ -94,7 +96,7 @@ const ChooseExercise = () => {
               </button>
             </p>
             {regimeCardArray.map((regimeData) => (
-              <WorkoutCard key={regimeData.id} regimeData={regimeData}  />
+              <WorkoutCard key={regimeData.id} regimeData={regimeData} />
             ))}
           </section>
           <section id="Exercises-container">
@@ -107,6 +109,11 @@ const ChooseExercise = () => {
 
           </section>
         </main>
+        <IonFab slot="fixed" vertical="bottom" horizontal="end">
+          <IonFabButton routerLink="/exercise/upload">
+            <IonIcon icon={addOutline}></IonIcon>
+          </IonFabButton>
+        </IonFab>
       </IonContent>
     </IonPage>
   );
