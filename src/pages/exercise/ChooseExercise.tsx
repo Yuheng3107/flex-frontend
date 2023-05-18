@@ -10,10 +10,11 @@ import {
   IonButton,
   IonIcon,
   IonFab,
+  IonFabList,
   IonFabButton,
 } from "@ionic/react";
 
-import { addCircleOutline, addOutline } from "ionicons/icons";
+import { addCircleOutline, addOutline, cloudUpload, cloudUploadOutline } from "ionicons/icons";
 
 //redux imports
 import { useAppSelector } from "../../store/hooks";
@@ -82,6 +83,11 @@ const ChooseExercise = () => {
     getRegimesData();
   }, [backend, exerciseStatsRedux])
 
+  function fileInputHandler (e: React.ChangeEvent<HTMLInputElement>) {
+    console.log(e.target.value);
+    history.push('exercise/upload')
+  }
+
   let samplePhoto = "https://images.unsplash.com/photo-1607962837359-5e7e89f86776?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
 
   return (
@@ -110,8 +116,9 @@ const ChooseExercise = () => {
           </section>
         </main>
         <IonFab slot="fixed" vertical="bottom" horizontal="end">
-          <IonFabButton routerLink="/exercise/upload">
-            <IonIcon icon={addOutline}></IonIcon>
+          <IonFabButton>
+            <IonIcon icon={cloudUploadOutline}></IonIcon>
+            <input type="file" className="opacity-0 z-10 absolute" onChange={fileInputHandler} accept="video/*"></input>
           </IonFabButton>
         </IonFab>
       </IonContent>
