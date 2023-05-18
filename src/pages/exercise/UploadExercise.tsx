@@ -1,13 +1,81 @@
+import React, { useState, useRef } from 'react';
+import {
+    IonButtons,
+    IonButton,
+    IonHeader,
+    IonContent,
+    IonToolbar,
+    IonTitle,
+    IonPage,
+    IonItem,
+    IonLabel,
+    IonInput,
+    useIonModal,
+} from '@ionic/react';
+import { OverlayEventDetail } from '@ionic/core/components';
+function Example() {
+    const [present, dismiss] = useIonModal(ModalExample, {
+        onDismiss: (data: string, role: string) => dismiss(data, role),
+    });
+    const [message, setMessage] = useState('This modal example uses the modalController to present and dismiss modals.');
 
-//Ionic imports
-import { IonContent, IonPage } from "@ionic/react";
+    function openModal() {
+        present({
+            onWillDismiss: (ev: CustomEvent<OverlayEventDetail>) => { },
+        });
+    }
 
-function UploadExercise () {
-    return <IonPage>
-        <IonContent>
-            Upload your exercise here
-        </IonContent>
-    </IonPage>
+    return (
+        <IonPage>
+            <IonHeader>
+                <IonToolbar>
+                    <IonTitle>Controller Modal</IonTitle>
+                </IonToolbar>
+            </IonHeader>
+            <IonContent className="ion-padding">
+                <IonButton expand="block" onClick={() => openModal()}>
+                    Open
+                </IonButton>
+                <p>{message}</p>
+            </IonContent>
+        </IonPage>
+    );
 }
 
-export default UploadExercise;
+
+const ModalExample = ({
+    onDismiss,
+}: {
+    onDismiss: (data?: string | null | undefined | number, role?: string) => void;
+}) => {
+    const inputRef = useRef<HTMLIonInputElement>(null);
+    return (
+        <IonPage>
+            <IonHeader>
+                <IonToolbar>
+                    <IonButtons slot="start">
+                        <IonButton color="medium" onClick={() => onDismiss(null, 'cancel')}>
+                            Cancel
+                        </IonButton>
+                    </IonButtons>
+                    <IonTitle>Welcome</IonTitle>
+                    <IonButtons slot="end">
+                        <IonButton onClick={() => onDismiss(inputRef.current?.value, 'confirm')} strong={true}>
+                            Confirm
+                        </IonButton>
+                    </IonButtons>
+                </IonToolbar>
+            </IonHeader>
+            <IonContent className="ion-padding">
+                <IonItem>
+                    <IonLabel position="stacked">Enter your name</IonLabel>
+                    <IonInput ref={inputRef} placeholder="Your name" />
+                </IonItem>
+            </IonContent>
+        </IonPage>
+    );
+};
+
+
+
+export default Example;

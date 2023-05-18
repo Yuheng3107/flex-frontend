@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { useHistory } from "react-router";
 
@@ -12,9 +12,14 @@ import {
   IonFab,
   IonFabList,
   IonFabButton,
+  IonModal,
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  useIonModal
 } from "@ionic/react";
 
-import { addCircleOutline, addOutline, cloudUpload, cloudUploadOutline } from "ionicons/icons";
+import { addCircleOutline, addOutline, closeOutline, cloudUpload, cloudUploadOutline } from "ionicons/icons";
 
 //redux imports
 import { useAppSelector } from "../../store/hooks";
@@ -34,14 +39,29 @@ import { getExerciseListAsync, getExerciseRegimeAsync } from "../../utils/data/g
 //types
 import { ObjExerciseRegimesInfo } from "../../types/stateTypes";
 import { ExerciseData } from "../../types/stateTypes";
+import { OverlayEventDetail } from "@ionic/react/dist/types/components/react-component-lib/interfaces";
 
 const ChooseExercise = () => {
 
   const [exerciseCardArray, setExerciseCardArray] = useState<ExerciseData[]>([]);
   const [regimeCardArray, setRegimeCardArray] = useState<any[]>([]);
   const exerciseStatsRedux = useAppSelector(state => state.exerciseStats)
-  const dispatch = useAppDispatch();
+  const videoInputRef = useRef<HTMLInputElement>(null)
+
+  //modal
+  const [presentModal, dismissModal] = useIonModal(VideoUploadModal, {
+    onDismiss: (data: string, role: string) => dismissModal(data, role),
+    videoFile: videoInputRef.current !== null && videoInputRef.current.files !== null ? videoInputRef.current.files[0] : null
+  });
+
+  function openModal() {
+    presentModal({
+      onWillDismiss: (ev: CustomEvent<OverlayEventDetail>) => { }
+    })
+  }
+
   const history = useHistory();
+
   useEffect(() => {
     console.log("useEffect running");
     async function getRegimesData() {
@@ -83,9 +103,13 @@ const ChooseExercise = () => {
     getRegimesData();
   }, [backend, exerciseStatsRedux])
 
-  function fileInputHandler (e: React.ChangeEvent<HTMLInputElement>) {
+  function fileInputHandler(e: React.ChangeEvent<HTMLInputElement>) {
     console.log(e.target.value);
-    history.push('exercise/upload')
+    // history.push('exercise/upload')
+    if (videoInputRef.current !== null && videoInputRef.current.files !== null) {
+      console.log(videoInputRef.current.files[0]);
+    }
+    openModal();
   }
 
   let samplePhoto = "https://images.unsplash.com/photo-1607962837359-5e7e89f86776?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80";
@@ -118,12 +142,34 @@ const ChooseExercise = () => {
         <IonFab slot="fixed" vertical="bottom" horizontal="end">
           <IonFabButton>
             <IonIcon icon={cloudUploadOutline}></IonIcon>
-            <input type="file" className="opacity-0 z-10 absolute" onChange={fileInputHandler} accept="video/*"></input>
+            <input ref={videoInputRef} type="file" className="opacity-0 z-10 absolute" onChange={fileInputHandler} accept="video/*"></input>
           </IonFabButton>
         </IonFab>
       </IonContent>
     </IonPage>
   );
 };
+
+const VideoUploadModal = ({ onDismiss, videoFile }: {
+  //define the type of props received
+  onDismiss: (data?: string | null | undefined | number, role?: string) => void;
+  videoFile: File | null;
+}) => {
+  console.log(videoFile)
+  return <IonPage>
+    <IonHeader>
+      <IonToolbar>
+        <IonButtons slot="start">
+          <IonButton onClick={() => onDismiss(null, 'cancel')}>
+            <IonIcon icon={closeOutline}></IonIcon>
+          </IonButton>
+        </IonButtons>
+      </IonToolbar>
+    </IonHeader>
+    <IonContent>
+      Analyze Exercise here
+    </IonContent>
+  </IonPage>
+}
 
 export default ChooseExercise;
