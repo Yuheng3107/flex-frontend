@@ -1,8 +1,4 @@
-export default function UploadedVideo({
-  videoFile,
-}: {
-  videoFile: File | null;
-}) {
+export default function UploadedVideo({videoFile,}: {videoFile: File | null;}) {
   if (videoFile === null) {
     return <video src=""></video>;
   }
