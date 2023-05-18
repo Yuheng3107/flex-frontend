@@ -1,13 +1,12 @@
-
 //Ionic imports
 import { IonContent, IonPage } from "@ionic/react";
 
-function UploadExercise () {
-    return <IonPage>
-        <IonContent>
-            Upload your exercise here
-        </IonContent>
+function UploadExercise() {
+  return (
+    <IonPage>
+      <IonContent></IonContent>
     </IonPage>
+  );
 }
 
 export default UploadExercise;
