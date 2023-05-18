@@ -6,16 +6,9 @@ import { useHistory } from "react-router";
 import {
   IonContent,
   IonPage,
-  IonItem,
-  IonButton,
   IonIcon,
   IonFab,
-  IonFabList,
   IonFabButton,
-  IonModal,
-  IonHeader,
-  IonToolbar,
-  IonButtons,
   useIonModal
 } from "@ionic/react";
 
@@ -30,6 +23,7 @@ import { exerciseDataActions } from "../../store/exerciseDataSlice";
 import { backend } from "../../App";
 import ExerciseCard from "../../components/Exercise/ExerciseCard";
 import WorkoutCard from "../../components/Exercise/workout/WorkoutCard";
+import AnalyseVideoModal from "../../components/Exercise/uploadVideo/AnalyseVideoModal";
 
 import AddIcon from "../../assets/svgComponents/AddIcon";
 
@@ -49,7 +43,7 @@ const ChooseExercise = () => {
   const videoInputRef = useRef<HTMLInputElement>(null)
 
   //modal
-  const [presentModal, dismissModal] = useIonModal(VideoUploadModal, {
+  const [presentModal, dismissModal] = useIonModal(AnalyseVideoModal, {
     onDismiss: (data: string, role: string) => dismissModal(data, role),
     videoFile: videoInputRef.current !== null && videoInputRef.current.files !== null ? videoInputRef.current.files[0] : null
   });
@@ -150,26 +144,6 @@ const ChooseExercise = () => {
   );
 };
 
-const VideoUploadModal = ({ onDismiss, videoFile }: {
-  //define the type of props received
-  onDismiss: (data?: string | null | undefined | number, role?: string) => void;
-  videoFile: File | null;
-}) => {
-  console.log(videoFile)
-  return <IonPage>
-    <IonHeader>
-      <IonToolbar>
-        <IonButtons slot="start">
-          <IonButton onClick={() => onDismiss(null, 'cancel')}>
-            <IonIcon icon={closeOutline}></IonIcon>
-          </IonButton>
-        </IonButtons>
-      </IonToolbar>
-    </IonHeader>
-    <IonContent>
-      Analyze Exercise here
-    </IonContent>
-  </IonPage>
-}
+
 
 export default ChooseExercise;
