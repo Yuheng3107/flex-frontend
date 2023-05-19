@@ -232,8 +232,8 @@ const VideoFeed = ({
           }}
           mirrored={true}
           ref={webcam}
-          height={270}
-          width={360}
+          height={webcam.current?.video?.videoHeight}
+          width={webcam.current?.video?.videoWidth}
           className="w-full"
         />
 
