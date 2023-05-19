@@ -185,7 +185,7 @@ const App: React.FC = () => {
               {profileDataRedux.profile_photo ? (
                 <img
                   className={`rounded-full border border-neutral-800 h-9`}
-                  src={profileDataRedux.profile_photo}
+                  src={imgBackend.concat(profileDataRedux.profile_photo)}
                 />
               ) : (
                 <IonIcon className="" aria-hidden="true" src={person} />
