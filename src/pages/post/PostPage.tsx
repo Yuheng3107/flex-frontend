@@ -119,7 +119,7 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
                 <IonToolbar>
                     <div className="flex flex-row justify-between items-center">
                         <textarea value={postTextInput} placeholder="Post Comment"
-                            className="bg-transparent block text-xl font-light w-5/6"
+                            className="m-2 bg-transparent block text-xl font-light w-5/6 h-8"
                             onChange={(event) => {
                                 setPostTextInput(event.target.value);
                                 console.log(postTextInput);
