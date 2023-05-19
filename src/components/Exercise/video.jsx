@@ -25,6 +25,12 @@ import RepCountCircle from "./RepCountCircle";
 // draw lines
 import { RendererCanvas2d } from "./workout/renderer_canvas2d";
 
+// params
+import * as params from "./workout/params";
+
+// mobile detection
+import { isMobile } from "./workout/util";
+
 let feedback = new Array();
 let isActive = false;
 let frameCount = 0;
@@ -80,22 +86,25 @@ class VideoFeed extends Component {
   }
 
   determineButtonDisplay() {
-    const startEndButton = <StartEndButton
-      detector={this.state.detector}
-      start={this.start}
-      end={this.end}
-      startButton={this.state.startButton}
-      setState={this.setState}
-      parentState={this.state}
-    />
+    const startEndButton = (
+      <StartEndButton
+        detector={this.state.detector}
+        start={this.start}
+        end={this.end}
+        startButton={this.state.startButton}
+        setState={this.setState}
+        parentState={this.state}
+      />
+    );
     if (this.state.exerciseEnded) {
-      if (this.props.completeExerciseButton) return this.props.completeExerciseButton;
-      else return (startEndButton);
+      if (this.props.completeExerciseButton)
+        return this.props.completeExerciseButton;
+      else return startEndButton;
     } else {
       if (this.state.detectorLoading) {
         return <IonSpinner></IonSpinner>;
       } else {
-        return (startEndButton);
+        return startEndButton;
       }
     }
   }
@@ -106,7 +115,13 @@ class VideoFeed extends Component {
         <div className="relative" id="video-feed">
           <canvas ref={this.canvas} className="absolute z-10"></canvas>
           <Webcam
-            videoConstraints={{ facingMode: "user" }}
+            videoConstraints={{
+              facingMode: "user",
+              // Only setting the video to a specified size for large screen, on
+              // mobile devices accept the default size.
+              width: isMobile() ? params.VIDEO_SIZE["360 X 270"].width : 640,
+              height: isMobile() ? params.VIDEO_SIZE["360 X 270"].height : 480,
+            }}
             mirrored={true}
             ref={this.webcam}
           />
@@ -146,10 +161,7 @@ class VideoFeed extends Component {
             {this.state.generalFeedback}
           </TextBox>
         </div>
-        <div
-          id="button-container"
-          className="flex justify-center pb-20"
-        >
+        <div id="button-container" className="flex justify-center pb-20">
           {/* {this.state.detectorLoading ?
             <IonSpinner></IonSpinner>
             :
@@ -179,9 +191,7 @@ class VideoFeed extends Component {
       generalFeedback: "Loading...",
     });
     await delay(1);
-    await this.state.detector.estimatePoses(
-      this.webcam.current.video
-    );
+    await this.state.detector.estimatePoses(this.webcam.current.video);
     console.log("start");
     this.setState({
       maxRepCount: 3,
@@ -313,7 +323,7 @@ async function delay(ms) {
 }
 
 const read = (content) => {
-  console.log('this code is running');
+  console.log("this code is running");
   if (textToSpeech()) {
     let speech = new SpeechSynthesisUtterance(content);
     window.speechSynthesis.speak(speech);
