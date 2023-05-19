@@ -20,7 +20,7 @@ import { toggleDarkTheme } from "./utils/darkMode";
 
 // tailwind imports
 import "./theme/tailwind.css";
-import { Redirect, Route } from "react-router-dom";
+import { Redirect, Route, useHistory } from "react-router-dom";
 
 //Ionic Imports
 import {
@@ -68,6 +68,10 @@ import OtherUserProfile from "./pages/other users/OtherUserProfile";
 import SearchPosts from "./pages/Home/SearchPosts";
 import SearchUsers from "./pages/Home/SearchUsers";
 import SearchCommunities from "./pages/Home/SearchCommunities";
+import checkLoginStatus from "./utils/checkLogin";
+import { emptyProfileData } from "./types/stateTypes";
+import Loading from "./pages/Home/Loading";
+import Login from "./pages/Home/Login";
 
 setupIonicReact();
 checkAndToggleDarkTheme();
@@ -79,6 +83,7 @@ const exercises = ["zero", "Squats", "Push-ups", "Hamstring Stretch"];
 
 const App: React.FC = () => {
   const [updateProfileState, setUpdateProfileState] = useState(0);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const profileDataRedux = useAppSelector((state) => state.profile.profileData);
   const updateProfileCounter = useAppSelector(
@@ -94,6 +99,8 @@ const App: React.FC = () => {
       let data = await getProfileDataAsync();
       //get favorite exercse
       if (data === false) {
+        dispatch(profileDataActions.setProfileData({id:-1}));
+        setLoading(false);
         return;
       }
       data.favorite_exercise = await getFavoriteExerciseAsync(data.id);
@@ -111,10 +118,11 @@ const App: React.FC = () => {
       console.log(data);
       dispatch(profileDataActions.setProfileData(data.profileData));
       dispatch(exerciseStatsActions.setExerciseStats(data.exerciseStats));
+      setLoading(false);
     }
 
     obtainProfileData();
-  }, [getProfileData, updateProfileState, updateProfileCounter]);
+  }, [updateProfileState, updateProfileCounter]);
 
   function closeHomeSideMenu() {
     homeMenuRef.current?.close();
@@ -125,6 +133,23 @@ const App: React.FC = () => {
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet>
+            {loading === true? <>
+              <Route>
+                <Redirect to="/" />
+              </Route>
+              <Route exact path="/">
+                <Loading />
+              </Route>
+            </>
+            :profileDataRedux.id === -1? <>
+              <Route>
+                <Redirect to="/login" />
+              </Route>
+              <Route exact path="/login">
+                <Login />
+              </Route>
+            </>
+            :<>
             <Route exact path="/">
               <Redirect to="/home" />
             </Route>
@@ -165,6 +190,7 @@ const App: React.FC = () => {
             <Route path="/profile" component={ProfilePages} />
 
             <Route path="/exercise" component={ExercisePages} />
+            </>}
           </IonRouterOutlet>
           <IonTabBar slot="bottom" onClick={closeHomeSideMenu}>
             <IonTabButton tab="home" href="/home">

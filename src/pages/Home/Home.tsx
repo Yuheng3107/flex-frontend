@@ -1,4 +1,5 @@
-import { useState, useRef, forwardRef } from 'react';
+import { useState, useRef, forwardRef, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 //Ionic imports
 import {
@@ -20,6 +21,8 @@ import { chevronBackOutline, pencilOutline } from 'ionicons/icons';
 //Redux imports
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 
+//Utils imports
+import checkLoginStatus from '../../utils/checkLogin';
 
 //Component imports
 import Feed from '../../components/Feed/Feed';
@@ -33,6 +36,7 @@ type HomeProps = {
 }
 const Home = forwardRef<Ref, HomeProps>(function (props, ref) {
   const communitiesRedux = useAppSelector((state) => state.profile.profileData.communities);
+  const profileId = useAppSelector((state) => state.profile.profileData.id);
   console.log(communitiesRedux);
   const [sideMenuShowing, setSetMenuShowing] = useState(false);
   const sideMenuRef = useRef<HTMLIonMenuElement>(null);
@@ -40,6 +44,11 @@ const Home = forwardRef<Ref, HomeProps>(function (props, ref) {
   function closeSideMenu() {
     sideMenuRef.current?.close();
   }
+  const history = useHistory();
+  useEffect(()=>{
+    if (profileId === 0) history.push('/profile');
+  },[])
+  
   return <>
     {/* This is the content of the sideMenu  */}
     <IonMenu ref={ref} contentId="main-content">
