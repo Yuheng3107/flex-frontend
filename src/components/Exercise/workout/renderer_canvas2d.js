@@ -101,7 +101,7 @@ export class RendererCanvas2d {
     // different model. If during model change, the result is from an old model,
     // which shouldn't be rendered.
     if (poses && poses.length > 0 && !isModelChanged) {
-      this.drawResults(poses, video.height, video.width);
+      this.drawResults(poses);
     }
   }
 
@@ -117,10 +117,10 @@ export class RendererCanvas2d {
    * Draw the keypoints and skeleton on the video.
    * @param poses A list of poses to render.
    */
-  drawResults(poses, videoHeight, videoWidth) {
+  drawResults(poses) {
     for (const pose of poses) {
       // for multiple poses
-      this.drawResult(pose, videoHeight, videoWidth);
+      this.drawResult(pose);
     }
   }
 
@@ -128,19 +128,19 @@ export class RendererCanvas2d {
    * Draw the keypoints and skeleton on the video.
    * @param pose A pose with keypoints to render.
    */
-  drawResult(pose, videoHeight, videoWidth) {
+  drawResult(pose) {
     if (pose.keypoints != null) {
       pose.keypoints = posedetection.calculators.keypointsToNormalizedKeypoints(
         pose.keypoints,
         {
-          height: 480,
-          width: 640,
+          height: this.cameraHeight,
+          width: this.cameraWidth,
         }
       );
 
       pose.keypoints.forEach((keypoint) => {
-        keypoint.x = keypoint.x * videoWidth;
-        keypoint.y = keypoint.y * videoHeight;
+        keypoint.x = keypoint.x * this.videoWidth;
+        keypoint.y = keypoint.y * this.videoHeight;
       });
       this.drawKeypoints(pose.keypoints);
       this.drawSkeleton(pose.keypoints, pose.id);

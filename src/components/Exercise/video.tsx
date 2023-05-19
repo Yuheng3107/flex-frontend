@@ -206,10 +206,6 @@ const VideoFeed = ({
       canvas.current === null
     )
       return;
-    console.log(webcam.current.video.videoHeight);
-    window.alert(
-      `Width is ${webcam.current.video.width}, Height is ${webcam.current.video.height}`
-    );
 
     // set explicit width and height for canvas
     [canvas.current.width, canvas.current.height] = [
@@ -217,10 +213,13 @@ const VideoFeed = ({
       webcam.current.video.height,
     ];
 
+    // get the width and height of the camera (which is used as the basis for tf keypoint calculations)
+    let cameraWidth = webcam.current.video.videoWidth;
+    let cameraHeight = webcam.current.video.videoHeight;
     rendererCanvas = new RendererCanvas2d(
       canvas.current,
-      webcam.current.video.videoWidth,
-      webcam.current.video.videoHeight
+      cameraWidth,
+      cameraHeight
     );
   };
   return (
