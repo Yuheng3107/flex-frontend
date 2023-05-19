@@ -73,7 +73,9 @@ import SearchCommunities from "./pages/Home/SearchCommunities";
 setupIonicReact();
 checkAndToggleDarkTheme();
 
-const backend = "https://fitai.click";
+// 'globals'
+const backend = "localhost:8000";
+const imgBackend = "localhost:8000";
 const exercises = ["zero", "Squats", "Push-ups", "Hamstring Stretch"];
 
 const App: React.FC = () => {
@@ -206,4 +208,4 @@ const App: React.FC = () => {
 
 export default App;
 
-export { backend, exercises };
+export { backend, imgBackend, exercises };

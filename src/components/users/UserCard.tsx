@@ -8,7 +8,7 @@ import { ProfileData, emptyProfileData } from "../../types/stateTypes";
 import { sendFriendRequest, deleteFriendRequest, deleteFriend } from "../../utils/data/friends";
 import { getOtherProfileDataAsync } from "../../utils/data/profileData";
 
-import { backend } from "../../App";
+import { imgBackend } from "../../App";
 
 type UserCardProps = {
   profileData: ProfileData;
@@ -42,7 +42,7 @@ function UserCard({ profileData }:UserCardProps) {
     useEffect(() => {
       if (profileDataRedux.followers.includes(profileData.id)) setFriendStatus(2);
       if (profileData?.profile_photo) {
-        setImageUrl(profileData.profile_photo)
+        setImageUrl(imgBackend.concat(profileData.profile_photo));
       }
     }, [profileData?.profile_photo, friendStatus, setFriendStatus, profileDataRedux])
   

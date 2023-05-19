@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import { backend } from "../../App";
+import { imgBackend } from "../../App";
 
 import Achievements from "./Achievements";
 import KeyStats from "./KeyStats";
@@ -15,7 +15,7 @@ const KeyProfileInfoDisplay = ({ profileData }: ProfileInfoProps) => {
 
   useEffect(() => {
     if (profileData?.profile_photo) {
-      setImageUrl(profileData.profile_photo);
+      setImageUrl(imgBackend.concat(profileData.profile_photo));
     }
   }, [profileData?.profile_photo]);
 

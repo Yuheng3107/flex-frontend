@@ -9,7 +9,7 @@ import {
 } from "../../utils/data/friends";
 import { getOtherProfileDataAsync } from "../../utils/data/profileData";
 
-import { backend } from "../../App";
+import { imgBackend } from "../../App";
 
 type FriendRequestProps = {
   profileId: number;
@@ -35,7 +35,7 @@ const FriendRequest = ({ profileId }: FriendRequestProps) => {
   useEffect(() => {
     getProfileData();
     if (profileData?.profile_photo) {
-      setImageUrl(profileData.profile_photo);
+      setImageUrl(imgBackend.concat(profileData.profile_photo));
     }
   }, [profileData?.profile_photo, requestState, setRequestState]);
 
