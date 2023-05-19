@@ -52,11 +52,12 @@ const VideoFeed = ({repCountInput, exerciseId, completeExerciseButton, exerciseD
 
   let rendererCanvas: RendererCanvas2d;
 
-  const toggleFeedbackLog = () => {setFeedbackLogShowing(!feedbackLogShowing);}
+
   useEffect(() => {
     loadDetector();
   },[]);
 
+  const toggleFeedbackLog = () => {setFeedbackLogShowing(!feedbackLogShowing);}
 
   const determineButtonDisplay = () => {
     const startEndButton = (
@@ -82,6 +83,10 @@ const VideoFeed = ({repCountInput, exerciseId, completeExerciseButton, exerciseD
       }
     }
   }
+
+  /*--------------------
+  EXERCISE FUNCTIONS
+  --------------------*/
   /**
    * loads detector
    */
@@ -97,7 +102,6 @@ const VideoFeed = ({repCountInput, exerciseId, completeExerciseButton, exerciseD
   }
   /**
    * starts exercise
-   * @returns idek
    */
   const start = async () => {
     if (detector === null) return window.alert("loading!");
@@ -133,7 +137,7 @@ const VideoFeed = ({repCountInput, exerciseId, completeExerciseButton, exerciseD
     setFeedback(["", ""]);
 
     // get from backend
-    let exercise:any = getExercise(exerciseId); // EXERCISE ID??? TODO
+    let exercise:any = getExercise(exerciseId);
     // initialise form correction
     formCorrection.init(
       exercise.evalPoses,
@@ -159,7 +163,6 @@ const VideoFeed = ({repCountInput, exerciseId, completeExerciseButton, exerciseD
         let newRepCount = newFeedback[0].slice(-1)[0].match(/\d+/)[0];
         console.log(newFeedback[0][0]);
         setRepCount(newRepCount);
-
         setRepFeedback(newFeedback[0].slice(-1));
         setRepFeedbackLog(newFeedback[0]);
       }
