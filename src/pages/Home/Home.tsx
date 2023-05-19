@@ -1,5 +1,4 @@
 import { useState, useRef, forwardRef, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 
 //Ionic imports
 import {
@@ -36,7 +35,6 @@ type HomeProps = {
 }
 const Home = forwardRef<Ref, HomeProps>(function (props, ref) {
   const communitiesRedux = useAppSelector((state) => state.profile.profileData.communities);
-  const profileId = useAppSelector((state) => state.profile.profileData.id);
   console.log(communitiesRedux);
   const [sideMenuShowing, setSetMenuShowing] = useState(false);
   const sideMenuRef = useRef<HTMLIonMenuElement>(null);
@@ -44,10 +42,6 @@ const Home = forwardRef<Ref, HomeProps>(function (props, ref) {
   function closeSideMenu() {
     sideMenuRef.current?.close();
   }
-  const history = useHistory();
-  useEffect(()=>{
-    if (profileId === 0) history.push('/profile');
-  },[])
   
   return <>
     {/* This is the content of the sideMenu  */}
