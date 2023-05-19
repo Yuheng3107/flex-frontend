@@ -109,10 +109,10 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
                         <img src={img404} />
                     </div> 
                 :
-                    <>
+                    <div className="px-2">
                         <PersonTextCard postData={postData} profileData={profileData} communityData={communityData} isLiked={isLiked}/>
                         <Posts loadData={loadComments} posts={posts}/>
-                    </>
+                    </div>
                 }
             </IonContent>
             <IonFooter>
