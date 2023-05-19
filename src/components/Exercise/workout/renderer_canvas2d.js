@@ -19,8 +19,6 @@ import * as scatter from "scatter-gl";
 
 import * as params from "./params";
 
-// mobile detection
-import { isMobile } from "./util";
 // These anchor points allow the pose pointcloud to resize according to its
 // position in the input.
 const ANCHOR_POINTS = [
@@ -73,7 +71,9 @@ const COLOR_PALETTE = [
   "#a9a9a9",
 ];
 export class RendererCanvas2d {
-  constructor(canvas) {
+  constructor(canvas, cameraWidth, cameraHeight) {
+    this.cameraWidth = cameraWidth;
+    this.cameraHeight = cameraHeight;
     this.ctx = canvas.getContext("2d");
     this.scatterGLEl = document.querySelector("#scatter-gl-container");
     this.scatterGL = new scatter.ScatterGL(this.scatterGLEl, {
@@ -133,8 +133,8 @@ export class RendererCanvas2d {
       pose.keypoints = posedetection.calculators.keypointsToNormalizedKeypoints(
         pose.keypoints,
         {
-          height: isMobile() ? params.VIDEO_SIZE["360 X 270"].height : 480,
-          width: isMobile() ? params.VIDEO_SIZE["360 X 270"].width : 640,
+          height: 480,
+          width: 640,
         }
       );
 

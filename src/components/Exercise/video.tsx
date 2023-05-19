@@ -33,7 +33,17 @@ import { isMobile } from "./workout/util";
 
 let isActive: boolean = false;
 
-const VideoFeed = ({repCountInput, exerciseId, completeExerciseButton, exerciseData}:{repCountInput: number, exerciseId:number, completeExerciseButton: any, exerciseData: any}) => {
+const VideoFeed = ({
+  repCountInput,
+  exerciseId,
+  completeExerciseButton,
+  exerciseData,
+}: {
+  repCountInput: number;
+  exerciseId: number;
+  completeExerciseButton: any;
+  exerciseData: any;
+}) => {
   const [repCount, setRepCount] = useState<number>(0);
   const [maxRepCount, setMaxRepCount] = useState<number>(1);
   const [feedbackLogShowing, setFeedbackLogShowing] = useState<boolean>(false);
@@ -47,16 +57,18 @@ const VideoFeed = ({repCountInput, exerciseId, completeExerciseButton, exerciseD
   const [exerciseEnded, setExerciseEnded] = useState<boolean>(false);
   const [startButton, setStartButton] = useState<boolean>(true);
 
-  const webcam = useRef<Webcam>(null); 
+  const webcam = useRef<Webcam>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
 
   let rendererCanvas: RendererCanvas2d;
 
   useEffect(() => {
     loadDetector();
-  },[]);
+  }, []);
 
-  const toggleFeedbackLog = () => {setFeedbackLogShowing(!feedbackLogShowing);}
+  const toggleFeedbackLog = () => {
+    setFeedbackLogShowing(!feedbackLogShowing);
+  };
 
   const determineButtonDisplay = () => {
     const startEndButton = (
@@ -66,13 +78,12 @@ const VideoFeed = ({repCountInput, exerciseId, completeExerciseButton, exerciseD
         end={end}
         startButton={startButton}
         setButton={setStartButton}
-        repCount = {repCount}
-        perfectRepCount = {perfectRepCount}
+        repCount={repCount}
+        perfectRepCount={perfectRepCount}
       />
     );
     if (exerciseEnded) {
-      if (completeExerciseButton !== null)
-        return completeExerciseButton;
+      if (completeExerciseButton !== null) return completeExerciseButton;
       else return startEndButton;
     } else {
       if (detector === null || webcam.current?.video === null) {
@@ -81,7 +92,7 @@ const VideoFeed = ({repCountInput, exerciseId, completeExerciseButton, exerciseD
         return startEndButton;
       }
     }
-  }
+  };
 
   /*--------------------
   EXERCISE FUNCTIONS
@@ -98,20 +109,19 @@ const VideoFeed = ({repCountInput, exerciseId, completeExerciseButton, exerciseD
       detectorConfig
     );
     setDetector(detectorObject);
-  }
+  };
   /**
    * starts exercise
    */
   const start = async () => {
     if (detector === null) return window.alert("loading!");
     assignImgHeight();
-    if (webcam.current === null || rendererCanvas === undefined) return window.alert("video error");
-    
+    if (webcam.current === null || rendererCanvas === undefined)
+      return window.alert("video error");
+
     setGeneralFeedback("Loading...");
     await delay(1);
-    await detector.estimatePoses(
-      webcam.current.video
-    );
+    await detector.estimatePoses(webcam.current.video);
     console.log("start");
     setMaxRepCount(3);
     setRepFeedback("");
@@ -136,7 +146,7 @@ const VideoFeed = ({repCountInput, exerciseId, completeExerciseButton, exerciseD
     setFeedback(["", ""]);
 
     // get from backend
-    let exercise:any = getExercise(exerciseId);
+    let exercise: any = getExercise(exerciseId);
     // initialise form correction
     formCorrection.init(
       exercise.evalPoses,
@@ -150,9 +160,7 @@ const VideoFeed = ({repCountInput, exerciseId, completeExerciseButton, exerciseD
     );
 
     while (isActive === true) {
-      let poses = await detector.estimatePoses(
-        webcam.current.video
-      );
+      let poses = await detector.estimatePoses(webcam.current.video);
       await delay(1);
       // add lines
       rendererCanvas.draw([webcam.current.video, poses, false]);
@@ -167,7 +175,7 @@ const VideoFeed = ({repCountInput, exerciseId, completeExerciseButton, exerciseD
       }
       if (newFeedback[1] != feedback[1]) setGeneralFeedback(newFeedback[1]);
       setFeedback(newFeedback);
-      setFrameCount(frameCount+1);
+      setFrameCount(frameCount + 1);
     }
   };
   /**
@@ -187,14 +195,21 @@ const VideoFeed = ({repCountInput, exerciseId, completeExerciseButton, exerciseD
   /*--------------------
   HELPER FUNCTIONS
   --------------------*/
-  async function delay(ms:number) {
+  async function delay(ms: number) {
     // return await for better async stack trace support in case of errors.
     return await new Promise((resolve) => setTimeout(resolve, ms));
   }
   const assignImgHeight = () => {
-    if (webcam.current === null || webcam.current.video === null || canvas.current === null) return;
-    console.log(webcam.current.video.videoHeight)
-    window.alert(`Width is ${webcam.current.video.videoWidth}, Height is ${webcam.current.video.videoHeight}`);
+    if (
+      webcam.current === null ||
+      webcam.current.video === null ||
+      canvas.current === null
+    )
+      return;
+    console.log(webcam.current.video.videoHeight);
+    window.alert(
+      `Width is ${webcam.current.video.width}, Height is ${webcam.current.video.height}`
+    );
 
     // set explicit width and height for canvas
     [canvas.current.width, canvas.current.height] = [
@@ -202,32 +217,32 @@ const VideoFeed = ({repCountInput, exerciseId, completeExerciseButton, exerciseD
       webcam.current.video.height,
     ];
 
-    rendererCanvas = new RendererCanvas2d(canvas.current);
+    rendererCanvas = new RendererCanvas2d(
+      canvas.current,
+      webcam.current.video.videoWidth,
+      webcam.current.video.videoHeight
+    );
   };
   return (
     <div className="relative h-full">
       <div className="relative" id="video-feed">
-        <canvas ref={canvas} className="absolute z-10"></canvas>
-        <Webcam height={160} width={240}
+        <canvas ref={canvas} className="absolute z-10 w-full"></canvas>
+        <Webcam
           videoConstraints={{
             facingMode: "user",
-            // Only setting the video to a specified size for large screen, on
-            // mobile devices accept the default size.
-            width: isMobile() ? params.VIDEO_SIZE["360 X 270"].width : 640,
-            height: isMobile() ? params.VIDEO_SIZE["360 X 270"].height : 480,
           }}
           mirrored={true}
           ref={webcam}
+          height={270}
+          width={360}
+          className="w-full"
         />
 
         <div id="scatter-gl-container" className="hidden"></div>
       </div>
 
       <div className="exercise-feedback flex flex-col items-center p-5 w-full">
-        <RepCountCircle
-          repCount={repCount}
-          repCountInput={maxRepCount}
-        />
+        <RepCountCircle repCount={repCount} repCountInput={maxRepCount} />
 
         <TextBox className="flex flex-col justify-between bg-zinc-100 pt-3 pb-0 w-4/5 mt-3">
           {feedbackLogShowing}
@@ -246,9 +261,7 @@ const VideoFeed = ({repCountInput, exerciseId, completeExerciseButton, exerciseD
               width="36"
             />
           </button>
-          {feedbackLogShowing && (
-            <span className="mt-1">{repFeedbackLog}</span>
-          )}
+          {feedbackLogShowing && <span className="mt-1">{repFeedbackLog}</span>}
         </TextBox>
 
         <TextBox className="bg-zinc-100 p-3 w-4/5 mt-3">
@@ -265,6 +278,6 @@ const VideoFeed = ({repCountInput, exerciseId, completeExerciseButton, exerciseD
       </div>
     </div>
   );
-}
+};
 
 export default VideoFeed;
