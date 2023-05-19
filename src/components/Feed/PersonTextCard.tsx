@@ -7,7 +7,7 @@ import BookmarkIcon from "../../assets/svgComponents/BookmarkIcon";
 import React, { useState, useEffect } from "react";
 import { useAppSelector } from "../../store/hooks";
 
-import { backend } from "../../App";
+import { imgBackend } from "../../App";
 import {
   UserPostData,
   ProfileData,
@@ -42,10 +42,10 @@ const PersonTextCard = ({
 
   useEffect(() => {
     if (profileData?.profile_photo) {
-      setImageUrl(profileData.profile_photo);
+      setImageUrl(imgBackend.concat(profileData.profile_photo));
     }
     if (postData?.media) {
-      setMediaUrl(postData.media);
+      setMediaUrl(imgBackend.concat(postData.media));
     }
     if (isLiked) setHasLiked(true);
     if (postData?.community) setPostType("community");
