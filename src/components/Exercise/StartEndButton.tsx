@@ -8,16 +8,14 @@ import { backend } from "../../App";
 //redux imports
 import { useAppSelector } from "../../store/hooks";
 
-function StartEndButton(props) {
+function StartEndButton({detector, start, end, startButton, setButton, repCount, perfectRepCount}:{detector:any, start:()=>void, end:()=>void, startButton:boolean, setButton:any, repCount: number, perfectRepCount: number}) {
   const profileDataRedux = useAppSelector((state) => state.profile.profileData);
-  function startButtonHandler(event) {
-    if (props.parentState.detector == null) {
+  function startButtonHandler(event:any) {
+    if (detector === null) {
       window.alert("loading!");
     } else {
-      props.start();
-      props.setState({
-        startButton: false,
-      });
+      start();
+      setButton(false);
     }
     // console.log(props.parentState.detector);
     // props.start();
@@ -25,20 +23,17 @@ function StartEndButton(props) {
     //     startButton: false
     // })
   }
-  console.log(props.parentState);
 
-  function endButtonHandler(event) {
+  function endButtonHandler(event:any) {
     console.log(
       JSON.stringify({
         exercise_id: 1,
-        total_reps: Number(props.parentState.repCount),
-        perfect_reps: Number(props.parentState.perfectRepCount),
+        total_reps: Number(repCount),
+        perfect_reps: Number(perfectRepCount),
       })
     );
-    props.end();
-    props.setState({
-      startButton: true,
-    });
+    end();
+    setButton(true);
     fetch(`${backend}/exercises/exercise_statistics/update`, {
       method: "POST",
       headers: {
@@ -50,8 +45,8 @@ function StartEndButton(props) {
       credentials: "include",
       body: JSON.stringify({
         exercise_id: 1,
-        total_reps: Number(props.parentState.repCount),
-        perfect_reps: Number(props.parentState.perfectRepCount),
+        total_reps: Number(repCount),
+        perfect_reps: Number(perfectRepCount),
       }),
     })
       .then((response) => {
@@ -72,7 +67,7 @@ function StartEndButton(props) {
       <Button
         onClick={startButtonHandler}
         className={`${
-          props.startButton ? "" : "hidden"
+          startButton ? "" : "hidden"
         } bg-blue-400 w-16 h-16 mx-2 text-zinc-900
       flex justify-center items-center p-0 aspect-square`}
       >
@@ -81,7 +76,7 @@ function StartEndButton(props) {
       <Button
         onClick={endButtonHandler}
         className={`${
-          props.startButton ? "hidden" : ""
+          startButton ? "hidden" : ""
         } bg-amber-300 w-16 h-16 mx-2 text-zinc-900
       flex justify-center items-center p-0 aspect-square`}
       >

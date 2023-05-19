@@ -19,8 +19,6 @@ import * as scatter from "scatter-gl";
 
 import * as params from "./params";
 
-// mobile detection
-import { isMobile } from "./util";
 // These anchor points allow the pose pointcloud to resize according to its
 // position in the input.
 const ANCHOR_POINTS = [
@@ -73,7 +71,9 @@ const COLOR_PALETTE = [
   "#a9a9a9",
 ];
 export class RendererCanvas2d {
-  constructor(canvas) {
+  constructor(canvas, cameraWidth, cameraHeight) {
+    this.cameraWidth = cameraWidth;
+    this.cameraHeight = cameraHeight;
     this.ctx = canvas.getContext("2d");
     this.scatterGLEl = document.querySelector("#scatter-gl-container");
     this.scatterGL = new scatter.ScatterGL(this.scatterGLEl, {
@@ -101,7 +101,7 @@ export class RendererCanvas2d {
     // different model. If during model change, the result is from an old model,
     // which shouldn't be rendered.
     if (poses && poses.length > 0 && !isModelChanged) {
-      this.drawResults(poses, video.height, video.width);
+      this.drawResults(poses);
     }
   }
 
@@ -117,10 +117,10 @@ export class RendererCanvas2d {
    * Draw the keypoints and skeleton on the video.
    * @param poses A list of poses to render.
    */
-  drawResults(poses, videoHeight, videoWidth) {
+  drawResults(poses) {
     for (const pose of poses) {
       // for multiple poses
-      this.drawResult(pose, videoHeight, videoWidth);
+      this.drawResult(pose);
     }
   }
 
@@ -128,19 +128,19 @@ export class RendererCanvas2d {
    * Draw the keypoints and skeleton on the video.
    * @param pose A pose with keypoints to render.
    */
-  drawResult(pose, videoHeight, videoWidth) {
+  drawResult(pose) {
     if (pose.keypoints != null) {
       pose.keypoints = posedetection.calculators.keypointsToNormalizedKeypoints(
         pose.keypoints,
         {
-          height: isMobile() ? params.VIDEO_SIZE["360 X 270"].height : 480,
-          width: isMobile() ? params.VIDEO_SIZE["360 X 270"].width : 640,
+          height: this.cameraHeight,
+          width: this.cameraWidth,
         }
       );
 
       pose.keypoints.forEach((keypoint) => {
-        keypoint.x = keypoint.x * videoWidth;
-        keypoint.y = keypoint.y * videoHeight;
+        keypoint.x = keypoint.x * this.videoWidth;
+        keypoint.y = keypoint.y * this.videoHeight;
       });
       this.drawKeypoints(pose.keypoints);
       this.drawSkeleton(pose.keypoints, pose.id);
