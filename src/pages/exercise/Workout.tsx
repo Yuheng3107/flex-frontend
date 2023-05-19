@@ -89,8 +89,8 @@ function Workout({ match }: WorkoutPageProps) {
   } else if (currentDisplayElement !== null) {
     console.log(displaysArr[currentDisplayIndex])
     if (typeIsExerciseData(currentDisplayElement) && currentDisplayElement.reps !== undefined) {
-      currentDisplayComponent = <VideoFeed repCountInput={currentDisplayElement.reps.rep_count} completeExerciseButton={nextExerciseButton}
-        exerciseData={displaysArr[currentDisplayIndex]}></VideoFeed>
+      currentDisplayComponent = <VideoFeed repCountInput={currentDisplayElement.reps.rep_count[0]} completeExerciseButton={nextExerciseButton}
+        exerciseData={displaysArr[currentDisplayIndex]} exerciseId={0}></VideoFeed>
     }
 
   }

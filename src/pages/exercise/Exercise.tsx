@@ -20,7 +20,7 @@ const ExercisePage: React.FC<ExercisePageProps> = ({ match }) => {
 
   console.log(match.params.exerciseId);
   const [isExercising, setIsExercising] = useState(false)
-  const [repCountInput, setRepCountInput] = useState<number>(1);
+  const [repCountInput, setRepCountInput] = useState<number>(10);
 
   function startExerciseHandler(event: React.MouseEvent<HTMLButtonElement>) {
     setIsExercising(true);
@@ -43,7 +43,7 @@ const ExercisePage: React.FC<ExercisePageProps> = ({ match }) => {
     <IonPage>
       <IonContent fullscreen>
         <main className="w-full h-full">
-          {isExercising ? <VideoFeed repCountInput={repCountInput} exerciseId={match.params.exerciseId} /> :
+          {isExercising ? <VideoFeed repCountInput={repCountInput} exerciseId={Number(match.params.exerciseId)} completeExerciseButton={null} exerciseData={null}/> :
             <ExerciseOptions startExerciseHandler={startExerciseHandler}
               repDecrementHandler={repDecrementHandler} repIncrementHandler={repIncrementHandler}
               repCountInput={repCountInput} />}

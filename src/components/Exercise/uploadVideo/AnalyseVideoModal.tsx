@@ -53,7 +53,6 @@ const AnalyseVideoModal = ({
   const [repFeedbackLog, setRepFeedbackLog] = useState<string[]>([]);
   const [generalFeedback, setGeneralFeedback] = useState<string>("");
   const [detector, setDetector] = useState<any>(undefined);
-  const [detectorLoading, setDetectorLoading] = useState<boolean>(true);
   const [feedback, setFeedback] = useState<any[]>([]);
   const [isActive, setIsActive] = useState<boolean>(false);
   const [frameCount, setFrameCount] = useState<number>(0);
@@ -77,7 +76,6 @@ const AnalyseVideoModal = ({
       detectorConfig
     );
     setDetector(detectorObject);
-    setDetectorLoading(false);
   }
   console.log(videoFile);
 
