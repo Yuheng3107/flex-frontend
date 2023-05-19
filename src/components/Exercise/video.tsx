@@ -171,6 +171,7 @@ const VideoFeed = ({
         setRepCount(newRepCount);
         setRepFeedback(newFeedback[0].slice(-1));
         setRepFeedbackLog(newFeedback[0]);
+        read(String([newFeedback[0].slice(-1)]));
       }
       if (newFeedback[1] != feedback[1]) setGeneralFeedback(newFeedback[1]);
       setFeedback(newFeedback);
@@ -190,9 +191,11 @@ const VideoFeed = ({
     setExerciseEnded(true);
     console.log(completedFeedback);
   };
+
+
   /*--------------------
-Text to Speech Functions
----------------------- */
+  Text to Speech Functions
+  ---------------------- */
   const textToSpeech = () => {
     // no need to remake synth if it is already made
     if (synth !== null) return true;
@@ -210,10 +213,11 @@ Text to Speech Functions
     }
     // can enable error to pop up if no text to speech
   };
+
+
   /*--------------------
   HELPER FUNCTIONS
   --------------------*/
-
   async function delay(ms: number) {
     // return await for better async stack trace support in case of errors.
     return await new Promise((resolve) => setTimeout(resolve, ms));
