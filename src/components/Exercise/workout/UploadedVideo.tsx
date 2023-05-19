@@ -4,7 +4,7 @@ export default function UploadedVideo({
   videoFile: File | null;
 }) {
   if (videoFile === null) {
-    return <video src=""></video>;
+    return <h1>Video not working</h1>;
   }
 
   const videoURL = URL.createObjectURL(videoFile);
