@@ -43,7 +43,6 @@ import CreatePost from "./pages/post/CreatePost";
 import CommunityPage from "./pages/community/CommunityPage";
 import PostPage from "./pages/post/PostPage";
 import ProfilePages from "./pages/profile/ProfilePages";
-import CreateComment from "./pages/post/CreateComment";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -74,8 +73,8 @@ setupIonicReact();
 checkAndToggleDarkTheme();
 
 // 'globals'
-const backend = "localhost:8000";
-const imgBackend = "localhost:8000";
+const backend = "http://localhost:8000";
+const imgBackend = "http://localhost:8000";
 const exercises = ["zero", "Squats", "Push-ups", "Hamstring Stretch"];
 
 const App: React.FC = () => {
@@ -153,13 +152,6 @@ const App: React.FC = () => {
             <Route path="/home/post/create">
               <CreatePost />
             </Route>
-            <Route
-              exact
-              path="/home/post/:postId/createcomment"
-              render={(props) => {
-                return <CreateComment {...props} />;
-              }}
-            />
             <Route path="/home/search/post">
               <SearchPosts />
             </Route>
