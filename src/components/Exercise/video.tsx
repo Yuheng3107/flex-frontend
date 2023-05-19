@@ -40,7 +40,7 @@ const VideoFeed = ({repCountInput, exerciseId, completeExerciseButton, exerciseD
   const [repFeedback, setRepFeedback] = useState<string>("");
   const [repFeedbackLog, setRepFeedbackLog] = useState<string[]>([]);
   const [generalFeedback, setGeneralFeedback] = useState<string>("");
-  const [detector, setDetector] = useState<any>(undefined);
+  const [detector, setDetector] = useState<any>(null);
   const [feedback, setFeedback] = useState<any[]>([]);
   const [frameCount, setFrameCount] = useState<number>(0);
   const [perfectRepCount, setPerfectRepCount] = useState<any>("");
@@ -51,7 +51,6 @@ const VideoFeed = ({repCountInput, exerciseId, completeExerciseButton, exerciseD
   const canvas = useRef<HTMLCanvasElement>(null);
 
   let rendererCanvas: RendererCanvas2d;
-
 
   useEffect(() => {
     loadDetector();
@@ -76,7 +75,7 @@ const VideoFeed = ({repCountInput, exerciseId, completeExerciseButton, exerciseD
         return completeExerciseButton;
       else return startEndButton;
     } else {
-      if (detector === null) {
+      if (detector === null || webcam.current?.video === null) {
         return <IonSpinner />;
       } else {
         return startEndButton;
