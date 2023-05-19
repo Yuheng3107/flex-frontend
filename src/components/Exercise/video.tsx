@@ -30,9 +30,8 @@ import * as params from "./workout/params";
 
 // mobile detection
 import { isMobile } from "./workout/util";
-
 let isActive: boolean = false;
-
+let synth: any = null;
 const VideoFeed = ({
   repCountInput,
   exerciseId,
@@ -191,10 +190,30 @@ const VideoFeed = ({
     setExerciseEnded(true);
     console.log(completedFeedback);
   };
-
+  /*--------------------
+Text to Speech Functions
+---------------------- */
+  const textToSpeech = () => {
+    // no need to remake synth if it is already made
+    if (synth !== null) return true;
+    if ("speechSynthesis" in window) {
+      synth = window.speechSynthesis;
+      return true;
+    }
+    return false;
+  };
+  const read = (content: string) => {
+    // function to read content
+    if (textToSpeech()) {
+      let speech = new SpeechSynthesisUtterance(content);
+      window.speechSynthesis.speak(speech);
+    }
+    // can enable error to pop up if no text to speech
+  };
   /*--------------------
   HELPER FUNCTIONS
   --------------------*/
+
   async function delay(ms: number) {
     // return await for better async stack trace support in case of errors.
     return await new Promise((resolve) => setTimeout(resolve, ms));
