@@ -24,6 +24,7 @@ import {
     IonFab,
     IonFabButton,
     IonIcon,
+    IonFooter,
 } from '@ionic/react';
 import { pencilOutline } from 'ionicons/icons';
 
@@ -108,6 +109,9 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
                     </>
                 }
             </IonContent>
+            <IonFooter>
+
+            </IonFooter>
         </IonPage>
     );
 }
