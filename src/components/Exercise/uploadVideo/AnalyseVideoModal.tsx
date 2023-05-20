@@ -1,5 +1,5 @@
 //React imports
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from "react";
 
 //ionic imports
 import {
@@ -35,7 +35,6 @@ import RepCountCircle from "../RepCountCircle";
 import { RendererCanvas2d } from "../workout/renderer_canvas2d";
 
 import { closeOutline } from "ionicons/icons";
-import UploadedVideo from "../workout/UploadedVideo";
 
 const AnalyseVideoModal = ({
   onDismiss,
@@ -45,7 +44,6 @@ const AnalyseVideoModal = ({
   onDismiss: (data?: string | null | undefined | number, role?: string) => void;
   videoFile: any;
 }) => {
-  
   const [repCount, setRepCount] = useState<number>(0);
   const [maxRepCount, setMaxRepCount] = useState<number>(10);
   const [feedbackLogShowing, setFeedbackLogShowing] = useState<boolean>(false);
@@ -61,12 +59,16 @@ const AnalyseVideoModal = ({
   const videoInputRef = useRef<HTMLVideoElement>(null); // VIDEO REF USASSIGNED TODO
 
   const videoURL = URL.createObjectURL(videoFile);
+  const canvas = useRef<HTMLCanvasElement>(null);
+  let rendererCanvas: RendererCanvas2d;
 
-  const toggleFeedbackLog = () => {setFeedbackLogShowing(!feedbackLogShowing);}
+  const toggleFeedbackLog = () => {
+    setFeedbackLogShowing(!feedbackLogShowing);
+  };
 
   useEffect(() => {
     detector === undefined ? loadDetector() : start();
-  },[detector, setDetector]);
+  }, [detector, setDetector]);
   const loadDetector = async () => {
     const detectorConfig = {
       modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING,
@@ -76,7 +78,7 @@ const AnalyseVideoModal = ({
       detectorConfig
     );
     setDetector(detectorObject);
-  }
+  };
   console.log(videoFile);
 
   const start = async () => {
@@ -90,9 +92,7 @@ const AnalyseVideoModal = ({
 
     setGeneralFeedback("Loading...");
     await delay(1);
-    await detector.estimatePoses(
-      videoInputRef.current
-    );
+    await detector.estimatePoses(videoInputRef.current);
     console.log("start");
     // reset local variables
     setIsActive(true);
@@ -100,7 +100,7 @@ const AnalyseVideoModal = ({
     setFeedback(["", ""]);
 
     // get from backend
-    let exercise:any = getExercise(Number(1)); // EXERCISE ID??? TODO
+    let exercise: any = getExercise(Number(1)); // EXERCISE ID??? TODO
     // initialise form correction
     formCorrection.init(
       exercise.evalPoses,
@@ -113,12 +113,8 @@ const AnalyseVideoModal = ({
       exercise.minSwitchPoseCount
     );
 
-    // initialise the renderer canvas
-
     while (isActive) {
-      let poses = await detector.estimatePoses(
-        videoInputRef.current
-      );
+      let poses = await detector.estimatePoses(videoInputRef.current);
       await delay(1);
       // add lines
       // rendererCanvas.draw([this.webcam.current.video, poses, false]);
@@ -134,7 +130,7 @@ const AnalyseVideoModal = ({
       }
       if (newFeedback[1] != feedback[1]) setGeneralFeedback(newFeedback[1]);
       setFeedback(newFeedback);
-      setFrameCount(frameCount+1);
+      setFrameCount(frameCount + 1);
     }
   };
 
@@ -155,12 +151,27 @@ const AnalyseVideoModal = ({
   /*--------------------
   HELPER FUNCTIONS
   --------------------*/
-  async function delay(ms:number) {
+  async function delay(ms: number) {
     // return await for better async stack trace support in case of errors.
     return await new Promise((resolve) => setTimeout(resolve, ms));
   }
   const assignImgHeight = () => {
-    // assign image height TODO
+    if (videoInputRef.current === null || canvas.current === null) return;
+
+    // set explicit width and height for canvas
+    [canvas.current.width, canvas.current.height] = [
+      videoInputRef.current.width,
+      videoInputRef.current.height,
+    ];
+
+    // get the width and height of the camera (which is used as the basis for tf keypoint calculations)
+    let cameraWidth = videoInputRef.current.videoWidth;
+    let cameraHeight = videoInputRef.current.videoHeight;
+    rendererCanvas = new RendererCanvas2d(
+      canvas.current,
+      cameraWidth,
+      cameraHeight
+    );
   };
 
   return (
@@ -176,13 +187,25 @@ const AnalyseVideoModal = ({
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        {videoFile === null ? <video src="" />
-        : <video src={videoURL} ref={videoInputRef} controls autoPlay />}
+        {videoFile === null ? (
+          <video src="" />
+        ) : (
+          <>
+            <canvas ref={canvas} className="absolute z-10 w-full"></canvas>
+            <video
+              src={videoURL}
+              ref={videoInputRef}
+              controls
+              autoPlay
+              height={videoInputRef.current?.videoHeight}
+              width={videoInputRef.current?.videoWidth}
+              className="w-full"
+            />
+          </>
+        )}
+        <div id="scatter-gl-container" className="hidden"></div>
         <div className="exercise-feedback flex flex-col items-center p-5 w-full">
-          <RepCountCircle
-            repCount={repCount}
-            repCountInput={maxRepCount}
-          />
+          <RepCountCircle repCount={repCount} repCountInput={maxRepCount} />
 
           <TextBox className="flex flex-col justify-between bg-zinc-100 pt-3 pb-0 w-4/5 mt-3">
             {feedbackLogShowing}
@@ -210,10 +233,7 @@ const AnalyseVideoModal = ({
             {generalFeedback}
           </TextBox>
         </div>
-        <div
-          id="button-container"
-          className="flex justify-center pb-20"
-        >
+        <div id="button-container" className="flex justify-center pb-20">
           BUTTONS GO HERE
         </div>
       </IonContent>
