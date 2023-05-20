@@ -258,7 +258,7 @@ const AnalyseVideoModal = ({
           </TextBox>
         </div>
         <div id="button-container" className="flex justify-center pb-20">
-          BUTTONS GO HERE
+          {determineButtonDisplay()}
         </div>
       </IonContent>
     </IonPage>
