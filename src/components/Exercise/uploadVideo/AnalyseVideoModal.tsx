@@ -88,11 +88,9 @@ const AnalyseVideoModal = ({
     }
     // assign img height
     assignImgHeight();
-    console.log(videoInputRef?.current?.height); // TODO
-
     setGeneralFeedback("Loading...");
     await delay(1);
-    await detector.estimatePoses(videoInputRef.current);
+    await detector.estimatePoses(videoInputRef?.current);
     console.log("start");
     // reset local variables
     setIsActive(true);
@@ -114,6 +112,7 @@ const AnalyseVideoModal = ({
     );
 
     while (isActive) {
+      console.log(videoInputRef?.current?.width);
       let poses = await detector.estimatePoses(videoInputRef.current);
       await delay(1);
       // add lines
