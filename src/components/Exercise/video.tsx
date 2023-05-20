@@ -291,11 +291,6 @@ const VideoFeed = ({
         </TextBox>
       </div>
       <div id="button-container" className="flex justify-center pb-20">
-        {/* {this.state.detectorLoading ?
-          <IonSpinner></IonSpinner>
-          :
-          <StartEndButton detector={this.state.detector} start={this.start} end={this.end} startButton={this.state.startButton} setState={this.setState} parentState={this.state} />
-        } */}
         {determineButtonDisplay()}
       </div>
     </div>

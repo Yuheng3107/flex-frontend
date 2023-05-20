@@ -11,6 +11,7 @@ import {
   IonToolbar,
   IonButtons,
   IonTitle,
+  IonSpinner,
 } from "@ionic/react";
 
 //components
@@ -56,7 +57,8 @@ const AnalyseVideoModal = ({
   const [frameCount, setFrameCount] = useState<number>(0);
   const [perfectRepCount, setPerfectRepCount] = useState<any>("");
   const [exerciseEnded, setExerciseEnded] = useState<boolean>(false);
-  const videoInputRef = useRef<HTMLVideoElement>(null); // VIDEO REF USASSIGNED TODO
+  const [startButton, setStartButton] = useState<boolean>(true);
+  const videoInputRef = useRef<HTMLVideoElement>(null);
 
   const videoURL = URL.createObjectURL(videoFile);
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -81,8 +83,31 @@ const AnalyseVideoModal = ({
   };
   console.log(videoFile);
 
+  const determineButtonDisplay = () => {
+    const startEndButton = (
+      <StartEndButton
+        detector={detector}
+        start={start}
+        end={end}
+        startButton={startButton}
+        setButton={setStartButton}
+        repCount={repCount}
+        perfectRepCount={perfectRepCount}
+      />
+    );
+    if (exerciseEnded) return startEndButton; else {
+      if (detector === null || videoInputRef === null) {
+        return <IonSpinner />;
+      } else {
+        return startEndButton;
+      }
+    }
+  };
+
+
+
   const start = async () => {
-    if (detector === null) {
+    if (detector === undefined || videoInputRef.current === null) {
       window.alert("loading!");
       return;
     }
@@ -90,7 +115,7 @@ const AnalyseVideoModal = ({
     assignImgHeight();
     setGeneralFeedback("Loading...");
     await delay(1);
-    await detector.estimatePoses(videoInputRef?.current);
+    await detector.estimatePoses(videoInputRef.current);
     console.log("start");
     // reset local variables
     setIsActive(true);
