@@ -17,7 +17,7 @@ import {
 //components
 import TextBox from "../../components/ui/TextBox";
 import StartEndButton from "../../components/Exercise/StartEndButton";
-
+import AnalyseButton from "./AnalyseButton";
 //assets
 import expandIcon from "../../assets/svg/expand-icon.svg";
 
@@ -62,7 +62,7 @@ const AnalyseVideo = () => {
   };
 
   useEffect(() => {
-    console.log("Should be running once only");
+    // to automatically prompt for file when page is loaded
     videoInputRef?.current?.click();
   }, []);
   const loadDetector = async () => {
@@ -252,7 +252,9 @@ const AnalyseVideo = () => {
           {detector === undefined || videoRef === null ? (
             <IonSpinner />
           ) : (
-            <StartEndButton
+            <AnalyseButton start={start} detector={detector} />
+
+            /*<StartEndButton
               detector={detector}
               start={start}
               end={end}
@@ -260,7 +262,7 @@ const AnalyseVideo = () => {
               setButton={setStartButton}
               repCount={repCount}
               perfectRepCount={perfectRepCount}
-            />
+            />*/
           )}
         </div>
       </IonContent>
