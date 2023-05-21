@@ -61,9 +61,7 @@ const AnalyseVideo = () => {
     setFeedbackLogShowing(!feedbackLogShowing);
   };
 
-  useEffect(() => {
-    loadDetector();
-  }, []);
+  useEffect(() => {}, []);
   const loadDetector = async () => {
     const detectorConfig = {
       modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING,
@@ -85,6 +83,7 @@ const AnalyseVideo = () => {
     }
     if (videoInputRef.current !== null && videoInputRef.current.files !== null)
       setVideoURL(URL.createObjectURL(videoInputRef.current.files[0]));
+    loadDetector();
   }
 
   const start = async () => {
@@ -95,6 +94,8 @@ const AnalyseVideo = () => {
     // assign img height
     assignImgHeight();
     setGeneralFeedback("Loading...");
+    // start the video
+    videoRef.current.play();
     await delay(1);
     await detector.estimatePoses(videoRef.current);
     console.log("start");
@@ -206,11 +207,10 @@ const AnalyseVideo = () => {
             <video
               src={videoURL}
               ref={videoRef}
-              controls
-              autoPlay
               height={videoRef.current?.videoHeight}
               width={videoRef.current?.videoWidth}
               className="w-full"
+              onEnded={() => end()}
             />
           </>
         )}
@@ -246,7 +246,7 @@ const AnalyseVideo = () => {
           </TextBox>
         </div>
         <div id="button-container" className="flex justify-center pb-20">
-          {detector === null || videoRef === null ? (
+          {detector === undefined || videoRef === null ? (
             <IonSpinner />
           ) : (
             <StartEndButton
