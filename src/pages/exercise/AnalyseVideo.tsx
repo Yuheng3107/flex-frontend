@@ -66,7 +66,7 @@ const AnalyseVideo = () => {
 
   const handleSelected = (e: any) => {
     // callback when an exercise is selected in the IonSelect
-    setSelected(true);
+
     // e.detail.value corresponds to the value of the option chosen
     // saves the exercise id to the exerciseId state
     setExerciseId(Number(e.detail.value));
@@ -100,7 +100,8 @@ const AnalyseVideo = () => {
       window.alert("loading!");
       return;
     }
-    // prompt user for video
+
+    setSelected(true);
 
     // assign img height
     assignImgHeight();
@@ -201,18 +202,7 @@ const AnalyseVideo = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        {videoURL === "" ? (
-          <IonButton>
-            Upload Video
-            <input
-              ref={videoInputRef}
-              type="file"
-              className="opacity-0 z-10 absolute"
-              onChange={fileInputHandler}
-              accept="video/*"
-            ></input>
-          </IonButton>
-        ) : (
+        {videoURL !== "" && (
           <>
             <canvas ref={canvas} className="absolute z-10 w-full"></canvas>
             <video
@@ -259,29 +249,33 @@ const AnalyseVideo = () => {
               {generalFeedback}
             </TextBox>
           ) : (
-            <IonSelect
-              placeholder="Select Exercise"
-              onIonChange={(e) => handleSelected(e)}
-            >
-              <IonSelectOption value="1">Side Squats</IonSelectOption>
-            </IonSelect>
+            <>
+              <IonSelect
+                placeholder="Side Squats"
+                onIonChange={(e) => handleSelected(e)}
+              >
+                <IonSelectOption value="1">Side Squats</IonSelectOption>
+                <IonSelectOption value="2">Front Squats</IonSelectOption>
+              </IonSelect>
+
+              <IonButton>
+                Upload Video
+                <input
+                  ref={videoInputRef}
+                  type="file"
+                  className="opacity-0 z-10 absolute"
+                  onChange={fileInputHandler}
+                  accept="video/*"
+                ></input>
+              </IonButton>
+            </>
           )}
         </div>
         <div id="button-container" className="flex justify-center pb-20">
-          {detector === undefined || videoRef === null ? (
-            <IonSpinner />
+          {detector === undefined ? (
+            videoRef.current !== null && <IonSpinner />
           ) : (
             <AnalyseButton start={start} detector={detector} />
-
-            /*<StartEndButton
-              detector={detector}
-              start={start}
-              end={end}
-              startButton={startButton}
-              setButton={setStartButton}
-              repCount={repCount}
-              perfectRepCount={perfectRepCount}
-            />*/
           )}
         </div>
       </IonContent>

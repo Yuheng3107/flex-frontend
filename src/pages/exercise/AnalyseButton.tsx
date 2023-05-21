@@ -28,7 +28,7 @@ export default function AnalyseButton({
       }
       onClick={startVideoHandler}
     >
-      Select Video
+      Analyze
     </Button>
   );
 }
