@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import Webcam from "react-webcam";
 
 //ionic imports
-import { IonSpinner } from "@ionic/react";
+import { IonSpinner, IonTab } from "@ionic/react";
 
 //components
 import TextBox from "../ui/TextBox";
@@ -67,30 +67,6 @@ const VideoFeed = ({
 
   const toggleFeedbackLog = () => {
     setFeedbackLogShowing(!feedbackLogShowing);
-  };
-
-  const determineButtonDisplay = () => {
-    const startEndButton = (
-      <StartEndButton
-        detector={detector}
-        start={start}
-        end={end}
-        startButton={startButton}
-        setButton={setStartButton}
-        repCount={repCount}
-        perfectRepCount={perfectRepCount}
-      />
-    );
-    if (exerciseEnded) {
-      if (completeExerciseButton !== null) return completeExerciseButton;
-      else return startEndButton;
-    } else {
-      if (detector === null || webcam.current?.video === null) {
-        return <IonSpinner />;
-      } else {
-        return startEndButton;
-      }
-    }
   };
 
   /*--------------------
@@ -291,12 +267,30 @@ const VideoFeed = ({
         </TextBox>
       </div>
       <div id="button-container" className="flex justify-center pb-20">
-        {/* {this.state.detectorLoading ?
-          <IonSpinner></IonSpinner>
+        {exerciseEnded ?
+          completeExerciseButton !== null ?
+            completeExerciseButton :
+            <StartEndButton
+              detector={detector}
+              start={start}
+              end={end}
+              startButton={startButton}
+              setButton={setStartButton}
+              repCount={repCount}
+              perfectRepCount={perfectRepCount}
+            />
+          : detector === null || webcam.current?.video === null ?
+            <IonSpinner />
           :
-          <StartEndButton detector={this.state.detector} start={this.start} end={this.end} startButton={this.state.startButton} setState={this.setState} parentState={this.state} />
-        } */}
-        {determineButtonDisplay()}
+            <StartEndButton
+            detector={detector}
+            start={start}
+            end={end}
+            startButton={startButton}
+            setButton={setStartButton}
+            repCount={repCount}
+            perfectRepCount={perfectRepCount}
+          />}
       </div>
     </div>
   );

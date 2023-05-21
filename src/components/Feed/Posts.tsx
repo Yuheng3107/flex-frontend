@@ -20,7 +20,7 @@ const Posts = ({ posts, loadData }: PostProps) => {
   return (
     <div
       id="userFeed"
-      className="flex flex-col justify-start w-full h-full px-5"
+      className="flex flex-col justify-start w-full h-full px-2"
     >
       {posts.postArray.length === 0 ? 
         <div className="text-center">No Posts</div>

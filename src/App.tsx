@@ -20,7 +20,7 @@ import { toggleDarkTheme } from "./utils/darkMode";
 
 // tailwind imports
 import "./theme/tailwind.css";
-import { Redirect, Route } from "react-router-dom";
+import { Redirect, Route, useHistory } from "react-router-dom";
 
 //Ionic Imports
 import {
@@ -43,7 +43,6 @@ import CreatePost from "./pages/post/CreatePost";
 import CommunityPage from "./pages/community/CommunityPage";
 import PostPage from "./pages/post/PostPage";
 import ProfilePages from "./pages/profile/ProfilePages";
-import CreateComment from "./pages/post/CreateComment";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -69,6 +68,10 @@ import OtherUserProfile from "./pages/other users/OtherUserProfile";
 import SearchPosts from "./pages/Home/SearchPosts";
 import SearchUsers from "./pages/Home/SearchUsers";
 import SearchCommunities from "./pages/Home/SearchCommunities";
+import checkLoginStatus from "./utils/checkLogin";
+import { emptyProfileData } from "./types/stateTypes";
+import Loading from "./pages/Home/Loading";
+import Login from "./pages/Home/Login";
 
 setupIonicReact();
 checkAndToggleDarkTheme();
@@ -80,6 +83,7 @@ const exercises = ["zero", "Squats", "Push-ups", "Hamstring Stretch"];
 
 const App: React.FC = () => {
   const [updateProfileState, setUpdateProfileState] = useState(0);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const profileDataRedux = useAppSelector((state) => state.profile.profileData);
   const updateProfileCounter = useAppSelector(
@@ -95,6 +99,8 @@ const App: React.FC = () => {
       let data = await getProfileDataAsync();
       //get favorite exercse
       if (data === false) {
+        dispatch(profileDataActions.setProfileData({ id: -1 }));
+        setLoading(false);
         return;
       }
       data.favorite_exercise = await getFavoriteExerciseAsync(data.id);
@@ -112,10 +118,11 @@ const App: React.FC = () => {
       console.log(data);
       dispatch(profileDataActions.setProfileData(data.profileData));
       dispatch(exerciseStatsActions.setExerciseStats(data.exerciseStats));
+      setLoading(false);
     }
 
     obtainProfileData();
-  }, [getProfileData, updateProfileState, updateProfileCounter]);
+  }, [updateProfileState, updateProfileCounter]);
 
   function closeHomeSideMenu() {
     homeMenuRef.current?.close();
@@ -126,53 +133,68 @@ const App: React.FC = () => {
       <IonReactRouter>
         <IonTabs>
           <IonRouterOutlet>
-            <Route exact path="/">
-              <Redirect to="/home" />
-            </Route>
-            <Route exact path="/home">
-              <Home ref={homeMenuRef} />
-            </Route>
+            {loading === true ? (
+              <>
+                <Route>
+                  <Redirect to="/" />
+                </Route>
+                <Route exact path="/">
+                  <Loading />
+                </Route>
+              </>
+            ) : profileDataRedux.id === -1 ? (
+              <>
+                <Route>
+                  <Redirect to="/login" />
+                </Route>
+                <Route exact path="/login">
+                  <Login />
+                </Route>
+              </>
+            ) : (
+              <>
+                <Route exact path="/">
+                  <Redirect to="/home" />
+                </Route>
+                <Route exact path="/home">
+                  <Home ref={homeMenuRef} />
+                </Route>
 
-            <Route path="/home/community" component={CommunityPage} />
+                <Route path="/home/community" component={CommunityPage} />
 
-            <Route
-              exact
-              path="/home/profile/:userId"
-              render={(props) => {
-                return <OtherUserProfile {...props} />;
-              }}
-            />
+                <Route
+                  exact
+                  path="/home/profile/:userId"
+                  render={(props) => {
+                    return <OtherUserProfile {...props} />;
+                  }}
+                />
 
-            <Route
-              exact
-              path="/home/post/:postId"
-              render={(props) => {
-                return <PostPage {...props} />;
-              }}
-            />
-            <Route path="/home/post/create">
-              <CreatePost />
-            </Route>
-            <Route
-              exact
-              path="/home/post/:postId/createcomment"
-              render={(props) => {
-                return <CreateComment {...props} />;
-              }}
-            />
-            <Route path="/home/search/post">
-              <SearchPosts />
-            </Route>
-            <Route path="/home/search/user">
-              <SearchUsers />
-            </Route>
-            <Route path="/home/search/community">
-              <SearchCommunities />
-            </Route>
+                <Route
+                  exact
+                  path="/home/post/:postId"
+                  render={(props) => {
+                    return <PostPage {...props} />;
+                  }}
+                />
+                <Route path="/home/post/create">
+                  <CreatePost />
+                </Route>
+                <Route path="/home/search/post">
+                  <SearchPosts />
+                </Route>
+                <Route path="/home/search/user">
+                  <SearchUsers />
+                </Route>
+                <Route path="/home/search/community">
+                  <SearchCommunities />
+                </Route>
 
-            <Route path="/profile" component={ProfilePages} />
+                <Route path="/profile" component={ProfilePages} />
 
-            <Route path="/exercise" component={ExercisePages} />
+                <Route path="/exercise" component={ExercisePages} />
+              </>
+            )}
           </IonRouterOutlet>
           <IonTabBar slot="bottom" onClick={closeHomeSideMenu}>
             <IonTabButton tab="home" href="/home">
@@ -193,7 +215,7 @@ const App: React.FC = () => {
               {profileDataRedux.profile_photo ? (
                 <img
                   className={`rounded-full border border-neutral-800 h-9`}
-                  src={profileDataRedux.profile_photo}
+                  src={imgBackend.concat(profileDataRedux.profile_photo)}
                 />
               ) : (
                 <IonIcon className="" aria-hidden="true" src={person} />

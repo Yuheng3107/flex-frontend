@@ -5,7 +5,6 @@ import { useAppSelector, useAppDispatch } from "../../store/hooks";
 import { profileDataActions } from '../../store/profileDataSlice';
 
 //utils imports
-import checkLoginStatus from "../../utils/checkLogin";
 import { getAllPostData, getLikesAsync, getUserPostsAsync } from "../../utils/data/postData";
 
 import { googleLogout } from "@react-oauth/google";
@@ -23,7 +22,6 @@ import {
 import { cog } from "ionicons/icons";
 
 //component imports
-import Login from "../../components/login/Login";
 import UserProfileTemplate from "../../components/profile/UserProfileTemplate";
 
 type ProfileProps = {
@@ -33,7 +31,6 @@ type ProfileProps = {
 
 const Tab3 = ({ }: ProfileProps) => {
   const [posts, setPosts] = useState<PostArray>(emptyPostArray);;
-  const [loginStatus, setLoginStatus] = useState(false);
   const [currentUserPostSet, setCurrentUserPostSet] = useState(0);
   const dispatch = useAppDispatch();
 
@@ -42,16 +39,8 @@ const Tab3 = ({ }: ProfileProps) => {
   console.log(profileDataRedux);
 
   useEffect(() => {
-    console.log(`the current loginStatus is ${loginStatus}`);
-    checkLoginStatus(loginStatus, setLoginStatus);
-    if (profileDataRedux !== emptyProfileData) loadUserPostData();
-  }, [loginStatus, setLoginStatus, checkLoginStatus, exerciseStatsRedux, profileDataRedux]);
-
-  const logOut = () => {
-    googleLogout();
-    setLoginStatus(false);
-    dispatch(profileDataActions.setProfileData(emptyProfileData))
-  };
+    loadUserPostData();
+  }, [exerciseStatsRedux, profileDataRedux]);
 
   const loadUserPostData = async () => {
     let postArray = await getUserPostsAsync(profileDataRedux.id, currentUserPostSet);
@@ -69,11 +58,7 @@ const Tab3 = ({ }: ProfileProps) => {
         <IonButton routerLink="/profile/settings" fill="default" shape="round">
           <IonIcon icon={cog} />
         </IonButton>
-        {loginStatus ?
           <UserProfileTemplate profileData={profileDataRedux} exerciseStats={exerciseStatsRedux} posts={posts} loadUserPostData={loadUserPostData} />
-          :
-          <Login setLoginStatus={setLoginStatus} />
-        }
       </IonContent>
     </IonPage>
   );

@@ -17,13 +17,11 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 const container = document.getElementById("root");
 const root = createRoot(container!);
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <GoogleOAuthProvider clientId="908101547092-2cg5rblc0ppg7dvn8csk6l8p8ehc6crt.apps.googleusercontent.com">
-        <App />
-      </GoogleOAuthProvider>
-    </Provider>
-  </React.StrictMode>
+  <Provider store={store}>
+    <GoogleOAuthProvider clientId="908101547092-2cg5rblc0ppg7dvn8csk6l8p8ehc6crt.apps.googleusercontent.com">
+      <App />
+    </GoogleOAuthProvider>
+  </Provider>
 );
 
 // If you want your app to work offline and load faster, you can change

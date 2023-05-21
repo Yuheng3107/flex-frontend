@@ -1,4 +1,4 @@
-import { useState, useRef, forwardRef } from 'react';
+import { useState, useRef, forwardRef, useEffect } from 'react';
 
 //Ionic imports
 import {
@@ -20,6 +20,8 @@ import { chevronBackOutline, pencilOutline } from 'ionicons/icons';
 //Redux imports
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 
+//Utils imports
+import checkLoginStatus from '../../utils/checkLogin';
 
 //Component imports
 import Feed from '../../components/Feed/Feed';
@@ -40,6 +42,7 @@ const Home = forwardRef<Ref, HomeProps>(function (props, ref) {
   function closeSideMenu() {
     sideMenuRef.current?.close();
   }
+  
   return <>
     {/* This is the content of the sideMenu  */}
     <IonMenu ref={ref} contentId="main-content">

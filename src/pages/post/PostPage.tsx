@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 
 //utils imports
 import { getAllProfileData } from "../../utils/data/profileData";
-import { getCommentsAsync, getPostAsync, getLikesAsync, getAllPostData } from "../../utils/data/postData";
+import { getCommentsAsync, getPostAsync, getLikesAsync, getAllPostData, createCommentAsync } from "../../utils/data/postData";
 import { getCommunityAsync } from "../../utils/data/communityData";
 
 //type imports
@@ -21,10 +21,8 @@ import {
     IonBackButton,
     IonTitle,
     IonButtons,
-    IonFab,
-    IonFabButton,
-    IonIcon,
     IonFooter,
+    IonButton,
 } from '@ionic/react';
 import { pencilOutline } from 'ionicons/icons';
 
@@ -44,6 +42,8 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
     const [currentCommentSet, setCurrentCommentSet] = useState(0);
     const [isLiked, setIsLiked] = useState(false);
     const [posts, setPosts] = useState<PostArray>(emptyPostArray);
+
+    const [postTextInput, setPostTextInput] = useState<string>("");
 
     useEffect(() => {
         if (postData === emptyUserPostData) loadPostData(); else loadComments();
@@ -82,6 +82,17 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
         setCurrentCommentSet(currentCommentSet+1);
     };
 
+    const submitHandler = async() => {
+        if (postTextInput === "") return console.log("no text!");
+        let response = await createCommentAsync('user',Number(match.params.postId),"", postTextInput);
+        console.log(response);
+        if (response?.status === 201) {
+            setPosts(emptyPostArray);
+            setPostData(emptyUserPostData);
+            setCurrentCommentSet(0);
+        }
+    }
+
     return (
         <IonPage>
             <IonHeader>
@@ -98,19 +109,27 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
                         <img src={img404} />
                     </div> 
                 :
-                    <>
+                    <div className="px-2">
                         <PersonTextCard postData={postData} profileData={profileData} communityData={communityData} isLiked={isLiked}/>
                         <Posts loadData={loadComments} posts={posts}/>
-                        <IonFab slot="fixed" vertical="bottom" horizontal="end">
-                            <IonFabButton routerLink={`/home/post/${match.params.postId}/createcomment`}>
-                                <IonIcon icon={pencilOutline}></IonIcon>
-                            </IonFabButton>
-                        </IonFab>
-                    </>
+                    </div>
                 }
             </IonContent>
             <IonFooter>
-
+                <IonToolbar>
+                    <div className="flex flex-row justify-between items-center">
+                        <textarea value={postTextInput} placeholder="Post Comment"
+                            className="m-2 bg-transparent block text-xl font-light w-5/6 h-8"
+                            onChange={(event) => {
+                                setPostTextInput(event.target.value);
+                                console.log(postTextInput);
+                            }} />
+                        <IonButton className="mr-1 rounded-lg bg-sky-400 text-white"
+                            onClick={submitHandler}>
+                            Post
+                        </IonButton>    
+                    </div>
+                </IonToolbar>
             </IonFooter>
         </IonPage>
     );

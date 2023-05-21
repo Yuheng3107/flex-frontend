@@ -8,7 +8,7 @@ import ChooseExercise from "./ChooseExercise";
 import ExercisePage from "./Exercise";
 import Workout from "./Workout";
 import CreateWorkout from "./CreateWorkout";
-import UploadExercise from "./UploadExercise";
+import AnalyseVideo from "./AnalyseVideo";
 
 interface ExercisePagesProps extends RouteComponentProps<{
 }> { }
@@ -26,7 +26,7 @@ function ExercisePages({ match }: ExercisePagesProps) {
                 exact
                 path={`${match.url}/upload`}
             >
-                <UploadExercise />
+                <AnalyseVideo />
             </Route>
             < Route
                 exact

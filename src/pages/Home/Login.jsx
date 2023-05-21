@@ -9,7 +9,7 @@ import {
 import axios from "axios";
 
 //ionic imports
-import { IonButton, IonImg } from "@ionic/react";
+import { IonButton, IonImg, IonTitle } from "@ionic/react";
 
 //icon import
 import googleIcon from "../../assets/svg/google-icon.svg";
@@ -26,17 +26,6 @@ function Login(props) {
   const [profile, setProfile] = useState({});
   let csrftoken = null;
   const dispatch = useAppDispatch();
-
-  // useGoogleOneTapLogin({
-  //   onSuccess: (credentialResponse) => {
-  //     console.log(credentialResponse);
-  //     setUser(credentialResponse);
-  //   },
-  //   onError: () => {
-  //     console.log("Login Failed");
-  //   },
-  // });
-
 
   //When the button is clicked, this function is triggered
   const login = useGoogleLogin({
@@ -90,8 +79,7 @@ function Login(props) {
             body: JSON.stringify(data),
           }).then((response) => {
             console.log(response);
-            // props.setUpdateProfileState(props.updateProfileState + 1);
-            dispatch(profileDataActions.updateProfileCounter());
+            window.location.reload();
           })
           // To use fetch API to send POST request to backend here
         })
@@ -102,42 +90,25 @@ function Login(props) {
     }
   }, [user, profileDataActions]);
 
-  const logOut = () => {
-    googleLogout();
-    setProfile(null);
-  };
-
   return (
-    <div>
-      {Object.keys(profile).length ? (
-        <div className="flex flex-col items-center">
-          <img
-            className="rounded-full"
-            src={profile.picture}
-            alt="user image"
-          />
-          <IonButton
-            className="dark:border-zinc-100 dark:border dark:text-zinc-50"
-            onClick={() => logOut()}
-          >
-            Log out
-          </IonButton>
-        </div>
-      ) : (
-        <IonButton
-          className="flex flex-row items-center
-          dark:text-zinc-100 dark:border-zinc-100 text-base border border-gray-800 border-1"
-          onClick={() => login()}
-          color="light"
-        >
-          Sign in with Google{" "}
-          <IonImg
-            className="ml-2 h-6"
-            src={googleIcon}
-            alt="Google icon"
-          ></IonImg>
-        </IonButton>
-      )}
+    <div className="px-5">
+      <IonButton
+        className="flex flex-row items-center
+        dark:text-zinc-100 dark:border-zinc-100 text-base border border-gray-800 border-1"
+        onClick={() => login()}
+        color="light"
+      >
+        Sign in with Google{" "}
+        <IonImg
+          className="ml-2 h-6"
+          src={googleIcon}
+          alt="Google icon"
+        ></IonImg>
+      </IonButton>
+      <div>
+        <h1>Welcome to Flex.</h1>
+        <span>Please Sign in to continue.</span>
+      </div>
     </div>
   );
 }
