@@ -12,6 +12,8 @@ import {
   IonButton,
   IonTitle,
   IonSpinner,
+  IonSelect,
+  IonSelectOption,
 } from "@ionic/react";
 
 //components
@@ -51,7 +53,8 @@ const AnalyseVideo = () => {
   const [exerciseEnded, setExerciseEnded] = useState<boolean>(false);
   const [startButton, setStartButton] = useState<boolean>(true);
   const [videoURL, setVideoURL] = useState<string>("");
-
+  const [selected, setSelected] = useState<boolean>(false);
+  const [exerciseId, setExerciseId] = useState<number>(1);
   const videoInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
@@ -61,10 +64,13 @@ const AnalyseVideo = () => {
     setFeedbackLogShowing(!feedbackLogShowing);
   };
 
-  useEffect(() => {
-    // to automatically prompt for file when page is loaded
-    videoInputRef?.current?.click();
-  }, []);
+  const handleSelected = (e: any) => {
+    // callback when an exercise is selected in the IonSelect
+    setSelected(true);
+    // e.detail.value corresponds to the value of the option chosen
+    // saves the exercise id to the exerciseId state
+    setExerciseId(Number(e.detail.value));
+  };
   const loadDetector = async () => {
     const detectorConfig = {
       modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING,
@@ -94,6 +100,8 @@ const AnalyseVideo = () => {
       window.alert("loading!");
       return;
     }
+    // prompt user for video
+
     // assign img height
     assignImgHeight();
     setGeneralFeedback("Loading...");
@@ -108,7 +116,7 @@ const AnalyseVideo = () => {
     setFeedback(["", ""]);
 
     // get from backend
-    let exercise: any = getExercise(Number(1)); // EXERCISE ID??? TODO
+    let exercise: any = getExercise(exerciseId);
     // initialise form correction
     formCorrection.init(
       exercise.evalPoses,
@@ -246,10 +254,18 @@ const AnalyseVideo = () => {
               <span className="mt-1">{repFeedbackLog}</span>
             )}
           </TextBox>
-
-          <TextBox className="bg-zinc-100 p-3 w-4/5 mt-3">
-            {generalFeedback}
-          </TextBox>
+          {selected ? (
+            <TextBox className="bg-zinc-100 p-3 w-4/5 mt-3">
+              {generalFeedback}
+            </TextBox>
+          ) : (
+            <IonSelect
+              placeholder="Select Exercise"
+              onIonChange={(e) => handleSelected(e)}
+            >
+              <IonSelectOption value="1">Side Squats</IonSelectOption>
+            </IonSelect>
+          )}
         </div>
         <div id="button-container" className="flex justify-center pb-20">
           {detector === undefined || videoRef === null ? (

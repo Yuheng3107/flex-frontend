@@ -23,12 +23,12 @@ export default function AnalyseButton({
     <Button
       className={
         buttonVisible
-          ? "bg-[#FC6111] text-white p-4 text-[20px] font-medium"
+          ? "bg-[#FC6111] text-white text-[20px] font-medium"
           : "hidden"
       }
       onClick={startVideoHandler}
     >
-      Analyze
+      Select Video
     </Button>
   );
 }
