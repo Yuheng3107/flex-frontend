@@ -213,7 +213,8 @@ const AnalyseVideo = () => {
               height={videoRef.current?.videoHeight}
               width={videoRef.current?.videoWidth}
               className="w-full"
-              onEnded={() => end()}
+              onEnded={end}
+              playsInline
             />
           </>
         )}
