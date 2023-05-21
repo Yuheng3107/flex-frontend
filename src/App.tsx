@@ -77,7 +77,7 @@ setupIonicReact();
 checkAndToggleDarkTheme();
 
 // 'globals'
-const backend = "http://fitai.click";
+const backend = "https://fitai.click";
 const imgBackend = "";
 const exercises = ["zero", "Squats", "Push-ups", "Hamstring Stretch"];
 
