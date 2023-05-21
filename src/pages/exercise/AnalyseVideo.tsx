@@ -77,10 +77,14 @@ const AnalyseVideo = () => {
 
   function fileInputHandler(e: React.ChangeEvent<HTMLInputElement>) {
     console.log(e.target.value);
-    if (videoInputRef.current !== null && videoInputRef.current.files !== null) {
+    if (
+      videoInputRef.current !== null &&
+      videoInputRef.current.files !== null
+    ) {
       console.log(videoInputRef.current.files);
     }
-    if (videoInputRef.current !== null && videoInputRef.current.files !== null) setVideoURL(URL.createObjectURL(videoInputRef.current.files[0]));
+    if (videoInputRef.current !== null && videoInputRef.current.files !== null)
+      setVideoURL(URL.createObjectURL(videoInputRef.current.files[0]));
   }
 
   const start = async () => {
@@ -89,7 +93,7 @@ const AnalyseVideo = () => {
       return;
     }
     // assign img height
-    // assignImgHeight();
+    assignImgHeight();
     setGeneralFeedback("Loading...");
     await delay(1);
     await detector.estimatePoses(videoRef.current);
@@ -117,7 +121,7 @@ const AnalyseVideo = () => {
       let poses = await detector.estimatePoses(videoRef.current);
       await delay(1);
       // add lines
-      // rendererCanvas.draw([videoRef.current, poses, false]);
+      rendererCanvas.draw([videoRef.current, poses, false]);
       // process raw data
       let newFeedback = formCorrection.run(poses);
       if (newFeedback[0] !== "") {
@@ -185,11 +189,18 @@ const AnalyseVideo = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-          {videoURL === "" ?
-            <IonButton>Upload Video
-              <input ref={videoInputRef} type="file" className="opacity-0 z-10 absolute" onChange={fileInputHandler} accept="video/*"></input>
-            </IonButton>
-          :
+        {videoURL === "" ? (
+          <IonButton>
+            Upload Video
+            <input
+              ref={videoInputRef}
+              type="file"
+              className="opacity-0 z-10 absolute"
+              onChange={fileInputHandler}
+              accept="video/*"
+            ></input>
+          </IonButton>
+        ) : (
           <>
             <canvas ref={canvas} className="absolute z-10 w-full"></canvas>
             <video
@@ -202,9 +213,8 @@ const AnalyseVideo = () => {
               className="w-full"
             />
           </>
-          }
-          
-          
+        )}
+
         <div id="scatter-gl-container" className="hidden"></div>
         <div className="exercise-feedback flex flex-col items-center p-5 w-full">
           <RepCountCircle repCount={repCount} repCountInput={maxRepCount} />
@@ -236,17 +246,19 @@ const AnalyseVideo = () => {
           </TextBox>
         </div>
         <div id="button-container" className="flex justify-center pb-20">
-          {detector === null || videoRef === null ? <IonSpinner />
-          :
-          <StartEndButton
-            detector={detector}
-            start={start}
-            end={end}
-            startButton={startButton}
-            setButton={setStartButton}
-            repCount={repCount}
-            perfectRepCount={perfectRepCount}
-          />}
+          {detector === null || videoRef === null ? (
+            <IonSpinner />
+          ) : (
+            <StartEndButton
+              detector={detector}
+              start={start}
+              end={end}
+              startButton={startButton}
+              setButton={setStartButton}
+              repCount={repCount}
+              perfectRepCount={perfectRepCount}
+            />
+          )}
         </div>
       </IonContent>
     </IonPage>
