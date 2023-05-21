@@ -36,7 +36,7 @@ import RepCountCircle from "../../components/Exercise/RepCountCircle";
 
 // draw lines
 import { RendererCanvas2d } from "../../components/Exercise/workout/renderer_canvas2d";
-
+import { backend } from "../../App";
 let isActive = false;
 
 const AnalyseVideo = () => {
@@ -55,11 +55,35 @@ const AnalyseVideo = () => {
   const [videoURL, setVideoURL] = useState<string>("");
   const [selected, setSelected] = useState<boolean>(false);
   const [exerciseId, setExerciseId] = useState<number>(1);
+  const [exercises, setExercises] = useState([]);
   const videoInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   let rendererCanvas: RendererCanvas2d;
 
+  useEffect(() => {
+    async function getExercises() {
+      try {
+        const response = await fetch(
+          backend.concat("/exercises/exercise/list"),
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": String(
+                document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]
+              ),
+            },
+          }
+        );
+        const data = await response.json();
+        setExercises(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getExercises();
+  }, []);
   const toggleFeedbackLog = () => {
     setFeedbackLogShowing(!feedbackLogShowing);
   };
@@ -83,7 +107,6 @@ const AnalyseVideo = () => {
   };
 
   function fileInputHandler(e: React.ChangeEvent<HTMLInputElement>) {
-    console.log(e.target.value);
     if (
       videoInputRef.current !== null &&
       videoInputRef.current.files !== null
@@ -110,7 +133,7 @@ const AnalyseVideo = () => {
     videoRef.current.play();
     await delay(1);
     await detector.estimatePoses(videoRef.current);
-    console.log("start");
+
     // reset local variables
     isActive = true;
     setFrameCount(0);
@@ -139,7 +162,7 @@ const AnalyseVideo = () => {
       let newFeedback = formCorrection.run(poses);
       if (newFeedback[0] !== "") {
         let newRepCount = newFeedback[0].slice(-1)[0].match(/\d+/)[0];
-        console.log(newFeedback[0][0]);
+
         setRepCount(newRepCount);
 
         setRepFeedback(newFeedback[0].slice(-1));
@@ -156,13 +179,12 @@ const AnalyseVideo = () => {
    */
   const end = () => {
     isActive = false;
-    console.log("End");
+
     let completedFeedback = formCorrection.endExercise();
     setRepFeedback(completedFeedback[0]);
     setPerfectRepCount(completedFeedback[1]);
     setGeneralFeedback("Exercise ended");
     setExerciseEnded(true);
-    console.log(completedFeedback);
   };
 
   /*--------------------
@@ -174,7 +196,7 @@ const AnalyseVideo = () => {
   }
   const assignImgHeight = () => {
     if (videoRef.current === null || canvas.current === null) return;
-    console.log("set");
+
     // set explicit width and height for canvas
     [canvas.current.width, canvas.current.height] = [
       videoRef.current.width,
@@ -253,9 +275,13 @@ const AnalyseVideo = () => {
               <IonSelect
                 placeholder="Side Squats"
                 onIonChange={(e) => handleSelected(e)}
+                interface="popover"
               >
-                <IonSelectOption value="1">Side Squats</IonSelectOption>
-                <IonSelectOption value="2">Front Squats</IonSelectOption>
+                {exercises.map((exercise: any) => (
+                  <IonSelectOption value={exercise.id} key={exercise.id}>
+                    {exercise.name}
+                  </IonSelectOption>
+                ))}
               </IonSelect>
 
               <IonButton>
