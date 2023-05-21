@@ -5,21 +5,21 @@ import { useEffect, useState, useRef } from "react";
 import {
   IonContent,
   IonPage,
-  IonButton,
-  IonIcon,
+  IonBackButton,
   IonHeader,
   IonToolbar,
   IonButtons,
+  IonButton,
   IonTitle,
   IonSpinner,
 } from "@ionic/react";
 
 //components
-import TextBox from "../../ui/TextBox";
-import StartEndButton from "../StartEndButton";
+import TextBox from "../../components/ui/TextBox";
+import StartEndButton from "../../components/Exercise/StartEndButton";
 
 //assets
-import expandIcon from "../../../assets/svg/expand-icon.svg";
+import expandIcon from "../../assets/svg/expand-icon.svg";
 
 //MoveNet
 import * as poseDetection from "@tensorflow-models/pose-detection";
@@ -28,23 +28,16 @@ import "@tensorflow/tfjs-backend-webgl";
 // import '@tensorflow/tfjs-backend-wasm';
 
 //formCorrection
-import * as formCorrection from "../../../utils/formCorrection";
-import getExercise from "../../../utils/ExerciseAlgo/exericseAlgo";
-import RepCountCircle from "../RepCountCircle";
+import * as formCorrection from "../../utils/formCorrection";
+import getExercise from "../../utils/ExerciseAlgo/exericseAlgo";
+import RepCountCircle from "../../components/Exercise/RepCountCircle";
 
 // draw lines
-import { RendererCanvas2d } from "../workout/renderer_canvas2d";
+import { RendererCanvas2d } from "../../components/Exercise/workout/renderer_canvas2d";
 
-import { closeOutline } from "ionicons/icons";
+let isActive = false;
 
-const AnalyseVideoModal = ({
-  onDismiss,
-  videoFile,
-}: {
-  //define the type of props received
-  onDismiss: (data?: string | null | undefined | number, role?: string) => void;
-  videoFile: any;
-}) => {
+const AnalyseVideo = () => {
   const [repCount, setRepCount] = useState<number>(0);
   const [maxRepCount, setMaxRepCount] = useState<number>(10);
   const [feedbackLogShowing, setFeedbackLogShowing] = useState<boolean>(false);
@@ -53,14 +46,14 @@ const AnalyseVideoModal = ({
   const [generalFeedback, setGeneralFeedback] = useState<string>("");
   const [detector, setDetector] = useState<any>(undefined);
   const [feedback, setFeedback] = useState<any[]>([]);
-  const [isActive, setIsActive] = useState<boolean>(false);
   const [frameCount, setFrameCount] = useState<number>(0);
   const [perfectRepCount, setPerfectRepCount] = useState<any>("");
   const [exerciseEnded, setExerciseEnded] = useState<boolean>(false);
   const [startButton, setStartButton] = useState<boolean>(true);
-  const videoInputRef = useRef<HTMLVideoElement>(null);
+  const [videoURL, setVideoURL] = useState<string>("");
 
-  const videoURL = URL.createObjectURL(videoFile);
+  const videoInputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   let rendererCanvas: RendererCanvas2d;
 
@@ -69,8 +62,8 @@ const AnalyseVideoModal = ({
   };
 
   useEffect(() => {
-    detector === undefined ? loadDetector() : start();
-  }, [detector, setDetector]);
+    loadDetector();
+  }, []);
   const loadDetector = async () => {
     const detectorConfig = {
       modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING,
@@ -81,44 +74,28 @@ const AnalyseVideoModal = ({
     );
     setDetector(detectorObject);
   };
-  console.log(videoFile);
 
-  const determineButtonDisplay = () => {
-    const startEndButton = (
-      <StartEndButton
-        detector={detector}
-        start={start}
-        end={end}
-        startButton={startButton}
-        setButton={setStartButton}
-        repCount={repCount}
-        perfectRepCount={perfectRepCount}
-      />
-    );
-    if (exerciseEnded) return startEndButton; else {
-      if (detector === null || videoInputRef === null) {
-        return <IonSpinner />;
-      } else {
-        return startEndButton;
-      }
+  function fileInputHandler(e: React.ChangeEvent<HTMLInputElement>) {
+    console.log(e.target.value);
+    if (videoInputRef.current !== null && videoInputRef.current.files !== null) {
+      console.log(videoInputRef.current.files);
     }
-  };
-
-
+    if (videoInputRef.current !== null && videoInputRef.current.files !== null) setVideoURL(URL.createObjectURL(videoInputRef.current.files[0]));
+  }
 
   const start = async () => {
-    if (detector === undefined || videoInputRef.current === null) {
+    if (detector === undefined || videoRef.current === null) {
       window.alert("loading!");
       return;
     }
     // assign img height
-    assignImgHeight();
+    // assignImgHeight();
     setGeneralFeedback("Loading...");
     await delay(1);
-    await detector.estimatePoses(videoInputRef.current);
+    await detector.estimatePoses(videoRef.current);
     console.log("start");
     // reset local variables
-    setIsActive(true);
+    isActive = true;
     setFrameCount(0);
     setFeedback(["", ""]);
 
@@ -137,11 +114,10 @@ const AnalyseVideoModal = ({
     );
 
     while (isActive) {
-      console.log(videoInputRef?.current?.width);
-      let poses = await detector.estimatePoses(videoInputRef.current);
+      let poses = await detector.estimatePoses(videoRef.current);
       await delay(1);
       // add lines
-      // rendererCanvas.draw([this.webcam.current.video, poses, false]);
+      // rendererCanvas.draw([videoRef.current, poses, false]);
       // process raw data
       let newFeedback = formCorrection.run(poses);
       if (newFeedback[0] !== "") {
@@ -152,7 +128,7 @@ const AnalyseVideoModal = ({
         setRepFeedback(newFeedback[0].slice(-1));
         setRepFeedbackLog(newFeedback[0]);
       }
-      if (newFeedback[1] != feedback[1]) setGeneralFeedback(newFeedback[1]);
+      if (newFeedback[1] !== feedback[1]) setGeneralFeedback(newFeedback[1]);
       setFeedback(newFeedback);
       setFrameCount(frameCount + 1);
     }
@@ -162,7 +138,7 @@ const AnalyseVideoModal = ({
    * Ends Exercise
    */
   const end = () => {
-    setIsActive(false);
+    isActive = false;
     console.log("End");
     let completedFeedback = formCorrection.endExercise();
     setRepFeedback(completedFeedback[0]);
@@ -180,17 +156,17 @@ const AnalyseVideoModal = ({
     return await new Promise((resolve) => setTimeout(resolve, ms));
   }
   const assignImgHeight = () => {
-    if (videoInputRef.current === null || canvas.current === null) return;
-
+    if (videoRef.current === null || canvas.current === null) return;
+    console.log("set");
     // set explicit width and height for canvas
     [canvas.current.width, canvas.current.height] = [
-      videoInputRef.current.width,
-      videoInputRef.current.height,
+      videoRef.current.width,
+      videoRef.current.height,
     ];
 
     // get the width and height of the camera (which is used as the basis for tf keypoint calculations)
-    let cameraWidth = videoInputRef.current.videoWidth;
-    let cameraHeight = videoInputRef.current.videoHeight;
+    let cameraWidth = videoRef.current.videoWidth;
+    let cameraHeight = videoRef.current.videoHeight;
     rendererCanvas = new RendererCanvas2d(
       canvas.current,
       cameraWidth,
@@ -204,29 +180,31 @@ const AnalyseVideoModal = ({
         <IonToolbar>
           <IonTitle>Analyse Video</IonTitle>
           <IonButtons slot="start">
-            <IonButton onClick={() => onDismiss(null, "cancel")}>
-              <IonIcon icon={closeOutline}></IonIcon>
-            </IonButton>
+            <IonBackButton defaultHref="/home" />
           </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        {videoFile === null ? (
-          <video src="" />
-        ) : (
+          {videoURL === "" ?
+            <IonButton>Upload Video
+              <input ref={videoInputRef} type="file" className="opacity-0 z-10 absolute" onChange={fileInputHandler} accept="video/*"></input>
+            </IonButton>
+          :
           <>
             <canvas ref={canvas} className="absolute z-10 w-full"></canvas>
             <video
               src={videoURL}
-              ref={videoInputRef}
+              ref={videoRef}
               controls
               autoPlay
-              height={videoInputRef.current?.videoHeight}
-              width={videoInputRef.current?.videoWidth}
+              height={videoRef.current?.videoHeight}
+              width={videoRef.current?.videoWidth}
               className="w-full"
             />
           </>
-        )}
+          }
+          
+          
         <div id="scatter-gl-container" className="hidden"></div>
         <div className="exercise-feedback flex flex-col items-center p-5 w-full">
           <RepCountCircle repCount={repCount} repCountInput={maxRepCount} />
@@ -258,11 +236,21 @@ const AnalyseVideoModal = ({
           </TextBox>
         </div>
         <div id="button-container" className="flex justify-center pb-20">
-          {determineButtonDisplay()}
+          {detector === null || videoRef === null ? <IonSpinner />
+          :
+          <StartEndButton
+            detector={detector}
+            start={start}
+            end={end}
+            startButton={startButton}
+            setButton={setStartButton}
+            repCount={repCount}
+            perfectRepCount={perfectRepCount}
+          />}
         </div>
       </IonContent>
     </IonPage>
   );
 };
 
-export default AnalyseVideoModal;
+export default AnalyseVideo;
