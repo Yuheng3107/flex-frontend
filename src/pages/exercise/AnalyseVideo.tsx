@@ -61,7 +61,10 @@ const AnalyseVideo = () => {
     setFeedbackLogShowing(!feedbackLogShowing);
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    console.log("Should be running once only");
+    videoInputRef?.current?.click();
+  }, []);
   const loadDetector = async () => {
     const detectorConfig = {
       modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING,
