@@ -215,6 +215,8 @@ const AnalyseVideo = () => {
               className="w-full"
               onEnded={end}
               playsInline
+              disablePictureInPicture
+              disableRemotePlayback
             />
           </>
         )}
