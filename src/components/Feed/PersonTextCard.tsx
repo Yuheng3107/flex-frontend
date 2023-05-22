@@ -62,7 +62,7 @@ const PersonTextCard = ({
   };
 
   return (
-    <div id="card-container" className="border border-zinc-500 mt-4 p-2 rounded-lg">
+    <div className="border border-b-zinc-500 p-2 w-full">
       <div id="top-bar" className=" flex flex-row justify-between mb-2">
         <div className="flex flex-row">
           <IonRouterLink
@@ -81,6 +81,7 @@ const PersonTextCard = ({
               className="font-semibold"
               routerLink={`/home/profile/${profileData.id}`}
               routerDirection="forward"
+              color="dark"
             >
               {profileData?.username}
             </IonRouterLink>
@@ -124,26 +125,20 @@ const PersonTextCard = ({
             ? `/home/community/post/${postData.id}`
             : undefined
         }
-        id="content"
         className="mb-2"
+        color="dark"
       >
-        <p id="title" className="font-semibold text-xl mb-2">
-          {postData?.title}
-        </p>
         {postData?.media ? (
           <img alt="post image" src={mediaUrl} className="w-full" />
         ) : (
           ""
         )}
-
+        <h3 className="font-semibold text-xl mb-2">{postData?.title}</h3>
         <p id="main-content" className="text-sm">
           {postData?.text}
         </p>
       </IonRouterLink>
-      <div
-        id="action-bar"
-        className="flex flex-row items-center justify-evenly mx-auto"
-      >
+      <div className="flex flex-row items-center justify-end mx-auto action-bar">
         {hasLiked ? (
           <button onClick={unlikePost}>
             <LikeIconFilled className="w-8 h-8 fill-red-500" />
@@ -162,7 +157,6 @@ const PersonTextCard = ({
           <BookmarkIcon className="w-8 h-8" />
         </button>
          */}
-        
       </div>
     </div>
   );
