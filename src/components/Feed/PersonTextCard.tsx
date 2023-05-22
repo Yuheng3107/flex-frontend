@@ -3,7 +3,7 @@ import CommentIcon from "../../assets/svgComponents/CommentIcon";
 import LikeIcon from "../../assets/svgComponents/LikeIcon";
 import LikeIconFilled from "../../assets/svgComponents/LikeIconFilled";
 import BookmarkIcon from "../../assets/svgComponents/BookmarkIcon";
-import ChatBubbleIcon from "../../assets/svgComponents/ChatBubbleIcon";
+
 import React, { useState, useEffect } from "react";
 import { useAppSelector } from "../../store/hooks";
 
@@ -67,7 +67,12 @@ const PersonTextCard = ({
       setLikes(likes - 1);
     }
   };
-
+  let comment = "0 comments";
+  if (postData.comments !== undefined) {
+    comment = `${postData.comments.length} comment${
+      postData.comments.length === 1 ? "" : "s"
+    }`;
+  }
   return (
     <div className="border border-b-zinc-500 p-2 w-full">
       <div id="top-bar" className=" flex flex-row justify-between mb-2">
@@ -145,7 +150,7 @@ const PersonTextCard = ({
           {postData?.text}
         </p>
       </IonRouterLink>
-      <div className="flex flex-row items-center justify-end mx-auto action-bar">
+      <div className="flex flex-row items-center justify-start mx-auto action-bar">
         {hasLiked ? (
           <button onClick={unlikePost}>
             <LikeIconFilled className="w-8 h-8 fill-red-500" />
@@ -155,8 +160,8 @@ const PersonTextCard = ({
             <LikeIcon className="w-8 h-8 fill-red-500" />
           </button>
         )}
-        <ChatBubbleIcon></ChatBubbleIcon>
-        <p>{likes}</p>
+        <CommentIcon className="w-8 h-8"></CommentIcon>
+        <p>{`${likes} like${likes === 1 ? "" : "s"} · ${comment}`}</p>
         {/*
         <button>
           <CommentIcon className="w-8 h-8" />
