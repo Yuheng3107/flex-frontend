@@ -3,7 +3,7 @@ import CommentIcon from "../../assets/svgComponents/CommentIcon";
 import LikeIcon from "../../assets/svgComponents/LikeIcon";
 import LikeIconFilled from "../../assets/svgComponents/LikeIconFilled";
 import BookmarkIcon from "../../assets/svgComponents/BookmarkIcon";
-
+import ChatBubbleIcon from "../../assets/svgComponents/ChatBubbleIcon";
 import React, { useState, useEffect } from "react";
 import { useAppSelector } from "../../store/hooks";
 
@@ -37,6 +37,7 @@ const PersonTextCard = ({
   const [imageUrl, setImageUrl] = useState("");
   const [mediaUrl, setMediaUrl] = useState("");
   const [hasLiked, setHasLiked] = useState(false);
+  const [likes, setLikes] = useState(postData.likes);
   const [postType, setPostType] = useState<PostType>("user");
   const postDate = new Date(postData.posted_at);
 
@@ -54,11 +55,17 @@ const PersonTextCard = ({
 
   const likePost = async () => {
     let response = await likePostAsync(postType, postData.id);
-    if (response?.status === 200) setHasLiked(true);
+    if (response?.status === 200) {
+      setHasLiked(true);
+      setLikes(likes + 1);
+    }
   };
   const unlikePost = async () => {
     let response = await unlikePostAsync(postType, postData.id);
-    if (response?.status === 200) setHasLiked(false);
+    if (response?.status === 200) {
+      setHasLiked(false);
+      setLikes(likes - 1);
+    }
   };
 
   return (
@@ -148,7 +155,8 @@ const PersonTextCard = ({
             <LikeIcon className="w-8 h-8 fill-red-500" />
           </button>
         )}
-        <p>{postData.likes}</p>
+        <ChatBubbleIcon></ChatBubbleIcon>
+        <p>{likes}</p>
         {/*
         <button>
           <CommentIcon className="w-8 h-8" />
