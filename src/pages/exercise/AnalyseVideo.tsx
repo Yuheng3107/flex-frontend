@@ -111,11 +111,9 @@ const AnalyseVideo = () => {
       videoInputRef.current !== null &&
       videoInputRef.current.files !== null
     ) {
-      console.log(videoInputRef.current.files);
-    }
-    if (videoInputRef.current !== null && videoInputRef.current.files !== null)
       setVideoURL(URL.createObjectURL(videoInputRef.current.files[0]));
-    loadDetector();
+      loadDetector();
+    }
   }
 
   const start = async () => {
@@ -284,7 +282,7 @@ const AnalyseVideo = () => {
                 ))}
               </IonSelect>
 
-              <IonButton>
+              <IonButton className={videoURL && "hidden"}>
                 Upload Video
                 <input
                   ref={videoInputRef}
@@ -299,7 +297,7 @@ const AnalyseVideo = () => {
         </div>
         <div id="button-container" className="flex justify-center pb-20">
           {detector === undefined ? (
-            videoRef.current !== null && <IonSpinner />
+            videoURL && <IonSpinner />
           ) : (
             <AnalyseButton start={start} detector={detector} />
           )}
