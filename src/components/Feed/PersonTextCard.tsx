@@ -179,15 +179,9 @@ const PersonTextCard = ({
           <CommentIcon className="w-8 h-8"></CommentIcon>
         </IonButton>
 
-        <p>{`${likes} like${likes === 1 ? "" : "s"} · ${comment}`}</p>
-        {/*
-        <button>
-          <CommentIcon className="w-8 h-8" />
-        </button>
-        <button>
-          <BookmarkIcon className="w-8 h-8" />
-        </button>
-         */}
+        <p className="text-[#717171]">{`${likes} like${
+          likes === 1 ? "" : "s"
+        } · ${comment}`}</p>
       </div>
     </div>
   );
