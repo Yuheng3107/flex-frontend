@@ -14,6 +14,7 @@ import {
   CommunityData,
   PostType,
 } from "../../types/stateTypes";
+import { formatDistance } from "date-fns";
 import { timeSince } from "../../utils/generalUtils";
 import { likePostAsync, unlikePostAsync } from "../../utils/data/postData";
 
@@ -39,7 +40,8 @@ const PersonTextCard = ({
   const [hasLiked, setHasLiked] = useState(false);
   const [likes, setLikes] = useState(postData.likes);
   const [postType, setPostType] = useState<PostType>("user");
-  const postDate = new Date(postData.posted_at);
+  const postDate =
+    postData.posted_at === "" ? new Date() : new Date(postData.posted_at);
 
   useEffect(() => {
     if (profileData?.profile_photo) {
@@ -67,6 +69,8 @@ const PersonTextCard = ({
       setLikes(likes - 1);
     }
   };
+
+  const handleCommentClick = () => {};
   let comment = "0 comments";
   if (postData.comments !== undefined) {
     comment = `${postData.comments.length} comment${
@@ -123,7 +127,7 @@ const PersonTextCard = ({
                 )}
               </span>
               <FilledCircle className="mx-1 h-1.5 w-1.5 aspect-square fill-slate-500" />
-              <span id="time-stamp">{timeSince(postDate)}</span>
+              <span className="time-stamp">{timeSince(postDate)}</span>
             </p>
           </div>
         </div>
@@ -160,7 +164,21 @@ const PersonTextCard = ({
             <LikeIcon className="w-8 h-8 fill-red-500" />
           </button>
         )}
-        <CommentIcon className="w-8 h-8"></CommentIcon>
+        <IonButton
+          fill="clear"
+          color="dark"
+          className="ion-no-padding"
+          routerLink={
+            postType === "user"
+              ? `/home/post/${postData.id}`
+              : postType === "community"
+              ? `/home/community/post/${postData.id}`
+              : undefined
+          }
+        >
+          <CommentIcon className="w-8 h-8"></CommentIcon>
+        </IonButton>
+
         <p>{`${likes} like${likes === 1 ? "" : "s"} · ${comment}`}</p>
         {/*
         <button>
