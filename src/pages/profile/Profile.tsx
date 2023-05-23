@@ -71,7 +71,7 @@ const Tab3 = ({}: ProfileProps) => {
           routerLink="/profile/settings"
           fill="default"
           shape="round"
-          className="ion-no-padding mx-2"
+          className="ion-no-padding mx-2 absolute"
         >
           <IonIcon icon={cog} />
         </IonButton>
