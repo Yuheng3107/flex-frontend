@@ -14,6 +14,7 @@ import {
   CommunityData,
   PostType,
 } from "../../types/stateTypes";
+import { formatDistance } from "date-fns";
 import { timeSince } from "../../utils/generalUtils";
 import { likePostAsync, unlikePostAsync } from "../../utils/data/postData";
 
@@ -37,8 +38,10 @@ const PersonTextCard = ({
   const [imageUrl, setImageUrl] = useState("");
   const [mediaUrl, setMediaUrl] = useState("");
   const [hasLiked, setHasLiked] = useState(false);
+  const [likes, setLikes] = useState(postData.likes);
   const [postType, setPostType] = useState<PostType>("user");
-  const postDate = new Date(postData.posted_at);
+  const postDate =
+    postData.posted_at === "" ? new Date() : new Date(postData.posted_at);
 
   useEffect(() => {
     if (profileData?.profile_photo) {
@@ -54,15 +57,28 @@ const PersonTextCard = ({
 
   const likePost = async () => {
     let response = await likePostAsync(postType, postData.id);
-    if (response?.status === 200) setHasLiked(true);
+    if (response?.status === 200) {
+      setHasLiked(true);
+      setLikes(likes + 1);
+    }
   };
   const unlikePost = async () => {
     let response = await unlikePostAsync(postType, postData.id);
-    if (response?.status === 200) setHasLiked(false);
+    if (response?.status === 200) {
+      setHasLiked(false);
+      setLikes(likes - 1);
+    }
   };
 
+  const handleCommentClick = () => {};
+  let comment = "0 comments";
+  if (postData.comments !== undefined) {
+    comment = `${postData.comments.length} comment${
+      postData.comments.length === 1 ? "" : "s"
+    }`;
+  }
   return (
-    <div id="card-container" className="border border-zinc-500 mt-4 p-2 rounded-lg">
+    <div className="border border-b-zinc-500 p-2 w-full">
       <div id="top-bar" className=" flex flex-row justify-between mb-2">
         <div className="flex flex-row">
           <IonRouterLink
@@ -81,6 +97,7 @@ const PersonTextCard = ({
               className="font-semibold"
               routerLink={`/home/profile/${profileData.id}`}
               routerDirection="forward"
+              color="dark"
             >
               {profileData?.username}
             </IonRouterLink>
@@ -110,7 +127,7 @@ const PersonTextCard = ({
                 )}
               </span>
               <FilledCircle className="mx-1 h-1.5 w-1.5 aspect-square fill-slate-500" />
-              <span id="time-stamp">{timeSince(postDate)}</span>
+              <span className="time-stamp">{timeSince(postDate)}</span>
             </p>
           </div>
         </div>
@@ -124,26 +141,20 @@ const PersonTextCard = ({
             ? `/home/community/post/${postData.id}`
             : undefined
         }
-        id="content"
         className="mb-2"
+        color="dark"
       >
-        <p id="title" className="font-semibold text-xl mb-2">
-          {postData?.title}
-        </p>
         {postData?.media ? (
           <img alt="post image" src={mediaUrl} className="w-full" />
         ) : (
           ""
         )}
-
+        <h3 className="font-semibold text-xl mb-2">{postData?.title}</h3>
         <p id="main-content" className="text-sm">
           {postData?.text}
         </p>
       </IonRouterLink>
-      <div
-        id="action-bar"
-        className="flex flex-row items-center justify-evenly mx-auto"
-      >
+      <div className="flex flex-row items-center justify-start mx-auto action-bar">
         {hasLiked ? (
           <button onClick={unlikePost}>
             <LikeIconFilled className="w-8 h-8 fill-red-500" />
@@ -153,16 +164,24 @@ const PersonTextCard = ({
             <LikeIcon className="w-8 h-8 fill-red-500" />
           </button>
         )}
-        <p>{postData.likes}</p>
-        {/*
-        <button>
-          <CommentIcon className="w-8 h-8" />
-        </button>
-        <button>
-          <BookmarkIcon className="w-8 h-8" />
-        </button>
-         */}
-        
+        <IonButton
+          fill="clear"
+          color="dark"
+          className="ion-no-padding"
+          routerLink={
+            postType === "user"
+              ? `/home/post/${postData.id}`
+              : postType === "community"
+              ? `/home/community/post/${postData.id}`
+              : undefined
+          }
+        >
+          <CommentIcon className="w-8 h-8"></CommentIcon>
+        </IonButton>
+
+        <p className="text-[#717171]">{`${likes} like${
+          likes === 1 ? "" : "s"
+        } · ${comment}`}</p>
       </div>
     </div>
   );
