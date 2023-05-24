@@ -1,7 +1,15 @@
 //React imports
 import { useState } from "react";
 
-import { IonContent, IonPage } from "@ionic/react";
+import {
+  IonContent,
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  IonBackButton,
+  IonTitle,
+} from "@ionic/react";
 
 //component imports
 import ExerciseOptions from "../../components/Exercise/ExerciseOptions";
@@ -37,6 +45,14 @@ const ExercisePage: React.FC<ExercisePageProps> = ({ match }) => {
 
   return (
     <IonPage>
+      <IonHeader>
+        <IonToolbar>
+          <IonButtons slot="start">
+            <IonBackButton defaultHref="/exercise">back</IonBackButton>
+          </IonButtons>
+          <IonTitle>Exercise Name (Placeholder)</IonTitle>
+        </IonToolbar>
+      </IonHeader>
       <IonContent fullscreen>
         <main className="w-full h-full">
           {isExercising ? (
