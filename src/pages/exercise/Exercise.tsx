@@ -1,8 +1,17 @@
 //React imports
 import { useState } from "react";
 
-import { IonContent, IonPage } from "@ionic/react";
+import {
+  IonContent,
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonButtons,
+  IonBackButton,
+  IonTitle,
+} from "@ionic/react";
 
+import Header from "../../components/ui/Header";
 //component imports
 import ExerciseOptions from "../../components/Exercise/ExerciseOptions";
 import VideoFeed from "../../components/Exercise/video";
@@ -37,6 +46,7 @@ const ExercisePage: React.FC<ExercisePageProps> = ({ match }) => {
 
   return (
     <IonPage>
+      <Header title="Exercise Name (Placeholder)"></Header>
       <IonContent fullscreen>
         <main className="w-full h-full">
           {isExercising ? (
