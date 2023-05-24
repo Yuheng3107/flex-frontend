@@ -29,7 +29,6 @@ import {
 
 //img imports
 import img404 from "../../assets/img/404.png";
-
 //Ionic Imports
 import {
   IonPage,
@@ -150,6 +149,7 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
               profileData={profileData}
               communityData={communityData}
               isLiked={isLiked}
+              isPostPage={true}
             />
             <Posts loadData={loadComments} posts={posts} />
           </div>

@@ -3,6 +3,7 @@ import CommentIcon from "../../assets/svgComponents/CommentIcon";
 import LikeIcon from "../../assets/svgComponents/LikeIcon";
 import LikeIconFilled from "../../assets/svgComponents/LikeIconFilled";
 import BookmarkIcon from "../../assets/svgComponents/BookmarkIcon";
+import FilterIcon from "../../assets/svgComponents/FilterIcon";
 
 import React, { useState, useEffect } from "react";
 import { useAppSelector } from "../../store/hooks";
@@ -26,6 +27,7 @@ type PostProps = {
   profileData: ProfileData;
   communityData: CommunityData | null;
   isLiked: Boolean;
+  isPostPage?: Boolean;
 };
 
 const PersonTextCard = ({
@@ -33,6 +35,7 @@ const PersonTextCard = ({
   profileData,
   communityData,
   isLiked,
+  isPostPage = false,
 }: PostProps) => {
   const profileDataRedux = useAppSelector((state) => state.profile.profileData);
   const [imageUrl, setImageUrl] = useState("");
@@ -75,7 +78,7 @@ const PersonTextCard = ({
   };
 
   return (
-    <div className="border border-b-zinc-500 p-2 w-full">
+    <div className="border border-b-zinc-500 p-2 w-full font-inter">
       <div id="top-bar" className=" flex flex-row justify-between mb-2">
         <div className="flex flex-row">
           <IonRouterLink
@@ -141,15 +144,31 @@ const PersonTextCard = ({
         className="mb-2"
         color="dark"
       >
-        {postData?.media ? (
-          <img alt="post image" src={mediaUrl} className="w-full" />
+        {isPostPage ? (
+          <>
+            <h3 className="font-semibold text-xl mb-2">{postData?.title}</h3>
+            <p id="main-content" className="text-sm">
+              {postData?.text}
+            </p>
+            {postData?.media ? (
+              <img alt="post image" src={mediaUrl} className="w-full" />
+            ) : (
+              ""
+            )}
+          </>
         ) : (
-          ""
+          <>
+            {postData?.media ? (
+              <img alt="post image" src={mediaUrl} className="w-full" />
+            ) : (
+              ""
+            )}
+            <h3 className="font-semibold text-xl mb-2">{postData?.title}</h3>
+            <p id="main-content" className="text-sm">
+              {postData?.text}
+            </p>
+          </>
         )}
-        <h3 className="font-semibold text-xl mb-2">{postData?.title}</h3>
-        <p id="main-content" className="text-sm">
-          {postData?.text}
-        </p>
       </IonRouterLink>
       <div className="flex flex-row items-center justify-start mx-auto action-bar gap-2">
         <div className="like-group flex items-center gap-1">
@@ -183,6 +202,11 @@ const PersonTextCard = ({
             {postData.comments !== undefined ? postData.comments.length : 0}
           </p>
         </div>
+      </div>
+      <div className="hashtags"></div>
+      <div className="all-comments flex justify-between items-center mx-2">
+        <h5 className="text-[#090909] text-sm">All Comments</h5>{" "}
+        <FilterIcon className="w-6 h-6"></FilterIcon>
       </div>
     </div>
   );
