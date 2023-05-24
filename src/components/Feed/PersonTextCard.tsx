@@ -38,11 +38,15 @@ const PersonTextCard = ({
   const [imageUrl, setImageUrl] = useState("");
   const [mediaUrl, setMediaUrl] = useState("");
   const [hasLiked, setHasLiked] = useState(false);
-  const [likes, setLikes] = useState(postData.likes);
+  const [likes, setLikes] = useState<number>(postData.likes);
   const [postType, setPostType] = useState<PostType>("user");
+  console.log(postData);
   const postDate =
     postData.posted_at === "" ? new Date() : new Date(postData.posted_at);
-
+  useEffect(() => {
+    // to update postData likes
+    setLikes(postData.likes);
+  }, [postData]);
   useEffect(() => {
     if (profileData?.profile_photo) {
       setImageUrl(imgBackend.concat(profileData.profile_photo));

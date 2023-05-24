@@ -2,7 +2,10 @@ import { RouteComponentProps } from "react-router";
 import React, { useState, useEffect } from "react";
 
 //utils imports
-import { getAllProfileData } from "../../utils/data/profileData";
+import {
+  getAllProfileData,
+  getProfileDataAsync,
+} from "../../utils/data/profileData";
 import {
   getCommentsAsync,
   getPostAsync,
