@@ -70,13 +70,6 @@ const PersonTextCard = ({
     }
   };
 
-  const handleCommentClick = () => {};
-  let comment = "0 comments";
-  if (postData.comments !== undefined) {
-    comment = `${postData.comments.length} comment${
-      postData.comments.length === 1 ? "" : "s"
-    }`;
-  }
   return (
     <div className="border border-b-zinc-500 p-2 w-full">
       <div id="top-bar" className=" flex flex-row justify-between mb-2">
@@ -154,34 +147,38 @@ const PersonTextCard = ({
           {postData?.text}
         </p>
       </IonRouterLink>
-      <div className="flex flex-row items-center justify-start mx-auto action-bar">
-        {hasLiked ? (
-          <button onClick={unlikePost}>
-            <LikeIconFilled className="w-8 h-8 fill-red-500" />
-          </button>
-        ) : (
-          <button onClick={likePost}>
-            <LikeIcon className="w-8 h-8 fill-red-500" />
-          </button>
-        )}
-        <IonButton
-          fill="clear"
-          color="dark"
-          className="ion-no-padding"
-          routerLink={
-            postType === "user"
-              ? `/home/post/${postData.id}`
-              : postType === "community"
-              ? `/home/community/post/${postData.id}`
-              : undefined
-          }
-        >
-          <CommentIcon className="w-8 h-8"></CommentIcon>
-        </IonButton>
-
-        <p className="text-[#717171]">{`${likes} like${
-          likes === 1 ? "" : "s"
-        } · ${comment}`}</p>
+      <div className="flex flex-row items-center justify-start mx-auto action-bar gap-2">
+        <div className="like-group flex items-center gap-1">
+          {hasLiked ? (
+            <button onClick={unlikePost}>
+              <LikeIconFilled className="w-8 h-8 fill-red-500" />
+            </button>
+          ) : (
+            <button onClick={likePost}>
+              <LikeIcon className="w-8 h-8 fill-red-500" />
+            </button>
+          )}
+          <p>{likes}</p>
+        </div>
+        <div className="comment-group flex items-center gap-1">
+          <IonButton
+            fill="clear"
+            color="dark"
+            className="ion-no-padding"
+            routerLink={
+              postType === "user"
+                ? `/home/post/${postData.id}`
+                : postType === "community"
+                ? `/home/community/post/${postData.id}`
+                : undefined
+            }
+          >
+            <CommentIcon className="w-8 h-8"></CommentIcon>
+          </IonButton>
+          <p className="comment">
+            {postData.comments !== undefined ? postData.comments.length : 0}
+          </p>
+        </div>
       </div>
     </div>
   );
