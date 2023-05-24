@@ -28,7 +28,7 @@ function ExerciseCard({
   const history = useHistory();
   return (
     <div
-      className={`${className} relative bg-zinc-200 rounded-xl flex flex-col justify-between h-56 w-44 overflow-hidden`}
+      className={`${className} relative bg-zinc-200 rounded-xl flex flex-col justify-between h-56 w-44 shrink-0`}
     >
       <img
         className="absolute w-full h-full object-cover z-0 grayscale contrast-75 brightness-75"
@@ -41,7 +41,7 @@ function ExerciseCard({
           <img
             src={likeIcon}
             alt="like icon"
-            className="w-8 h-8 aspect-square invert"
+            className="w-10 h-10 aspect-square invert px-2"
           />
           <span className="text-white">{likes}</span>
         </div>

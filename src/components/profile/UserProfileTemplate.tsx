@@ -30,7 +30,7 @@ const UserProfileTemplate = ({
       {isTrend === true ? (
         <ExerciseStatsDisplay exerciseStats={exerciseStats} />
       ) : (
-        <Posts posts={posts} loadData={loadUserPostData} />
+        <Posts posts={posts} loadData={loadUserPostData} isProfilePage={true} />
       )}
     </div>
   );

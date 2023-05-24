@@ -22,7 +22,7 @@ const ExerciseStatsDisplay = ({ exerciseStats }: ExerciseStatsDisplayProps) => {
       >
         <div
           id="fav-exercise"
-          className={`relative flex flex-col border border-zinc-500 p-3 rounded-lg ${moduleWidth} aspect-square text-white
+          className={`relative flex flex-col border border-zinc-300 p-3 rounded-lg ${moduleWidth} aspect-square text-white
            bg-cover bg-center bg-[url('https://images.healthshots.com/healthshots/en/uploads/2021/09/06145503/shutterstock_1563301450-1600x900.jpg')]`}
         >
           <span className="text-xs text-orange-400 font-bold z-10">
@@ -59,14 +59,14 @@ const ExerciseStatsDisplay = ({ exerciseStats }: ExerciseStatsDisplayProps) => {
         <div className={`flex flex-col justify-between ${moduleWidth}`}>
           <div
             id="streak"
-            className={`flex flex-col border border-zinc-500 p-2 rounded-lg ${moduleHeight}`}
+            className={`flex flex-col border border-zinc-300 p-2 rounded-lg ${moduleHeight}`}
           >
             <span className="text-xs">Longest Streak&#9889;</span>
             <span className="text-xl">{exerciseStats?.streak} days</span>
           </div>
           <div
             id="calories"
-            className={`flex flex-col border border-zinc-500 p-2 rounded-lg ${moduleHeight}`}
+            className={`flex flex-col border border-zinc-300 p-2 rounded-lg ${moduleHeight}`}
           >
             <span className="text-xs">Calories Burnt&#128293; </span>
             <span className="text-xl">
@@ -80,7 +80,7 @@ const ExerciseStatsDisplay = ({ exerciseStats }: ExerciseStatsDisplayProps) => {
       <div className="flex flex-row justify-evenly mt-2">
         <div
           id="workout"
-          className={`flex flex-col border border-zinc-500 p-2 rounded-lg w-full aspect-[2/1]`}
+          className={`flex flex-col border border-zinc-300 p-2 rounded-lg w-full aspect-[2/1]`}
         >
           <span className="text-xs">Favourite Workout</span>
           <span className="text-2xl">
@@ -102,7 +102,7 @@ const ExerciseStatsDisplay = ({ exerciseStats }: ExerciseStatsDisplayProps) => {
       <div className="flex flex-row justify-evenly mt-2">
         <div
           id="breakdown"
-          className="flex flex-col border border-zinc-500 p-2 rounded-lg w-full"
+          className="flex flex-col border border-zinc-300 p-2 rounded-lg w-full"
         >
           <span className="text-xs">Exercise Breakdown</span>
           <span className="text-3xl">IMAGE HERE</span>

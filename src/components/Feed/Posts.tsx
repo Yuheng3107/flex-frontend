@@ -19,11 +19,22 @@ type PostProps = {
   };
   loadData: (() => any) | undefined;
   isComment?: Boolean;
+  isProfilePage?: Boolean;
 };
 
-const Posts = ({ posts, loadData, isComment = false }: PostProps) => {
+const Posts = ({
+  posts,
+  loadData,
+  isComment = false,
+  isProfilePage = false,
+}: PostProps) => {
   return (
-    <div id="userFeed" className="flex flex-col justify-start w-full h-full">
+    <div
+      id="userFeed"
+      className={`flex flex-col justify-start w-full h-full ${
+        isProfilePage && "bg-[#EFEFEF] -my-3"
+      }`}
+    >
       {posts.postArray.length === 0 ? (
         <div className="text-center">
           {isComment ? "No Comments" : "No Posts"}
@@ -45,6 +56,7 @@ const Posts = ({ posts, loadData, isComment = false }: PostProps) => {
             key={item.id}
             isLiked={posts.likeArray.includes(item.id)}
             isComment={isComment}
+            isProfilePage={isProfilePage}
           />
         ))
       )}
