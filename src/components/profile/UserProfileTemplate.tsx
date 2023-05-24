@@ -15,24 +15,25 @@ type UserProfileTemplateProps = {
   loadUserPostData: () => void;
 };
 
-const UserProfileTemplate = ({ profileData, exerciseStats, posts, loadUserPostData }: UserProfileTemplateProps) => {
-  useEffect(() => {
-  },[])
+const UserProfileTemplate = ({
+  profileData,
+  exerciseStats,
+  posts,
+  loadUserPostData,
+}: UserProfileTemplateProps) => {
+  useEffect(() => {}, []);
   const [isTrend, setTrend] = useState(true);
   return (
     <div>
       <KeyProfileInfoDisplay profileData={profileData} />
       <ToggleBar isTrend={isTrend} setTrend={setTrend} />
-      {isTrend === true ?
+      {isTrend === true ? (
         <ExerciseStatsDisplay exerciseStats={exerciseStats} />
-        :
-        <Posts 
-          posts={posts}
-          loadData={loadUserPostData}
-          />
-      }
+      ) : (
+        <Posts posts={posts} loadData={loadUserPostData} isProfilePage={true} />
+      )}
     </div>
-  )
+  );
 };
 
 export default UserProfileTemplate;

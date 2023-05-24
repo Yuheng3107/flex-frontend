@@ -29,6 +29,7 @@ type PostProps = {
   isLiked: Boolean;
   isPostPage?: Boolean;
   isComment?: Boolean;
+  isProfilePage?: Boolean;
 };
 
 const PersonTextCard = ({
@@ -38,6 +39,7 @@ const PersonTextCard = ({
   isLiked,
   isPostPage = false,
   isComment = false,
+  isProfilePage = false,
 }: PostProps) => {
   const profileDataRedux = useAppSelector((state) => state.profile.profileData);
   const [imageUrl, setImageUrl] = useState("");
@@ -81,7 +83,11 @@ const PersonTextCard = ({
   };
 
   return (
-    <div className="border border-b-zinc-300 p-2 w-full font-inter">
+    <div
+      className={`border border-b-zinc-300 p-2  font-inter bg-white ${
+        isProfilePage && "m-4 rounded-lg drop-shadow-card"
+      }`}
+    >
       {isComment ? (
         <div className="comment flex justify-between items-center mx-2 py-4">
           <div className="profile flex">
@@ -120,7 +126,7 @@ const PersonTextCard = ({
         </div>
       ) : (
         <>
-          <div id="top-bar" className=" flex flex-row justify-between mb-2">
+          <div id="top-bar" className=" flex flex-row justify-between">
             <div className="flex flex-row">
               <IonRouterLink
                 routerLink={`/home/profile/${profileData.id}`}
@@ -249,10 +255,12 @@ const PersonTextCard = ({
             </div>
           </div>
           <div className="hashtags"></div>
-          <div className="all-comments flex justify-between items-center mx-2">
-            <h5 className="text-[#090909] text-sm">All Comments</h5>{" "}
-            <FilterIcon className="w-6 h-6"></FilterIcon>
-          </div>
+          {isPostPage && (
+            <div className="all-comments flex justify-between items-center mx-2">
+              <h5 className="text-[#090909] text-sm">All Comments</h5>{" "}
+              <FilterIcon className="w-6 h-6"></FilterIcon>
+            </div>
+          )}
         </>
       )}
     </div>

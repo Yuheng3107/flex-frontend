@@ -22,16 +22,20 @@ import ExerciseCard from "../../components/Exercise/ExerciseCard";
 import WorkoutCard from "../../components/Exercise/workout/WorkoutCard";
 
 //utils
-import { getExerciseListAsync, getExerciseRegimeAsync } from "../../utils/data/getExerciseData";
+import {
+  getExerciseListAsync,
+  getExerciseRegimeAsync,
+} from "../../utils/data/getExerciseData";
 
 //types
 import { ExerciseData } from "../../types/stateTypes";
 
 const ChooseExercise = () => {
-
-  const [exerciseCardArray, setExerciseCardArray] = useState<ExerciseData[]>([]);
+  const [exerciseCardArray, setExerciseCardArray] = useState<ExerciseData[]>(
+    []
+  );
   const [regimeCardArray, setRegimeCardArray] = useState<any[]>([]);
-  const exerciseStatsRedux = useAppSelector(state => state.exerciseStats)
+  const exerciseStatsRedux = useAppSelector((state) => state.exerciseStats);
 
   const history = useHistory();
 
@@ -47,22 +51,23 @@ const ChooseExercise = () => {
         data.exercises = exercisesData;
         console.log(data);
         regimesDataArray.push(data);
-
       }
       setRegimeCardArray(regimesDataArray);
-
     }
     async function getExercises() {
       try {
-        const response = await fetch(backend.concat('/exercises/exercise/list'), {
-          method: 'GET',
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": String(
-              document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]
-            ),
-          },
-        });
+        const response = await fetch(
+          backend.concat("/exercises/exercise/list"),
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": String(
+                document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]
+              ),
+            },
+          }
+        );
         const data = await response.json();
         setExerciseCardArray(data);
 
@@ -74,7 +79,7 @@ const ChooseExercise = () => {
 
     getExercises();
     getRegimesData();
-  }, [exerciseStatsRedux])
+  }, [exerciseStatsRedux]);
 
   return (
     <IonPage>
@@ -84,7 +89,11 @@ const ChooseExercise = () => {
             <p className="text-xl mb-2 flex flex-row justify-between items-center">
               Workouts
               <button onClick={() => history.push("/exercise/workout/create")}>
-                <IonIcon color="primary" size="large" icon={addCircleOutline}></IonIcon>
+                <IonIcon
+                  color="primary"
+                  size="large"
+                  icon={addCircleOutline}
+                ></IonIcon>
               </button>
             </p>
             {regimeCardArray.map((regimeData) => (
@@ -93,12 +102,18 @@ const ChooseExercise = () => {
           </section>
           <section id="Exercises-container">
             <p className="text-xl mb-2">Exercises</p>
-            <div className="flex flex-col">
+
+            <div className="flex overflow-x-auto gap-x-4">
               {exerciseCardArray.map((cardInfo) => (
-                <ExerciseCard key={cardInfo.id} name={cardInfo.name} likes={cardInfo.likes} media={cardInfo.media} exerciseId={cardInfo.id} />
+                <ExerciseCard
+                  key={cardInfo.id}
+                  name={cardInfo.name}
+                  likes={cardInfo.likes}
+                  media={cardInfo.media}
+                  exerciseId={cardInfo.id}
+                />
               ))}
             </div>
-
           </section>
         </main>
         <IonFab slot="fixed" vertical="bottom" horizontal="end">
@@ -110,7 +125,5 @@ const ChooseExercise = () => {
     </IonPage>
   );
 };
-
-
 
 export default ChooseExercise;
