@@ -151,7 +151,7 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
               isLiked={isLiked}
               isPostPage={true}
             />
-            <Posts loadData={loadComments} posts={posts} />
+            <Posts loadData={loadComments} posts={posts} isComment={true} />
           </div>
         )}
       </IonContent>

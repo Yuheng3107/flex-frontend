@@ -2,9 +2,8 @@ import FilledCircle from "../../assets/svgComponents/FilledCircle";
 import CommentIcon from "../../assets/svgComponents/CommentIcon";
 import LikeIcon from "../../assets/svgComponents/LikeIcon";
 import LikeIconFilled from "../../assets/svgComponents/LikeIconFilled";
-import BookmarkIcon from "../../assets/svgComponents/BookmarkIcon";
+import ArrowForwardIcon from "../../assets/svgComponents/ArrowForwardIcon";
 import FilterIcon from "../../assets/svgComponents/FilterIcon";
-
 import React, { useState, useEffect } from "react";
 import { useAppSelector } from "../../store/hooks";
 
@@ -21,6 +20,7 @@ import { likePostAsync, unlikePostAsync } from "../../utils/data/postData";
 
 //ionic imports
 import { IonRouterLink, IonContent, IonButton } from "@ionic/react";
+import { div } from "@tensorflow/tfjs-core";
 
 type PostProps = {
   postData: UserPostData;
@@ -28,6 +28,7 @@ type PostProps = {
   communityData: CommunityData | null;
   isLiked: Boolean;
   isPostPage?: Boolean;
+  isComment?: Boolean;
 };
 
 const PersonTextCard = ({
@@ -36,6 +37,7 @@ const PersonTextCard = ({
   communityData,
   isLiked,
   isPostPage = false,
+  isComment = false,
 }: PostProps) => {
   const profileDataRedux = useAppSelector((state) => state.profile.profileData);
   const [imageUrl, setImageUrl] = useState("");
@@ -44,6 +46,7 @@ const PersonTextCard = ({
   const [likes, setLikes] = useState<number>(postData.likes);
   const [postType, setPostType] = useState<PostType>("user");
   console.log(postData);
+
   const postDate =
     postData.posted_at === "" ? new Date() : new Date(postData.posted_at);
   useEffect(() => {
@@ -79,115 +82,99 @@ const PersonTextCard = ({
 
   return (
     <div className="border border-b-zinc-500 p-2 w-full font-inter">
-      <div id="top-bar" className=" flex flex-row justify-between mb-2">
-        <div className="flex flex-row">
-          <IonRouterLink
-            routerLink={`/home/profile/${profileData.id}`}
-            routerDirection="forward"
-          >
+      {isComment ? (
+        <div className="comment flex justify-between items-center mx-2 py-3">
+          <div className="profile flex">
             <img
               alt="prof pic"
               src={imageUrl}
               className="h-12 w-12 rounded-full object-cover"
             />
-          </IonRouterLink>
-          <div className="ml-3">
-            <IonRouterLink
-              id="username"
-              className="font-semibold"
-              routerLink={`/home/profile/${profileData.id}`}
-              routerDirection="forward"
-              color="dark"
-            >
-              {profileData?.username}
-            </IonRouterLink>
-            <p
-              id="subtitle"
-              className="flex flex-row items-center text-sm text-gray-700"
-            >
-              <span id="post-place">
-                {postType === "user" ? (
-                  <IonRouterLink
-                    className="text-gray-700"
-                    routerLink={`/home/profile/${profileData.id}`}
-                    routerDirection="forward"
-                  >
-                    Profile
-                  </IonRouterLink>
-                ) : postType === "community" ? (
-                  <IonRouterLink
-                    className="text-gray-700"
-                    routerLink={`/home/community/${communityData?.id}`}
-                    routerDirection="forward"
-                  >
-                    {communityData?.name}
-                  </IonRouterLink>
-                ) : (
-                  "Comment"
-                )}
-              </span>
-              <FilledCircle className="mx-1 h-1.5 w-1.5 aspect-square fill-slate-500" />
-              <span className="time-stamp">{timeSince(postDate)}</span>
-            </p>
+            <div className="profile-info">
+              <IonRouterLink
+                id="username"
+                className="font-semibold"
+                routerLink={`/home/profile/${profileData.id}`}
+                routerDirection="forward"
+                color="dark"
+              >
+                <p className="flex items-center">
+                  {profileData?.username}
+                  <ArrowForwardIcon className="h-4 w-4"></ArrowForwardIcon>
+                </p>
+              </IonRouterLink>
+              <p id="main-content" className="text-sm">
+                {postData?.text}
+              </p>
+            </div>
           </div>
-        </div>
-        <button id="menu-button"></button>
-      </div>
-      <IonRouterLink
-        routerLink={
-          postType === "user"
-            ? `/home/post/${postData.id}`
-            : postType === "community"
-            ? `/home/community/post/${postData.id}`
-            : undefined
-        }
-        className="mb-2"
-        color="dark"
-      >
-        {isPostPage ? (
-          <>
-            <h3 className="font-semibold text-xl mb-2">{postData?.title}</h3>
-            <p id="main-content" className="text-sm">
-              {postData?.text}
-            </p>
-            {postData?.media ? (
-              <img alt="post image" src={mediaUrl} className="w-full" />
-            ) : (
-              ""
-            )}
-          </>
-        ) : (
-          <>
-            {postData?.media ? (
-              <img alt="post image" src={mediaUrl} className="w-full" />
-            ) : (
-              ""
-            )}
-            <h3 className="font-semibold text-xl mb-2">{postData?.title}</h3>
-            <p id="main-content" className="text-sm">
-              {postData?.text}
-            </p>
-          </>
-        )}
-      </IonRouterLink>
-      <div className="flex flex-row items-center justify-start mx-auto action-bar gap-2">
-        <div className="like-group flex items-center gap-1">
           {hasLiked ? (
             <button onClick={unlikePost}>
-              <LikeIconFilled className="w-8 h-8 fill-red-500" />
+              <LikeIconFilled className="w-6 h-6 fill-red-500" />
             </button>
           ) : (
             <button onClick={likePost}>
-              <LikeIcon className="w-8 h-8 fill-red-500" />
+              <LikeIcon className="w-6 h-6 fill-red-500" />
             </button>
           )}
-          <p>{likes}</p>
         </div>
-        <div className="comment-group flex items-center gap-1">
-          <IonButton
-            fill="clear"
-            color="dark"
-            className="ion-no-padding"
+      ) : (
+        <>
+          <div id="top-bar" className=" flex flex-row justify-between mb-2">
+            <div className="flex flex-row">
+              <IonRouterLink
+                routerLink={`/home/profile/${profileData.id}`}
+                routerDirection="forward"
+              >
+                <img
+                  alt="prof pic"
+                  src={imageUrl}
+                  className="h-12 w-12 rounded-full object-cover"
+                />
+              </IonRouterLink>
+              <div className="ml-3">
+                <IonRouterLink
+                  id="username"
+                  className="font-semibold"
+                  routerLink={`/home/profile/${profileData.id}`}
+                  routerDirection="forward"
+                  color="dark"
+                >
+                  {profileData?.username}
+                </IonRouterLink>
+                <p
+                  id="subtitle"
+                  className="flex flex-row items-center text-sm text-gray-700"
+                >
+                  <span id="post-place">
+                    {postType === "user" ? (
+                      <IonRouterLink
+                        className="text-gray-700"
+                        routerLink={`/home/profile/${profileData.id}`}
+                        routerDirection="forward"
+                      >
+                        Profile
+                      </IonRouterLink>
+                    ) : postType === "community" ? (
+                      <IonRouterLink
+                        className="text-gray-700"
+                        routerLink={`/home/community/${communityData?.id}`}
+                        routerDirection="forward"
+                      >
+                        {communityData?.name}
+                      </IonRouterLink>
+                    ) : (
+                      "Comment"
+                    )}
+                  </span>
+                  <FilledCircle className="mx-1 h-1.5 w-1.5 aspect-square fill-slate-500" />
+                  <span className="time-stamp">{timeSince(postDate)}</span>
+                </p>
+              </div>
+            </div>
+            <button id="menu-button"></button>
+          </div>
+          <IonRouterLink
             routerLink={
               postType === "user"
                 ? `/home/post/${postData.id}`
@@ -195,19 +182,79 @@ const PersonTextCard = ({
                 ? `/home/community/post/${postData.id}`
                 : undefined
             }
+            className="mb-2"
+            color="dark"
           >
-            <CommentIcon className="w-8 h-8"></CommentIcon>
-          </IonButton>
-          <p className="comment">
-            {postData.comments !== undefined ? postData.comments.length : 0}
-          </p>
-        </div>
-      </div>
-      <div className="hashtags"></div>
-      <div className="all-comments flex justify-between items-center mx-2">
-        <h5 className="text-[#090909] text-sm">All Comments</h5>{" "}
-        <FilterIcon className="w-6 h-6"></FilterIcon>
-      </div>
+            {isPostPage ? (
+              <>
+                <h3 className="font-semibold text-xl mb-2">
+                  {postData?.title}
+                </h3>
+                <p id="main-content" className="text-sm">
+                  {postData?.text}
+                </p>
+                {postData?.media ? (
+                  <img alt="post image" src={mediaUrl} className="w-full" />
+                ) : (
+                  ""
+                )}
+              </>
+            ) : (
+              <>
+                {postData?.media ? (
+                  <img alt="post image" src={mediaUrl} className="w-full" />
+                ) : (
+                  ""
+                )}
+                <h3 className="font-semibold text-xl mb-2">
+                  {postData?.title}
+                </h3>
+                <p id="main-content" className="text-sm">
+                  {postData?.text}
+                </p>
+              </>
+            )}
+          </IonRouterLink>
+          <div className="flex flex-row items-center justify-start mx-auto action-bar gap-2">
+            <div className="like-group flex items-center gap-1">
+              {hasLiked ? (
+                <button onClick={unlikePost}>
+                  <LikeIconFilled className="w-8 h-8 fill-red-500" />
+                </button>
+              ) : (
+                <button onClick={likePost}>
+                  <LikeIcon className="w-8 h-8 fill-red-500" />
+                </button>
+              )}
+              <p>{likes}</p>
+            </div>
+            <div className="comment-group flex items-center gap-1">
+              <IonButton
+                fill="clear"
+                color="dark"
+                className="ion-no-padding"
+                routerLink={
+                  postType === "user"
+                    ? `/home/post/${postData.id}`
+                    : postType === "community"
+                    ? `/home/community/post/${postData.id}`
+                    : undefined
+                }
+              >
+                <CommentIcon className="w-8 h-8"></CommentIcon>
+              </IonButton>
+              <p className="comment">
+                {postData.comments !== undefined ? postData.comments.length : 0}
+              </p>
+            </div>
+          </div>
+          <div className="hashtags"></div>
+          <div className="all-comments flex justify-between items-center mx-2">
+            <h5 className="text-[#090909] text-sm">All Comments</h5>{" "}
+            <FilterIcon className="w-6 h-6"></FilterIcon>
+          </div>
+        </>
+      )}
     </div>
   );
 };
