@@ -249,10 +249,12 @@ const PersonTextCard = ({
             </div>
           </div>
           <div className="hashtags"></div>
-          <div className="all-comments flex justify-between items-center mx-2">
-            <h5 className="text-[#090909] text-sm">All Comments</h5>{" "}
-            <FilterIcon className="w-6 h-6"></FilterIcon>
-          </div>
+          {isPostPage && (
+            <div className="all-comments flex justify-between items-center mx-2">
+              <h5 className="text-[#090909] text-sm">All Comments</h5>{" "}
+              <FilterIcon className="w-6 h-6"></FilterIcon>
+            </div>
+          )}
         </>
       )}
     </div>

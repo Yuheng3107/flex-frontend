@@ -25,12 +25,17 @@ export default function KeyStats({ followers, reps, perfect_reps }) {
         </span>
         <span className="text-l">Perfect</span>
       </div>
-      <IonRouterLink id="followers" routerLink="/profile/friendslist" routerDirection="forward">
+      <IonRouterLink
+        id="followers"
+        routerLink="/profile/friendslist"
+        routerDirection="forward"
+        color="dark"
+      >
         <div className="flex flex-col items-center justify-evenly">
           <span className="text-xl font-semibold -mb-1">
             {followers === undefined ? "?" : followers}
           </span>
-          <span className="text-l">Friends</span>  
+          <span className="text-l">Friends</span>
         </div>
       </IonRouterLink>
     </div>
