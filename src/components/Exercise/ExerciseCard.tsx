@@ -28,7 +28,7 @@ function ExerciseCard({
   const history = useHistory();
   return (
     <div
-      className={`${className} relative bg-zinc-200 rounded-xl flex flex-col justify-between h-56 w-44 shrink-0`}
+      className={`${className} relative bg-zinc-200 rounded-3xl flex flex-col justify-between h-56 w-44 shrink-0`}
     >
       <img
         className="absolute w-full h-full object-cover z-0 grayscale contrast-75 brightness-75"
