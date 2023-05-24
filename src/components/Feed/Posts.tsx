@@ -18,13 +18,16 @@ type PostProps = {
     likeArray: any[];
   };
   loadData: (() => any) | undefined;
+  isComment?: Boolean;
 };
 
-const Posts = ({ posts, loadData }: PostProps) => {
+const Posts = ({ posts, loadData, isComment = false }: PostProps) => {
   return (
     <div id="userFeed" className="flex flex-col justify-start w-full h-full">
       {posts.postArray.length === 0 ? (
-        <div className="text-center">No Posts</div>
+        <div className="text-center">
+          {isComment ? "No Comments" : "No Posts"}
+        </div>
       ) : (
         posts.postArray.map((item, i) => (
           <PersonTextCard
@@ -41,6 +44,7 @@ const Posts = ({ posts, loadData }: PostProps) => {
             }
             key={item.id}
             isLiked={posts.likeArray.includes(item.id)}
+            isComment={isComment}
           />
         ))
       )}

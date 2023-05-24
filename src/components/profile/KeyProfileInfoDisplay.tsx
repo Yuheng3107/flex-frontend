@@ -20,11 +20,17 @@ const KeyProfileInfoDisplay = ({ profileData }: ProfileInfoProps) => {
   }, [profileData?.profile_photo]);
 
   return (
-    <div id="userInfo" className="flex flex-col items-center justify-evenly">
+    <div
+      id="userInfo"
+      className="flex flex-col items-center justify-evenly mt-4"
+    >
       <img className="rounded-full w-1/3 mt-2 p-1" src={imageUrl} />
-      <span id="username" className="text-3xl">
+      <h1
+        id="username"
+        className="text-2xl py-0 my-0 font-medium text-black font-inter"
+      >
         {profileData?.username}
-      </span>
+      </h1>
 
       <Achievements achievements={profileData?.achievements} />
       <KeyStats
