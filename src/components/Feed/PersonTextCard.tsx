@@ -81,16 +81,16 @@ const PersonTextCard = ({
   };
 
   return (
-    <div className="border border-b-zinc-500 p-2 w-full font-inter">
+    <div className="border border-b-zinc-300 p-2 w-full font-inter">
       {isComment ? (
-        <div className="comment flex justify-between items-center mx-2 py-3">
+        <div className="comment flex justify-between items-center mx-2 py-4">
           <div className="profile flex">
             <img
               alt="prof pic"
               src={imageUrl}
               className="h-12 w-12 rounded-full object-cover"
             />
-            <div className="profile-info">
+            <div className="profile-info p-2">
               <IonRouterLink
                 id="username"
                 className="font-semibold"
