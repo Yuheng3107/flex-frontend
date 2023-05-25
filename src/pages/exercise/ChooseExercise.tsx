@@ -103,7 +103,7 @@ const ChooseExercise = () => {
           <section id="Exercises-container">
             <p className="text-xl mb-2">Exercises</p>
 
-            <div className="flex overflow-x-auto gap-x-4">
+            <div className="flex overflow-x-auto gap-x-4 no-scrollbar">
               {exerciseCardArray.map((cardInfo) => (
                 <ExerciseCard
                   key={cardInfo.id}
