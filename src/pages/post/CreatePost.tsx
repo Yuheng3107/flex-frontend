@@ -75,7 +75,7 @@ function CreatePost() {
                 </IonToolbar>
             </IonHeader>
             <IonContent>
-                <main className="flex flex-col h-3/4">
+                <main className="flex flex-col">
                     {isComment ? (
                         ""
                     ) : (
@@ -90,19 +90,24 @@ function CreatePost() {
                         />
                     )}
                     <hr className="border-t border-t-slate-300" />
+                    {imageDataUrl && <div className="w-full aspect-square flex justify-center items-center overflow-hidden">
+                        <IonImg
+                            className="object-cover"
+                            src={typeof imageDataUrl === "string" ? imageDataUrl : undefined}
+                            alt="post image"
+                        />
+                    </div>}
                     <textarea
                         value={postTextInput}
                         placeholder="Post Text"
-                        className="bg-transparent block p-4 text-xl font-light focus:outline-0 h-5/6"
+                        className="bg-transparent block p-4 text-xl font-light focus:outline-0 h-32 mb-4"
                         onChange={(event) => {
                             setPostTextInput(event.target.value);
                             console.log(postTextInput);
                         }}
                     />
-                    <IonImg
-                        src={typeof imageDataUrl === "string" ? imageDataUrl:undefined}
-                        alt="post image"
-                    ></IonImg>
+                    
+
                     {/* <hr className="border-t border-t-slate-300" />
                     <p className="bg-transparent block p-4 text-xl focus:outline-0">
                         Upload Optional Media
