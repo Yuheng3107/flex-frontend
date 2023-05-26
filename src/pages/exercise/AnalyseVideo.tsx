@@ -1,5 +1,5 @@
 //React imports
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 //ionic imports
 import {
@@ -41,10 +41,10 @@ let isActive = false;
 
 const AnalyseVideo = () => {
   const [repCount, setRepCount] = useState<number>(0);
-  const [maxRepCount, setMaxRepCount] = useState<number>(10);
+  const [maxRepCount, setMaxRepCount] = useState<number>(0);
   const [feedbackLogShowing, setFeedbackLogShowing] = useState<boolean>(false);
   const [repFeedback, setRepFeedback] = useState<string>("");
-  const [repFeedbackLog, setRepFeedbackLog] = useState<string[]>([]);
+  const [repFeedbackLog, setRepFeedbackLog] = useState<JSX.Element | string>("");
   const [generalFeedback, setGeneralFeedback] = useState<string>("");
   const [detector, setDetector] = useState<any>(undefined);
   const [feedback, setFeedback] = useState<any[]>([]);
@@ -160,11 +160,20 @@ const AnalyseVideo = () => {
       let newFeedback = formCorrection.run(poses);
       if (newFeedback[0] !== "") {
         let newRepCount = newFeedback[0].slice(-1)[0].match(/\d+/)[0];
-
+        console.log(newFeedback[0]);
         setRepCount(newRepCount);
 
         setRepFeedback(newFeedback[0].slice(-1));
-        setRepFeedbackLog(newFeedback[0]);
+        let spacedFeedbackLog = <p>
+          {newFeedback[0].map((str: string, index: number) => (
+            <React.Fragment key={index}>
+            {str}
+            <br />
+          </React.Fragment>
+          ))}
+        </p>
+        console.log(spacedFeedbackLog);
+        setRepFeedbackLog(spacedFeedbackLog);
       }
       if (newFeedback[1] !== feedback[1]) setGeneralFeedback(newFeedback[1]);
       setFeedback(newFeedback);
@@ -261,7 +270,7 @@ const AnalyseVideo = () => {
               />
             </button>
             {feedbackLogShowing && (
-              <span className="mt-1">{repFeedbackLog}</span>
+              <p className="mt-1 whitespace-pre-wrap">{repFeedbackLog}</p>
             )}
           </TextBox>
           {selected ? (
