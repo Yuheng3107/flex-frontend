@@ -11,6 +11,9 @@ import { getOtherProfileDataAsync } from "../../utils/data/profileData";
 
 import { imgBackend } from "../../App";
 
+import PersonCircleIcon from "../../assets/svgComponents/PersonCircleIcon";
+
+
 type SentFriendRequestProps = {
   profileId: number;
 };
@@ -39,35 +42,32 @@ const SentFriendRequest = ({ profileId }: SentFriendRequestProps) => {
   }, [profileData?.profile_photo, requestSent, setRequestSent]);
 
   return (
-    <div className="border border-zinc-500 mt-4 p-2 flex flex-row justify-evenly items-center">
+    <div className=" mt-4 p-2 flex flex-row justify-between items-center">
       <IonRouterLink
         routerLink={`/home/profile/${profileData.id}`}
         routerDirection="forward"
+        color="dark"
+        className="flex flex-row"
       >
-        <img
-          alt="profile-picture"
-          src={imageUrl}
-          className="h-12 w-12 rounded-full object-cover"
-        />
+        <div id="pic-and-name" className="flex flex-row items-center">
+          {imageUrl ? <img
+            alt="profile-picture"
+            src={imageUrl}
+            className="h-12 w-12 rounded-full object-cover"
+          /> : <span className="h-12 w-12 bg-slate-300 rounded-full"><PersonCircleIcon className="h-12 w-12 fill-white" /></span>}
+
+          <span className="ml-2">{profileData?.username}</span>
+
+        </div>
       </IonRouterLink>
-      <div className="ml-3 flex flex-row items-center">
-        <IonRouterLink
-          routerLink={`/home/profile/${profileData.id}`}
-          routerDirection="forward"
-          id="username"
-          className="font-semibold text-black"
-        >
-          {profileData?.username}
-        </IonRouterLink>
-      </div>
       {requestSent ? (
-        <IonButton className="text-xs" onClick={deleteRequest}>
-          Delete
-        </IonButton>
+        <button onClick={deleteRequest} className="h-8 flex items-center px-4 text-sm text-gray-600 bg-gray-300 rounded-full">
+          Cancel
+        </button>
       ) : (
-        <IonButton className="text-xs" onClick={sendRequest}>
+        <button onClick={sendRequest} className="h-8 flex items-center px-4 text-sm text-gray-600 bg-gray-300 rounded-full">
           Resend
-        </IonButton>
+        </button>
       )}
     </div>
   );

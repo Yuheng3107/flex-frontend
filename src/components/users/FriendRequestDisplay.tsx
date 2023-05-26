@@ -8,13 +8,16 @@ type FriendRequestDisplayProps = {
 
 const FriendRequestDisplay = ({ friend_requests }: FriendRequestDisplayProps) => {
   return (
-    <div>
-      {friend_requests.length === 0 ? 
+    <div className="shadow p-2 bg-theme-off-white">
+      <p className="">Incoming Requests</p>
+      {friend_requests.length === 0 ?
         <div className="text-center">No Friend Requests</div>
-      :
-        friend_requests.map(item => (
-          <FriendRequest profileId={item} key={item}/>
-      ))}
+        :
+        friend_requests.map((item, index) => <>
+          <FriendRequest profileId={item} key={item} />
+        </>
+
+        )}
     </div>
   )
 };

@@ -27,11 +27,13 @@ function FriendsList() {
     const [friends, setFriends] = useState<ProfileData[]>([]);
     const dispatch = useAppDispatch();
     useEffect(() => {
+        console.log(profileDataRedux.followers)
+        const getFriendData = async function () {
+            setFriends(await getManyOtherProfileDataAsync(profileDataRedux.followers));
+        }
         getFriendData();
     }, [profileDataRedux])
-    const getFriendData = async function () {
-        setFriends(await getManyOtherProfileDataAsync(profileDataRedux.followers));
-    }
+    console.log(friends)
     return <IonPage>
         <IonHeader>
             <IonToolbar>
@@ -42,17 +44,25 @@ function FriendsList() {
             </IonToolbar>
         </IonHeader>
         <IonContent>
-            <div className="border border-zinc-500 m-4 p-2 flex flex-col text-center">
-                <div className="text-2xl">Friends</div>
+            <main className="h-full w-full bg-gray-50 py-3">
+                {profileDataRedux.friend_requests.length !== 0 && <FriendRequestDisplay friend_requests={profileDataRedux.friend_requests} />}
+                {profileDataRedux.sent_friend_requests.length !== 0 && <SentFriendRequestDisplay friend_requests={profileDataRedux.sent_friend_requests} />}
+
                 <UserDisplay users={friends} />
-                <div className="mt-3 text-xl">Incoming Friend Requests</div>
-                <FriendRequestDisplay friend_requests={profileDataRedux.friend_requests} />
-                <div className="mt-3 text-xl">Sent Friend Requests</div>
-                <SentFriendRequestDisplay friend_requests={profileDataRedux.sent_friend_requests} />    
-            </div>
-            
+            </main>
         </IonContent>
     </IonPage>
+}
+
+type ActionButtonProps = {
+    actionFunc: () => void;
+    className?: string;
+    label: string;
+}
+export const ActionButton = ({actionFunc, className, label}:ActionButtonProps) => {
+    return <button onClick={actionFunc} className={`${className} h-8 flex items-center px-4 text-sm rounded-full`}>
+        {label}
+    </button>
 }
 
 export default FriendsList
