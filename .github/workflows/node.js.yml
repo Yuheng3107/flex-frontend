@@ -18,3 +18,8 @@ jobs:
         run: |
           npm install --legacy-peer-deps
           npm run test
+      - name: Merge dev branch into prod
+        uses: peter-evans/create-pull-request@v5
+        with:
+          branch: prod
+          token: ${{ secrets.TOKEN }}
