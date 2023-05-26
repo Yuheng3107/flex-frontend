@@ -14,7 +14,9 @@ import {
   IonSpinner,
   IonSelect,
   IonSelectOption,
+  IonIcon
 } from "@ionic/react";
+import { playCircleOutline } from 'ionicons/icons';
 
 //components
 import TextBox from "../../components/ui/TextBox";
@@ -37,10 +39,11 @@ import RepCountCircle from "../../components/Exercise/RepCountCircle";
 // draw lines
 import { RendererCanvas2d } from "../../components/Exercise/workout/renderer_canvas2d";
 import { backend } from "../../App";
+import PlayCircleIcon from "../../assets/svgComponents/PlayCircleIcon";
 let isActive = false;
 
 const AnalyseVideo = () => {
-  const [exerciseDone, setExerciseDone] = useState(false);
+  const [analysisDone, setAnalysisDone] = useState(false);
   const [repCount, setRepCount] = useState<number>(0);
   const [maxRepCount, setMaxRepCount] = useState<number>(0);
   const [feedbackLogShowing, setFeedbackLogShowing] = useState<boolean>(false);
@@ -171,7 +174,7 @@ const AnalyseVideo = () => {
           {newFeedback[0].map((str: string, index: number) => (
             <React.Fragment key={index}>
               {str}
-              <br className="h-4"/>
+              <br className="h-4" />
             </React.Fragment>
           ))}
         </p>
@@ -193,7 +196,7 @@ const AnalyseVideo = () => {
     console.log(completedFeedback[0]);
     setPerfectRepCount(completedFeedback[1]);
     setFeedbackConclusion(completedFeedback[0]);
-    setExerciseDone(true);
+    setAnalysisDone(true);
     setExerciseEnded(true);
   };
 
@@ -223,6 +226,10 @@ const AnalyseVideo = () => {
     );
   };
 
+  function playbackVideoHandler() {
+
+  }
+
   return (
     <IonPage>
       <IonHeader>
@@ -235,7 +242,7 @@ const AnalyseVideo = () => {
       </IonHeader>
       <IonContent>
         {videoURL !== "" && (
-          <>
+          <section className="relative">
             <canvas ref={canvas} className="absolute z-10 w-full"></canvas>
             <video
               src={videoURL}
@@ -244,11 +251,16 @@ const AnalyseVideo = () => {
               width={videoRef.current?.videoWidth}
               className="w-full"
               onEnded={end}
+              controls
               playsInline
               disablePictureInPicture
               disableRemotePlayback
             />
-          </>
+            {analysisDone && <button onClick={playbackVideoHandler} className="w-28 aspect-square absolute left-1/2 top-1/2 -ml-14 -mt-14 z-10">
+              <PlayCircleIcon className="fill-slate-50 drop-shadow-md" circleColor="stroke-slate-50" />
+            </button>}
+
+          </section>
         )}
 
         <div id="scatter-gl-container" className="hidden"></div>
@@ -260,7 +272,7 @@ const AnalyseVideo = () => {
           </TextBox>
           {selected ? (
             <TextBox className="bg-zinc-100 p-3 w-4/5 mt-3">
-              {exerciseDone ? feedbackConslusion:generalFeedback}
+              {analysisDone ? feedbackConslusion : generalFeedback}
             </TextBox>
           ) : (
             <>
