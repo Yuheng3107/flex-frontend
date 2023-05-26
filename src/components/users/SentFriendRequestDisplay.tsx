@@ -8,13 +8,14 @@ type SentFriendRequestDisplayProps = {
 
 const SentFriendRequestDisplay = ({ friend_requests }: SentFriendRequestDisplayProps) => {
   return (
-    <div>
-      {friend_requests.length === 0 ? 
+    <div className="shadow p-2 bg-white">
+      <p className="">Sent Requests</p>
+      {friend_requests.length === 0 ?
         <div className="text-center">No Friend Requests Sent</div>
-      :
+        :
         friend_requests.map(item => (
-          <SentFriendRequest profileId={item} key={item}/>
-      ))}
+          <SentFriendRequest profileId={item} key={item} />
+        ))}
     </div>
   )
 };

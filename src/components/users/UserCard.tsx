@@ -10,6 +10,10 @@ import { getOtherProfileDataAsync } from "../../utils/data/profileData";
 
 import { imgBackend } from "../../App";
 
+//component imports
+import PersonCircleIcon from "../../assets/svgComponents/PersonCircleIcon";
+import { ActionButton } from "../../pages/profile/FriendsList";
+
 type UserCardProps = {
   profileData: ProfileData;
 };
@@ -19,61 +23,65 @@ type UserCardProps = {
  * @param profileData 
  * @returns UserCard
  */
-function UserCard({ profileData }:UserCardProps) {
-    const [imageUrl, setImageUrl] = useState("");
-    const [friendStatus, setFriendStatus] = useState(0);
-    const profileDataRedux = useAppSelector((state) => state.profile.profileData)
-  
-    const friendRequest = async () => {
-        let response = await sendFriendRequest(profileData.id);
-        if (response?.status === 200) setFriendStatus(1);
-    }
+function UserCard({ profileData }: UserCardProps) {
+  const [imageUrl, setImageUrl] = useState("");
+  const [friendStatus, setFriendStatus] = useState(0);
+  const profileDataRedux = useAppSelector((state) => state.profile.profileData)
 
-    const removeFriendRequest = async () => {
-        let response = await deleteFriendRequest(profileData.id);
-        if (response?.status === 200) setFriendStatus(0);
-    }
+  const friendRequest = async () => {
+    let response = await sendFriendRequest(profileData.id);
+    if (response?.status === 200) setFriendStatus(1);
+  }
 
-    const removeFriend = async () => {
-        let response = await deleteFriend(profileData.id);
-        if (response?.status === 200) setFriendStatus(0);
-    }
+  const removeFriendRequest = async () => {
+    let response = await deleteFriendRequest(profileData.id);
+    if (response?.status === 200) setFriendStatus(0);
+  }
 
-    useEffect(() => {
-      if (profileDataRedux.followers.includes(profileData.id)) setFriendStatus(2);
-      if (profileData?.profile_photo) {
-        setImageUrl(imgBackend.concat(profileData.profile_photo));
-      }
-    }, [profileData?.profile_photo, friendStatus, setFriendStatus, profileDataRedux])
-  
-    return (
-      <div className="border border-zinc-500 mt-4 p-2 flex flex-col justify-evenly items-center">
-        <div className="flex flex-row justify-evenly items-center">
-          <IonRouterLink routerLink={`/home/profile/${profileData.id}`} routerDirection="forward">
-            <img
+  const removeFriend = async () => {
+    let response = await deleteFriend(profileData.id);
+    if (response?.status === 200) setFriendStatus(0);
+  }
+
+  useEffect(() => {
+    if (profileDataRedux.followers.includes(profileData.id)) setFriendStatus(2);
+    if (profileData?.profile_photo) {
+      setImageUrl(imgBackend.concat(profileData.profile_photo));
+    }
+  }, [profileData?.profile_photo, friendStatus, setFriendStatus, profileDataRedux])
+
+  return (
+    <div className="mt-4 p-2 flex flex-row justify-between items-center">
+      <div className="flex flex-row justify-evenly items-center">
+        <IonRouterLink
+          routerLink={`/home/profile/${profileData.id}`}
+          routerDirection="forward"
+          color="dark"
+          className="flex flex-row"
+        >
+          <div id="pic-and-name" className="flex flex-row items-center">
+            {imageUrl ? <img
               alt="profile-picture"
               src={imageUrl}
               className="h-12 w-12 rounded-full object-cover"
-            />
-          </IonRouterLink>
-          <div className="mx-3 flex flex-row items-center">
-            <IonRouterLink routerLink={`/home/profile/${profileData.id}`} routerDirection="forward" id="username" className="font-semibold text-black">
-              {profileData?.username}
-            </IonRouterLink>
+            /> : <span className="h-12 w-12 bg-slate-300 rounded-full"><PersonCircleIcon className="h-12 w-12 fill-white" /></span>}
+
+            <span className="ml-2">{profileData?.username}</span>
+
           </div>
-          {friendStatus === 0 ?
-              <IonButton onClick={friendRequest}>Request</IonButton>
-          : friendStatus === 1 ?
-              <IonButton onClick={removeFriendRequest}>Remove Request</IonButton>
-          : 
-              <IonButton onClick={removeFriend}>Unfriend</IonButton>
-          }
-        </div>
-          <p className="text-xs">
-            {profileData?.bio}
-          </p>  
+        </IonRouterLink >
+
       </div>
-    );
+      {friendStatus === 0 ?
+        <ActionButton actionFunc={friendRequest} label="Request" className="bg-gray-300"/>
+        : friendStatus === 1 ?
+          <ActionButton actionFunc={removeFriendRequest} label="Remove Request" className="bg-gray-300"/>
+          :
+          <ActionButton actionFunc={removeFriend} label="Unfriend" className="bg-gray-300"/>
+      }
+    </div>
+  );
 }
+
 
 export default UserCard;
