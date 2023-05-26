@@ -13,8 +13,12 @@ import {
   IonButton,
   IonTitle,
   useIonToast,
+  IonFab,
+  IonFabButton,
+  IonIcon,
+  IonFabList
 } from "@ionic/react";
-import { closeOutline } from "ionicons/icons";
+import { addOutline, imageOutline, videocamOutline, closeOutline } from "ionicons/icons";
 
 type CreatePostProps = {
   makePost: (title: string, text: string, media: FormData) => any;
@@ -120,6 +124,19 @@ function CreatePostForm({ makePost, backUrl, isComment }: CreatePostProps) {
             </>
           )}
         </main>
+        <IonFab slot="fixed" vertical="bottom" horizontal="end">
+          <IonFabButton color="tertiary">
+            <IonIcon icon={addOutline}></IonIcon>
+          </IonFabButton>
+          <IonFabList side="top">
+            <IonFabButton>
+              <IonIcon icon={imageOutline}></IonIcon>
+            </IonFabButton>
+            <IonFabButton>
+              <IonIcon icon={videocamOutline}></IonIcon>
+            </IonFabButton>
+          </IonFabList>
+        </IonFab>
       </IonContent>
     </IonPage>
   );
