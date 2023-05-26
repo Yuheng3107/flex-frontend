@@ -42,6 +42,7 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^5.0.1",
     "react-webcam": "^7.0.1",
+    "redux-mock-store": "^1.5.4",
     "scatter-gl": "^0.0.13",
     "serve": "^14.2.0",
     "typescript": "^4.1.3",
