@@ -40,12 +40,14 @@ import { backend } from "../../App";
 let isActive = false;
 
 const AnalyseVideo = () => {
+  const [exerciseDone, setExerciseDone] = useState(false);
   const [repCount, setRepCount] = useState<number>(0);
   const [maxRepCount, setMaxRepCount] = useState<number>(0);
   const [feedbackLogShowing, setFeedbackLogShowing] = useState<boolean>(false);
   const [repFeedback, setRepFeedback] = useState<string>("");
   const [repFeedbackLog, setRepFeedbackLog] = useState<JSX.Element | string>("");
   const [generalFeedback, setGeneralFeedback] = useState<string>("");
+  const [feedbackConslusion, setFeedbackConclusion] = useState<string>("");
   const [detector, setDetector] = useState<any>(undefined);
   const [feedback, setFeedback] = useState<any[]>([]);
   const [frameCount, setFrameCount] = useState<number>(0);
@@ -60,6 +62,7 @@ const AnalyseVideo = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   let rendererCanvas: RendererCanvas2d;
+  console.log(generalFeedback);
 
   useEffect(() => {
     async function getExercises() {
@@ -167,9 +170,9 @@ const AnalyseVideo = () => {
         let spacedFeedbackLog = <p>
           {newFeedback[0].map((str: string, index: number) => (
             <React.Fragment key={index}>
-            {str}
-            <br />
-          </React.Fragment>
+              {str}
+              <br className="h-4"/>
+            </React.Fragment>
           ))}
         </p>
         console.log(spacedFeedbackLog);
@@ -186,11 +189,11 @@ const AnalyseVideo = () => {
    */
   const end = () => {
     isActive = false;
-
     let completedFeedback = formCorrection.endExercise();
-    setRepFeedback(completedFeedback[0]);
+    console.log(completedFeedback[0]);
     setPerfectRepCount(completedFeedback[1]);
-    setGeneralFeedback("Exercise ended");
+    setFeedbackConclusion(completedFeedback[0]);
+    setExerciseDone(true);
     setExerciseEnded(true);
   };
 
@@ -252,30 +255,12 @@ const AnalyseVideo = () => {
         <div className="exercise-feedback flex flex-col items-center p-5 w-full">
           <RepCountCircle repCount={repCount} repCountInput={maxRepCount} />
 
-          <TextBox className="flex flex-col justify-between bg-zinc-100 pt-3 pb-0 w-4/5 mt-3">
-            {feedbackLogShowing}
-            {repFeedback}
-            <button
-              onClick={toggleFeedbackLog}
-              className="flex flex-row items-center justify-center"
-              id="show-log-button"
-            >
-              <span className="text-zinc-400">Show Feedback Log</span>
-              <img
-                className={`${feedbackLogShowing && "rotate-180"} `}
-                src={expandIcon}
-                alt="expand icon"
-                height="36"
-                width="36"
-              />
-            </button>
-            {feedbackLogShowing && (
-              <p className="mt-1 whitespace-pre-wrap">{repFeedbackLog}</p>
-            )}
+          <TextBox className="flex flex-col justify-between bg-zinc-100 py-3 w-4/5 mt-3">
+            {repFeedbackLog}
           </TextBox>
           {selected ? (
             <TextBox className="bg-zinc-100 p-3 w-4/5 mt-3">
-              {generalFeedback}
+              {exerciseDone ? feedbackConslusion:generalFeedback}
             </TextBox>
           ) : (
             <>
