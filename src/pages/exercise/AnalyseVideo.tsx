@@ -38,7 +38,7 @@ import RepCountCircle from "../../components/Exercise/RepCountCircle";
 import { RendererCanvas2d } from "../../components/Exercise/workout/renderer_canvas2d";
 import { backend } from "../../App";
 let isActive = false;
-
+let chunks: any[] = [];
 const AnalyseVideo = () => {
   const [exerciseDone, setExerciseDone] = useState(false);
   const [repCount, setRepCount] = useState<number>(0);
@@ -60,12 +60,12 @@ const AnalyseVideo = () => {
   const [selected, setSelected] = useState<boolean>(false);
   const [exerciseId, setExerciseId] = useState<number>(1);
   const [exercises, setExercises] = useState([]);
-  const [chunks, setChunks] = useState<any[]>([]);
+  const [mediaRecorder, setMediaRecorder] = useState<any>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   let canvas_stream: any = null;
-  let media_recorder: any = null;
+
   let rendererCanvas: RendererCanvas2d;
 
   useEffect(() => {
@@ -90,30 +90,16 @@ const AnalyseVideo = () => {
       }
     }
     getExercises();
-    // functionality to get a video from the canvas
-    canvas_stream = canvas.current?.captureStream(30); // captures stream at 30fps
-    // Create media recorder from canvas stream
-    if (canvas_stream !== undefined) {
-      media_recorder = new MediaRecorder(canvas_stream, {
-        mimeType: "video/webm; codecs=vp9",
-      });
-    }
-    if (media_recorder !== null) {
-      // Record data in chunks array when data is available
-      media_recorder.ondataavailable = (evt: any) => {
-        setChunks([...chunks, evt.data]);
-      };
-      media_recorder.onstop = () => {
-        stopMediaRecording(chunks);
-      };
-      // Start recording using a 1s timeslice [ie data is made available every 1s)
-      media_recorder.start(1000);
-    }
   }, []);
+  // invoke mediaRecorder.stop() to stop recording
   const stopMediaRecording = (chunks: any[]) => {
+    console.log("fuck");
+    console.log(chunks);
     let blob = new Blob(chunks, { type: "video/webm" });
     let recording_url = URL.createObjectURL(blob);
+
     console.log(recording_url);
+    console.log("fuck end");
   };
   const toggleFeedbackLog = () => {
     setFeedbackLogShowing(!feedbackLogShowing);
@@ -163,6 +149,28 @@ const AnalyseVideo = () => {
     await delay(1);
     await detector.estimatePoses(videoRef.current);
 
+    // functionality to get a video from the canvas
+    canvas_stream = canvas.current?.captureStream(30); // captures stream at 30fps
+    let media_recorder = null;
+    // Create media recorder from canvas stream
+    if (canvas_stream !== undefined) {
+      media_recorder = new MediaRecorder(canvas_stream, {
+        mimeType: "video/webm; codecs=vp9",
+      });
+    }
+    if (media_recorder !== null) {
+      // Record data in chunks array when data is available
+      media_recorder.ondataavailable = (evt: any) => {
+        chunks.push(evt.data);
+        console.log(chunks);
+      };
+      media_recorder.onstop = () => {
+        stopMediaRecording(chunks);
+      };
+      // Start recording using a 1s timeslice [ie data is made available every 1s)
+      media_recorder.start(1000);
+      setMediaRecorder(media_recorder);
+    }
     // reset local variables
     isActive = true;
     setFrameCount(0);
@@ -225,6 +233,9 @@ const AnalyseVideo = () => {
     setFeedbackConclusion(completedFeedback[0]);
     setExerciseDone(true);
     setExerciseEnded(true);
+    console.log(mediaRecorder);
+    console.log(chunks);
+    mediaRecorder.stop();
   };
 
   /*--------------------
