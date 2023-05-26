@@ -45,7 +45,9 @@ const AnalyseVideo = () => {
   const [maxRepCount, setMaxRepCount] = useState<number>(0);
   const [feedbackLogShowing, setFeedbackLogShowing] = useState<boolean>(false);
   const [repFeedback, setRepFeedback] = useState<string>("");
-  const [repFeedbackLog, setRepFeedbackLog] = useState<JSX.Element | string>("");
+  const [repFeedbackLog, setRepFeedbackLog] = useState<JSX.Element | string>(
+    ""
+  );
   const [generalFeedback, setGeneralFeedback] = useState<string>("");
   const [feedbackConslusion, setFeedbackConclusion] = useState<string>("");
   const [detector, setDetector] = useState<any>(undefined);
@@ -58,11 +60,13 @@ const AnalyseVideo = () => {
   const [selected, setSelected] = useState<boolean>(false);
   const [exerciseId, setExerciseId] = useState<number>(1);
   const [exercises, setExercises] = useState([]);
+  const [chunks, setChunks] = useState<any[]>([]);
   const videoInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
+  let canvas_stream: any = null;
+  let media_recorder: any = null;
   let rendererCanvas: RendererCanvas2d;
-  console.log(generalFeedback);
 
   useEffect(() => {
     async function getExercises() {
@@ -86,7 +90,31 @@ const AnalyseVideo = () => {
       }
     }
     getExercises();
+    // functionality to get a video from the canvas
+    canvas_stream = canvas.current?.captureStream(30); // captures stream at 30fps
+    // Create media recorder from canvas stream
+    if (canvas_stream !== undefined) {
+      media_recorder = new MediaRecorder(canvas_stream, {
+        mimeType: "video/webm; codecs=vp9",
+      });
+    }
+    if (media_recorder !== null) {
+      // Record data in chunks array when data is available
+      media_recorder.ondataavailable = (evt: any) => {
+        setChunks([...chunks, evt.data]);
+      };
+      media_recorder.onstop = () => {
+        stopMediaRecording(chunks);
+      };
+      // Start recording using a 1s timeslice [ie data is made available every 1s)
+      media_recorder.start(1000);
+    }
   }, []);
+  const stopMediaRecording = (chunks: any[]) => {
+    let blob = new Blob(chunks, { type: "video/webm" });
+    let recording_url = URL.createObjectURL(blob);
+    console.log(recording_url);
+  };
   const toggleFeedbackLog = () => {
     setFeedbackLogShowing(!feedbackLogShowing);
   };
@@ -167,14 +195,16 @@ const AnalyseVideo = () => {
         setRepCount(newRepCount);
 
         setRepFeedback(newFeedback[0].slice(-1));
-        let spacedFeedbackLog = <p>
-          {newFeedback[0].map((str: string, index: number) => (
-            <React.Fragment key={index}>
-              {str}
-              <br className="h-4"/>
-            </React.Fragment>
-          ))}
-        </p>
+        let spacedFeedbackLog = (
+          <p>
+            {newFeedback[0].map((str: string, index: number) => (
+              <React.Fragment key={index}>
+                {str}
+                <br className="h-4" />
+              </React.Fragment>
+            ))}
+          </p>
+        );
         console.log(spacedFeedbackLog);
         setRepFeedbackLog(spacedFeedbackLog);
       }
@@ -260,7 +290,7 @@ const AnalyseVideo = () => {
           </TextBox>
           {selected ? (
             <TextBox className="bg-zinc-100 p-3 w-4/5 mt-3">
-              {exerciseDone ? feedbackConslusion:generalFeedback}
+              {exerciseDone ? feedbackConslusion : generalFeedback}
             </TextBox>
           ) : (
             <>
