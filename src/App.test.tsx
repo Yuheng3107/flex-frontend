@@ -1,12 +1,7 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import VideoFeed from "./components/Exercise/video";
-const backend = "https://fitai.click";
+import { backend } from "./App";
 
-/*
-test("renders without crashing", () => {
-  const submitForm = (arg: string) => { console.log(arg) };
-  const { baseElement } = render(<VideoFeed />);
-  expect(baseElement).toBeDefined();
+test("check that backend is localhost for dev", () => {
+  expect(backend).toBe("http://localhost:8000");
 });
-*/
