@@ -162,7 +162,6 @@ const AnalyseVideo = () => {
       // Record data in chunks array when data is available
       media_recorder.ondataavailable = (evt: any) => {
         chunks.push(evt.data);
-        console.log(chunks);
       };
       media_recorder.onstop = () => {
         stopMediaRecording(chunks);
