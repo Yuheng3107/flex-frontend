@@ -21,3 +21,7 @@
       file:bg-sky-50 file:text-sky-700
       hover:file:bg-sky-100;
 }
+
+.exercise-button {
+  @apply bg-[#FC6111] text-white text-[20px] font-medium;
+}
