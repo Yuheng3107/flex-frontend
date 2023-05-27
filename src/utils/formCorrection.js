@@ -198,7 +198,7 @@ function run(poses) {
   processKeypoints(poses);
   let curPose = processData(keypoints);
   let score = poseScore(curPose);
-  console.log(score);
+  // console.log(score);
   if (score === -1) {
     return ["", "Position Self in Frame"];
   }

@@ -8,7 +8,8 @@ type UserDisplayProps = {
 
 const UserDisplay = ({ users }: UserDisplayProps) => {
   return (
-    <div>
+    <div className="shadow p-2 bg-theme-off-white">
+      <p className="">Friends</p>
       {users.length === 0 ? 
         <div className="text-center">No Users</div>
       :

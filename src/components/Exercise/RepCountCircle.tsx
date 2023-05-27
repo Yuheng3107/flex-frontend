@@ -20,7 +20,7 @@ function RepCountCircle({ repCountInput, repCount }: RepCountProps) {
             />
             <circle
                 id="rep-circle"
-                className="stroke-current text-blue-500 z-10"
+                className="stroke-current text-orange-400 z-10"
                 stroke="#4A5568"
                 strokeWidth="14"
                 fill="transparent"

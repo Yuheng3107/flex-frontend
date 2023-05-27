@@ -1,5 +1,5 @@
 //React imports
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 //ionic imports
 import {
@@ -38,14 +38,18 @@ import RepCountCircle from "../../components/Exercise/RepCountCircle";
 import { RendererCanvas2d } from "../../components/Exercise/workout/renderer_canvas2d";
 import { backend } from "../../App";
 let isActive = false;
-
+let chunks: any[] = [];
 const AnalyseVideo = () => {
+  const [exerciseDone, setExerciseDone] = useState(false);
   const [repCount, setRepCount] = useState<number>(0);
-  const [maxRepCount, setMaxRepCount] = useState<number>(10);
+  const [maxRepCount, setMaxRepCount] = useState<number>(0);
   const [feedbackLogShowing, setFeedbackLogShowing] = useState<boolean>(false);
   const [repFeedback, setRepFeedback] = useState<string>("");
-  const [repFeedbackLog, setRepFeedbackLog] = useState<string[]>([]);
+  const [repFeedbackLog, setRepFeedbackLog] = useState<JSX.Element | string>(
+    ""
+  );
   const [generalFeedback, setGeneralFeedback] = useState<string>("");
+  const [feedbackConslusion, setFeedbackConclusion] = useState<string>("");
   const [detector, setDetector] = useState<any>(undefined);
   const [feedback, setFeedback] = useState<any[]>([]);
   const [frameCount, setFrameCount] = useState<number>(0);
@@ -56,9 +60,12 @@ const AnalyseVideo = () => {
   const [selected, setSelected] = useState<boolean>(false);
   const [exerciseId, setExerciseId] = useState<number>(1);
   const [exercises, setExercises] = useState([]);
+  const [mediaRecorder, setMediaRecorder] = useState<any>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
+  let canvas_stream: any = null;
+
   let rendererCanvas: RendererCanvas2d;
 
   useEffect(() => {
@@ -84,6 +91,16 @@ const AnalyseVideo = () => {
     }
     getExercises();
   }, []);
+  // invoke mediaRecorder.stop() to stop recording
+  const stopMediaRecording = (chunks: any[]) => {
+    console.log("fuck");
+    console.log(chunks);
+    let blob = new Blob(chunks, { type: "video/webm" });
+    let recording_url = URL.createObjectURL(blob);
+
+    console.log(recording_url);
+    console.log("fuck end");
+  };
   const toggleFeedbackLog = () => {
     setFeedbackLogShowing(!feedbackLogShowing);
   };
@@ -132,6 +149,27 @@ const AnalyseVideo = () => {
     await delay(1);
     await detector.estimatePoses(videoRef.current);
 
+    // functionality to get a video from the canvas
+    canvas_stream = canvas.current?.captureStream(30); // captures stream at 30fps
+    let media_recorder = null;
+    // Create media recorder from canvas stream
+    if (canvas_stream !== undefined) {
+      media_recorder = new MediaRecorder(canvas_stream, {
+        mimeType: "video/webm; codecs=vp9",
+      });
+    }
+    if (media_recorder !== null) {
+      // Record data in chunks array when data is available
+      media_recorder.ondataavailable = (evt: any) => {
+        chunks.push(evt.data);
+      };
+      media_recorder.onstop = () => {
+        stopMediaRecording(chunks);
+      };
+      // Start recording using a 1s timeslice [ie data is made available every 1s)
+      media_recorder.start(1000);
+      setMediaRecorder(media_recorder);
+    }
     // reset local variables
     isActive = true;
     setFrameCount(0);
@@ -160,11 +198,22 @@ const AnalyseVideo = () => {
       let newFeedback = formCorrection.run(poses);
       if (newFeedback[0] !== "") {
         let newRepCount = newFeedback[0].slice(-1)[0].match(/\d+/)[0];
-
+        console.log(newFeedback[0]);
         setRepCount(newRepCount);
 
         setRepFeedback(newFeedback[0].slice(-1));
-        setRepFeedbackLog(newFeedback[0]);
+        let spacedFeedbackLog = (
+          <p>
+            {newFeedback[0].map((str: string, index: number) => (
+              <React.Fragment key={index}>
+                {str}
+                <br className="h-4" />
+              </React.Fragment>
+            ))}
+          </p>
+        );
+        console.log(spacedFeedbackLog);
+        setRepFeedbackLog(spacedFeedbackLog);
       }
       if (newFeedback[1] !== feedback[1]) setGeneralFeedback(newFeedback[1]);
       setFeedback(newFeedback);
@@ -177,12 +226,15 @@ const AnalyseVideo = () => {
    */
   const end = () => {
     isActive = false;
-
     let completedFeedback = formCorrection.endExercise();
-    setRepFeedback(completedFeedback[0]);
+    console.log(completedFeedback[0]);
     setPerfectRepCount(completedFeedback[1]);
-    setGeneralFeedback("Exercise ended");
+    setFeedbackConclusion(completedFeedback[0]);
+    setExerciseDone(true);
     setExerciseEnded(true);
+    console.log(mediaRecorder);
+    console.log(chunks);
+    mediaRecorder.stop();
   };
 
   /*--------------------
@@ -243,30 +295,12 @@ const AnalyseVideo = () => {
         <div className="exercise-feedback flex flex-col items-center p-5 w-full">
           <RepCountCircle repCount={repCount} repCountInput={maxRepCount} />
 
-          <TextBox className="flex flex-col justify-between bg-zinc-100 pt-3 pb-0 w-4/5 mt-3">
-            {feedbackLogShowing}
-            {repFeedback}
-            <button
-              onClick={toggleFeedbackLog}
-              className="flex flex-row items-center justify-center"
-              id="show-log-button"
-            >
-              <span className="text-zinc-400">Show Feedback Log</span>
-              <img
-                className={`${feedbackLogShowing && "rotate-180"} `}
-                src={expandIcon}
-                alt="expand icon"
-                height="36"
-                width="36"
-              />
-            </button>
-            {feedbackLogShowing && (
-              <span className="mt-1">{repFeedbackLog}</span>
-            )}
+          <TextBox className="flex flex-col justify-between bg-zinc-100 py-3 w-4/5 mt-3">
+            {repFeedbackLog}
           </TextBox>
           {selected ? (
             <TextBox className="bg-zinc-100 p-3 w-4/5 mt-3">
-              {generalFeedback}
+              {exerciseDone ? feedbackConslusion : generalFeedback}
             </TextBox>
           ) : (
             <>
