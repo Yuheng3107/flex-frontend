@@ -293,87 +293,85 @@ const AnalyseVideo = () => {
               <input type="file" className="file" id="media" name="media" />
             </form>
           </>
-        ) : (
-          <>
-            videoURL !== "" && (
-            <>
-              <canvas ref={canvas} className="absolute z-10 w-full"></canvas>
-              <video
-                src={videoURL}
-                ref={videoRef}
-                height={videoRef.current?.videoHeight}
-                width={videoRef.current?.videoWidth}
-                className="w-full"
-                onEnded={end}
-                playsInline
-                disablePictureInPicture
-                disableRemotePlayback
-              />
-            </>
-            )<div id="scatter-gl-container" className="hidden"></div>
-            <div className="exercise-feedback flex flex-col items-center p-5 w-full">
-              <RepCountCircle repCount={repCount} repCountInput={maxRepCount} />
+        ) : <>
+          {videoURL !== "" && <>
+            <canvas ref={canvas} className="absolute z-10 w-full"></canvas>
+            <video
+              src={videoURL}
+              ref={videoRef}
+              height={videoRef.current?.videoHeight}
+              width={videoRef.current?.videoWidth}
+              className="w-full"
+              onEnded={end}
+              playsInline
+              disablePictureInPicture
+              disableRemotePlayback
+            />
+          </>}
+          <div id="scatter-gl-container" className="hidden"></div>
+          <div className="exercise-feedback flex flex-col items-center p-5 w-full">
+            <RepCountCircle repCount={repCount} repCountInput={maxRepCount} />
 
-              <TextBox className="flex flex-col justify-between bg-zinc-100 py-3 w-4/5 mt-3">
-                {repFeedbackLog}
+            <TextBox className="flex flex-col justify-between bg-zinc-100 py-3 w-4/5 mt-3">
+              {repFeedbackLog}
+            </TextBox>
+            {selected ? (
+              <TextBox className="bg-zinc-100 p-3 w-4/5 mt-3">
+                {exerciseDone ? feedbackConslusion : generalFeedback}
               </TextBox>
-              {selected ? (
-                <TextBox className="bg-zinc-100 p-3 w-4/5 mt-3">
-                  {exerciseDone ? feedbackConslusion : generalFeedback}
-                </TextBox>
-              ) : (
-                <>
-                  <IonSelect
-                    placeholder="Side Squats"
-                    onIonChange={(e) => handleSelected(e)}
-                    interface="popover"
-                  >
-                    {exercises.map((exercise: any) => (
-                      <IonSelectOption value={exercise.id} key={exercise.id}>
-                        {exercise.name}
-                      </IonSelectOption>
-                    ))}
-                  </IonSelect>
+            ) : (
+              <>
+                <IonSelect
+                  placeholder="Side Squats"
+                  onIonChange={(e) => handleSelected(e)}
+                  interface="popover"
+                >
+                  {exercises.map((exercise: any) => (
+                    <IonSelectOption value={exercise.id} key={exercise.id}>
+                      {exercise.name}
+                    </IonSelectOption>
+                  ))}
+                </IonSelect>
 
-                  <IonButton className={videoURL && "hidden"}>
-                    Upload Video
-                    <input
-                      ref={videoInputRef}
-                      type="file"
-                      className="opacity-0 z-10 absolute"
-                      onChange={fileInputHandler}
-                      accept="video/*"
-                    ></input>
-                  </IonButton>
-                </>
+                <IonButton className={videoURL && "hidden"}>
+                  Upload Video
+                  <input
+                    ref={videoInputRef}
+                    type="file"
+                    className="opacity-0 z-10 absolute"
+                    onChange={fileInputHandler}
+                    accept="video/*"
+                  ></input>
+                </IonButton>
+              </>
+            )}
+          </div>
+          {!exerciseEnded && (
+            <div id="button-container" className="flex justify-center pb-20">
+              {detector === undefined ? (
+                videoURL && <IonSpinner />
+              ) : (
+                <AnalyseButton start={start} detector={detector} />
               )}
             </div>
-            {!exerciseEnded && (
-              <div id="button-container" className="flex justify-center pb-20">
-                {detector === undefined ? (
-                  videoURL && <IonSpinner />
-                ) : (
-                  <AnalyseButton start={start} detector={detector} />
-                )}
-              </div>
-            )}
-            {exerciseEnded && (
-              <div className="flex mx-2 items-center justify-center gap-4">
-                <IonButton>
-                  <Button className="exercise-button">Rewind</Button>
-                </IonButton>
-                <IonButton>
-                  <Button
-                    className="exercise-button"
-                    onClick={() => setSaveActivity(true)}
-                  >
-                    Save Activity
-                  </Button>
-                </IonButton>
-              </div>
-            )}
-          </>
-        )}
+          )}
+          {exerciseEnded && (
+            <div className="flex mx-2 items-center justify-center gap-4">
+              <IonButton>
+                <Button className="exercise-button">Rewind</Button>
+              </IonButton>
+              <IonButton>
+                <Button
+                  className="exercise-button"
+                  onClick={() => setSaveActivity(true)}
+                >
+                  Save Activity
+                </Button>
+              </IonButton>
+            </div>
+          )}
+        </>
+        }
       </IonContent>
     </IonPage>
   );
