@@ -316,7 +316,7 @@ const AnalyseVideo = () => {
               {repFeedbackLog}
             </TextBox>
             {selected ? (
-              <TextBox className="bg-zinc-100 p-3 w-4/5 mt-3">
+              <TextBox className="bg-zinc-100 p-3 w-4/5 mt-3 dark:bg-zinc-700">
                 {exerciseDone ? feedbackConslusion : generalFeedback}
               </TextBox>
             ) : (
