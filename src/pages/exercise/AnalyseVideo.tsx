@@ -1,6 +1,8 @@
 //React imports
 import React, { useEffect, useState, useRef } from "react";
 
+// react-hook-form imports
+import { useForm } from "react-hook-form";
 //ionic imports
 import {
   IonContent,
@@ -67,10 +69,16 @@ const AnalyseVideo = () => {
   const [recordingURL, setRecordingURL] = useState<any>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const uploadedFileRef = useRef<HTMLInputElement>(null);
+  const uploadedFileRef = useRef<HTMLInputElement | null>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   let canvas_stream: any = null;
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const { ref, ...rest } = { ...register("media") };
   let rendererCanvas: RendererCanvas2d;
   useEffect(() => {
     // attach uploaded file
@@ -108,7 +116,9 @@ const AnalyseVideo = () => {
   const toggleFeedbackLog = () => {
     setFeedbackLogShowing(!feedbackLogShowing);
   };
-
+  const onSubmit = (data: any) => {
+    console.log(data);
+  };
   const handleSelected = (e: any) => {
     // callback when an exercise is selected in the IonSelect
 
@@ -284,7 +294,9 @@ const AnalyseVideo = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Analyse Video</IonTitle>
+          <IonTitle>
+            {saveActivity ? "Save Activity" : "Analyse Video"}
+          </IonTitle>
           <IonButtons slot="start">
             <IonBackButton defaultHref="/home" />
           </IonButtons>
@@ -293,21 +305,29 @@ const AnalyseVideo = () => {
       <IonContent>
         {saveActivity ? (
           <>
-            <form action="" className="p-4 m-2 flex flex-col gap-4">
+            <form
+              action=""
+              className="p-4 m-2 flex flex-col gap-4"
+              onSubmit={handleSubmit(onSubmit)}
+            >
               <input
                 type="text"
                 placeholder="Activity"
-                name="title"
                 id="title"
-                className="p-2"
+                className="p-2 border border-zinc-400 focus:border-orange-500 focus:border-2"
+                {...(register("title"),
+                {
+                  required: true,
+                })}
               />
-              <input
-                type="text"
-                name="text"
+              <textarea
                 id="text"
-                className="p-2"
-                placeholder="How was it? Share more about your activity!"
-              />
+                className="p-2 border border-zinc-400 focus:border-orange-500 focus:border-2"
+                placeholder="How did it go? Share more about your activity here!"
+                {...register("text")}
+              >
+                {feedbackConslusion}
+              </textarea>
               <div className="flex justify-center">
                 <video
                   src={recordingURL}
@@ -317,15 +337,19 @@ const AnalyseVideo = () => {
                 ></video>
               </div>
               <input
-                type="file"
-                className="file"
-                id="media"
+                {...rest}
                 name="media"
-                ref={uploadedFileRef}
+                type="file"
+                className="file-input"
+                id="media"
+                ref={(e) => {
+                  ref(e);
+                  uploadedFileRef.current = e;
+                }}
               />
-              <IonButton>
-                <Button type="submit">Save</Button>
-              </IonButton>
+              <Button type="submit" className="p-2 bg-sky-600 text-white">
+                Save
+              </Button>
             </form>
           </>
         ) : (
