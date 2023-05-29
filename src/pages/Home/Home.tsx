@@ -42,7 +42,7 @@ const Home = forwardRef<Ref, HomeProps>(function (props, ref) {
   function closeSideMenu() {
     sideMenuRef.current?.close();
   }
-  
+
   return <>
     {/* This is the content of the sideMenu  */}
     <IonMenu ref={ref} contentId="main-content">
@@ -64,12 +64,14 @@ const Home = forwardRef<Ref, HomeProps>(function (props, ref) {
     <IonPage id="main-content">
       <IonHeader>
         <IonToolbar>
-          <IonButtons slot="start">
-            <IonMenuButton></IonMenuButton>
-            <SearchIcon className="w-6 aspect-square" />
-            <IonButton routerLink='/home/search/post'>Posts</IonButton>
-            <IonButton routerLink='/home/search/user'>Users</IonButton>
-            <IonButton routerLink='/home/search/community'>Community</IonButton>
+          <IonButtons slot="start" color="medium">
+            <IonMenuButton color="medium"></IonMenuButton>
+          </IonButtons>
+          <IonButtons slot="end">
+
+            <IonButton routerLink='/home/search' color={'medium'}>
+              <SearchIcon className="w-6 aspect-square" />
+            </IonButton>
           </IonButtons>
         </IonToolbar>
       </IonHeader>

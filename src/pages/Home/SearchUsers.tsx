@@ -20,7 +20,7 @@ import UserDisplay from "../../components/users/UserDisplay";
 const SearchUsers = ({  }) => {
     const [users, setUsers] = useState<any[]>([]);
 
-    const loadPosts = async (content: string) => {
+    const loadUsers = async (content: string) => {
         let results = await getSearchUsersAsync(content);
         if (typeof results !== "string") setUsers(results);
     };
@@ -32,7 +32,7 @@ const SearchUsers = ({  }) => {
                     <IonButtons slot="start">
                         <IonBackButton defaultHref="/home"></IonBackButton>
                     </IonButtons>
-                    <SearchBar submitForm={loadPosts} placeholder="Search Users"/>
+                    <SearchBar submitForm={loadUsers} placeholder="Search Users"/>
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen>

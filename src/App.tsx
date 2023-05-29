@@ -16,6 +16,7 @@ import {
 } from "./utils/data/profileData";
 import { getExerciseRegimeAsync } from "./utils/data/getExerciseData";
 import { checkAndToggleDarkTheme } from "./utils/darkMode";
+import { isDev } from "./utils/checkEnv";
 import { toggleDarkTheme } from "./utils/darkMode";
 
 // tailwind imports
@@ -43,6 +44,7 @@ import CreatePost from "./pages/post/CreatePost";
 import CommunityPage from "./pages/community/CommunityPage";
 import PostPage from "./pages/post/PostPage";
 import ProfilePages from "./pages/profile/ProfilePages";
+import Search from "./pages/Home/Search";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -72,7 +74,11 @@ import checkLoginStatus from "./utils/checkLogin";
 import { emptyProfileData } from "./types/stateTypes";
 import Loading from "./pages/Home/Loading";
 import Login from "./pages/Home/Login";
-import { isDev } from "./utils/checkEnv";
+
+
+
+
+
 setupIonicReact();
 checkAndToggleDarkTheme();
 
@@ -179,6 +185,9 @@ const App: React.FC = () => {
                 />
                 <Route path="/home/post/create">
                   <CreatePost />
+                </Route>
+                <Route path="/home/search">
+                  <Search />
                 </Route>
                 <Route path="/home/search/post">
                   <SearchPosts />
