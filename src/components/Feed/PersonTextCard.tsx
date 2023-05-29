@@ -84,7 +84,7 @@ const PersonTextCard = ({
 
   return (
     <div
-      className={`border border-b-zinc-300 p-2  font-inter bg-white ${
+      className={`border border-b-zinc-300 p-2  font-inter bg-white dark:bg-zinc-800 ${
         isProfilePage && "m-4 rounded-lg drop-shadow-card"
       }`}
     >
@@ -150,18 +150,10 @@ const PersonTextCard = ({
                 </IonRouterLink>
                 <p
                   id="subtitle"
-                  className="flex flex-row items-center text-sm text-gray-700"
+                  className="flex flex-row items-center text-sm text-gray-700 dark:text-gray-500"
                 >
                   <span id="post-place">
-                    {postType === "user" ? (
-                      <IonRouterLink
-                        className="text-gray-700"
-                        routerLink={`/home/profile/${profileData.id}`}
-                        routerDirection="forward"
-                      >
-                        Profile
-                      </IonRouterLink>
-                    ) : postType === "community" ? (
+                    {postType === "user" ? "" : postType === "community" ? (
                       <IonRouterLink
                         className="text-gray-700"
                         routerLink={`/home/community/${communityData?.id}`}

@@ -21,7 +21,6 @@ const UserProfileTemplate = ({
   posts,
   loadUserPostData,
 }: UserProfileTemplateProps) => {
-  useEffect(() => {}, []);
   const [isTrend, setTrend] = useState(true);
   return (
     <div>
