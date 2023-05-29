@@ -45,12 +45,12 @@ const Home = forwardRef<Ref, HomeProps>(function (props, ref) {
 
   return <>
     {/* This is the content of the sideMenu  */}
-    <IonMenu ref={ref} contentId="main-content">
+    <IonMenu ref={ref} contentId="main-content" className=''>
       <IonHeader>
-        <IonToolbar>
+        <IonToolbar className="bg-white">
           <IonMenuToggle>
             <IonButton fill="clear" size="small">
-              <IonIcon icon={chevronBackOutline} />
+              <IonIcon icon={chevronBackOutline} color="medium" />
             </IonButton>
           </IonMenuToggle>
           <IonTitle>Communities</IonTitle>
@@ -69,8 +69,8 @@ const Home = forwardRef<Ref, HomeProps>(function (props, ref) {
           </IonButtons>
           <IonButtons slot="end">
 
-            <IonButton routerLink='/home/search' color={'medium'}>
-              <SearchIcon className="w-6 aspect-square" />
+            <IonButton routerLink='/home/search'>
+              <SearchIcon className="w-6 aspect-square stroke-zinc-600 dark:stroke-zinc-400" />
             </IonButton>
           </IonButtons>
         </IonToolbar>
