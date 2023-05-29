@@ -312,7 +312,7 @@ const AnalyseVideo = () => {
           <div className="exercise-feedback flex flex-col items-center p-5 w-full">
             <RepCountCircle repCount={repCount} repCountInput={maxRepCount} />
 
-            <TextBox className="flex flex-col justify-between bg-zinc-100 py-3 w-4/5 mt-3">
+            <TextBox className="flex flex-col justify-between bg-zinc-100 dark:bg-zinc-700 py-3 w-4/5 mt-3">
               {repFeedbackLog}
             </TextBox>
             {selected ? (

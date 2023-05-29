@@ -57,7 +57,6 @@ function Settings() {
                     <p>Darkmode Toggle</p>
                     <IonToggle checked={darkThemeToggleChecked} onIonChange={onDarkThemeToggle}></IonToggle>    
                 </div>
-                <IonButton  routerLink="/profile/friendslist" routerDirection="forward">Friends</IonButton>
                 <IonButton routerLink="/profile/create" routerDirection="forward">
                     Edit Profile
                 </IonButton>
