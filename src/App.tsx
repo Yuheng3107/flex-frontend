@@ -72,13 +72,13 @@ import checkLoginStatus from "./utils/checkLogin";
 import { emptyProfileData } from "./types/stateTypes";
 import Loading from "./pages/Home/Loading";
 import Login from "./pages/Home/Login";
-
+import { isDev } from "./utils/checkEnv";
 setupIonicReact();
 checkAndToggleDarkTheme();
 
 // 'globals'
-const backend = "http://localhost:8000";
-const imgBackend = "http://localhost:8000";
+const backend = isDev() ? "http://localhost:8000" : "https://fitai.click";
+const imgBackend = isDev() ? "http://localhost:8000" : "";
 const exercises = ["zero", "Squats", "Push-ups", "Hamstring Stretch"];
 
 const App: React.FC = () => {
