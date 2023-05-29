@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Cropper, { Area } from "react-easy-crop";
 import { useHistory } from "react-router-dom";
 
-import { backend } from "../../App";
+import { backend, imgBackend } from "../../App";
 
 //redux imports
 import { profileDataActions } from "../../store/profileDataSlice";
@@ -132,7 +132,7 @@ const UpdateProfilePic = ({}: UpdateProfilePicProps) => {
         ) : (
           <img
             className={`rounded-full border-4 border-sky-300 p-2 w-full h-full`}
-            src={profileData.profile_photo}
+            src={`${imgBackend}${profileData.profile_photo}`}
           />
         )}
 
