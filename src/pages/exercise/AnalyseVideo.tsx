@@ -40,6 +40,7 @@ import { RendererCanvas2d } from "../../components/Exercise/workout/renderer_can
 import { backend } from "../../App";
 let isActive = false;
 let chunks: any[] = [];
+
 const AnalyseVideo = () => {
   const [exerciseDone, setExerciseDone] = useState(false);
   const [repCount, setRepCount] = useState<number>(0);
@@ -66,11 +67,15 @@ const AnalyseVideo = () => {
   const [recordingURL, setRecordingURL] = useState<any>(null);
   const videoInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const uploadedFileRef = useRef<HTMLInputElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   let canvas_stream: any = null;
 
   let rendererCanvas: RendererCanvas2d;
-
+  useEffect(() => {
+    // attach uploaded file
+    attachUploadedFile();
+  }, [saveActivity]);
   useEffect(() => {
     async function getExercises() {
       try {
@@ -99,7 +104,6 @@ const AnalyseVideo = () => {
     let blob = new Blob(chunks, { type: "video/webm" });
     let recording_url = URL.createObjectURL(blob);
     setRecordingURL(recording_url);
-    console.log(recording_url);
   };
   const toggleFeedbackLog = () => {
     setFeedbackLogShowing(!feedbackLogShowing);
@@ -132,7 +136,20 @@ const AnalyseVideo = () => {
       loadDetector();
     }
   }
-
+  async function attachUploadedFile() {
+    const dataTransfer = new DataTransfer();
+    let blob = await fetch(recordingURL).then((r) => r.blob());
+    const uploadedFile = new File([blob], "Exercise Video", {
+      type: "video/webm",
+    });
+    console.log(uploadedFile);
+    dataTransfer.items.add(uploadedFile);
+    if (uploadedFileRef?.current !== null) {
+      console.log("Fuck");
+      console.log(uploadedFileRef.current);
+      uploadedFileRef.current.files = dataTransfer.files;
+    }
+  }
   const start = async () => {
     if (detector === undefined || videoRef.current === null) {
       window.alert("loading!");
@@ -276,102 +293,123 @@ const AnalyseVideo = () => {
       <IonContent>
         {saveActivity ? (
           <>
-            <form action="">
+            <form action="" className="p-4 m-2 flex flex-col gap-4">
               <input
                 type="text"
                 placeholder="Activity"
                 name="title"
                 id="title"
+                className="p-2"
               />
-              <input type="text" name="text" id="text" />
-              <video
-                src={recordingURL}
-                controls
-                autoPlay
-                className="h-1/2"
-              ></video>
-              <input type="file" className="file" id="media" name="media" />
+              <input
+                type="text"
+                name="text"
+                id="text"
+                className="p-2"
+                placeholder="How was it? Share more about your activity!"
+              />
+              <div className="flex justify-center">
+                <video
+                  src={recordingURL}
+                  controls
+                  autoPlay
+                  className="w-3/4"
+                ></video>
+              </div>
+              <input
+                type="file"
+                className="file"
+                id="media"
+                name="media"
+                ref={uploadedFileRef}
+              />
+              <IonButton>
+                <Button type="submit">Save</Button>
+              </IonButton>
             </form>
           </>
-        ) : <>
-          {videoURL !== "" && <>
-            <canvas ref={canvas} className="absolute z-10 w-full"></canvas>
-            <video
-              src={videoURL}
-              ref={videoRef}
-              height={videoRef.current?.videoHeight}
-              width={videoRef.current?.videoWidth}
-              className="w-full"
-              onEnded={end}
-              playsInline
-              disablePictureInPicture
-              disableRemotePlayback
-            />
-          </>}
-          <div id="scatter-gl-container" className="hidden"></div>
-          <div className="exercise-feedback flex flex-col items-center p-5 w-full">
-            <RepCountCircle repCount={repCount} repCountInput={maxRepCount} />
-
-            <TextBox className="flex flex-col justify-between bg-zinc-100 py-3 w-4/5 mt-3">
-              {repFeedbackLog}
-            </TextBox>
-            {selected ? (
-              <TextBox className="bg-zinc-100 p-3 w-4/5 mt-3">
-                {exerciseDone ? feedbackConslusion : generalFeedback}
-              </TextBox>
-            ) : (
+        ) : (
+          <>
+            {videoURL !== "" && (
               <>
-                <IonSelect
-                  placeholder="Side Squats"
-                  onIonChange={(e) => handleSelected(e)}
-                  interface="popover"
-                >
-                  {exercises.map((exercise: any) => (
-                    <IonSelectOption value={exercise.id} key={exercise.id}>
-                      {exercise.name}
-                    </IonSelectOption>
-                  ))}
-                </IonSelect>
-
-                <IonButton className={videoURL && "hidden"}>
-                  Upload Video
-                  <input
-                    ref={videoInputRef}
-                    type="file"
-                    className="opacity-0 z-10 absolute"
-                    onChange={fileInputHandler}
-                    accept="video/*"
-                  ></input>
-                </IonButton>
+                <canvas ref={canvas} className="absolute z-10 w-full"></canvas>
+                <video
+                  src={videoURL}
+                  ref={videoRef}
+                  height={videoRef.current?.videoHeight}
+                  width={videoRef.current?.videoWidth}
+                  className="w-full"
+                  onEnded={end}
+                  playsInline
+                  disablePictureInPicture
+                  disableRemotePlayback
+                />
               </>
             )}
-          </div>
-          {!exerciseEnded && (
-            <div id="button-container" className="flex justify-center pb-20">
-              {detector === undefined ? (
-                videoURL && <IonSpinner />
+            <div id="scatter-gl-container" className="hidden"></div>
+            <div className="exercise-feedback flex flex-col items-center p-5 w-full">
+              <RepCountCircle repCount={repCount} repCountInput={maxRepCount} />
+
+              <TextBox className="flex flex-col justify-between bg-zinc-100 py-3 w-4/5 mt-3">
+                {repFeedbackLog}
+              </TextBox>
+              {selected ? (
+                <TextBox className="bg-zinc-100 p-3 w-4/5 mt-3">
+                  {exerciseDone ? feedbackConslusion : generalFeedback}
+                </TextBox>
               ) : (
-                <AnalyseButton start={start} detector={detector} />
+                <>
+                  <IonSelect
+                    placeholder="Side Squats"
+                    onIonChange={(e) => handleSelected(e)}
+                    interface="popover"
+                  >
+                    {exercises.map((exercise: any) => (
+                      <IonSelectOption value={exercise.id} key={exercise.id}>
+                        {exercise.name}
+                      </IonSelectOption>
+                    ))}
+                  </IonSelect>
+
+                  <IonButton className={videoURL && "hidden"}>
+                    Upload Video
+                    <input
+                      ref={videoInputRef}
+                      type="file"
+                      className="opacity-0 z-10 absolute"
+                      onChange={fileInputHandler}
+                      accept="video/*"
+                    ></input>
+                  </IonButton>
+                </>
               )}
             </div>
-          )}
-          {exerciseEnded && (
-            <div className="flex mx-2 items-center justify-center gap-4">
-              <IonButton>
-                <Button className="exercise-button">Rewind</Button>
-              </IonButton>
-              <IonButton>
-                <Button
-                  className="exercise-button"
-                  onClick={() => setSaveActivity(true)}
-                >
-                  Save Activity
-                </Button>
-              </IonButton>
-            </div>
-          )}
-        </>
-        }
+            {!exerciseEnded && (
+              <div id="button-container" className="flex justify-center pb-20">
+                {detector === undefined ? (
+                  videoURL && <IonSpinner />
+                ) : (
+                  <AnalyseButton start={start} detector={detector} />
+                )}
+              </div>
+            )}
+            {exerciseEnded && (
+              <div className="flex mx-2 items-center justify-center gap-4">
+                <IonButton>
+                  <Button className="exercise-button">Rewind</Button>
+                </IonButton>
+                <IonButton>
+                  <Button
+                    className="exercise-button"
+                    onClick={() => setSaveActivity(true)}
+                  >
+                    Save Activity
+                  </Button>
+                </IonButton>
+              </div>
+            )}
+          </>
+        )}
       </IonContent>
     </IonPage>
   );
