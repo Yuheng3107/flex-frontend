@@ -357,17 +357,13 @@ const AnalyseVideo = () => {
           )}
           {exerciseEnded && (
             <div className="flex mx-2 items-center justify-center gap-4">
-              <IonButton>
-                <Button className="exercise-button">Rewind</Button>
-              </IonButton>
-              <IonButton>
-                <Button
-                  className="exercise-button"
-                  onClick={() => setSaveActivity(true)}
-                >
-                  Save Activity
-                </Button>
-              </IonButton>
+              <Button className="exercise-button">Rewind</Button>
+              <Button
+                className="exercise-button"
+                onClick={() => setSaveActivity(true)}
+              >
+                Save Activity
+              </Button>
             </div>
           )}
         </>
