@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Cropper, { Area } from "react-easy-crop";
 import { useHistory } from "react-router-dom";
 
-import { backend } from "../../App";
+import { backend, imgBackend } from "../../App";
 
 //redux imports
 import { profileDataActions } from "../../store/profileDataSlice";
@@ -47,6 +47,7 @@ const UpdateProfilePic = ({}: UpdateProfilePicProps) => {
 
   const imageInputRef = useRef<HTMLInputElement>(null);
 
+  console.log(profileData.profile_photo);
   let profilePhotoFormData = new FormData();
 
   //Using getProfileData to get the current profilePic
@@ -131,7 +132,7 @@ const UpdateProfilePic = ({}: UpdateProfilePicProps) => {
         ) : (
           <img
             className={`rounded-full border-4 border-sky-300 p-2 w-full h-full`}
-            src={profileData.profile_photo}
+            src={`${imgBackend}${profileData.profile_photo}`}
           />
         )}
 
@@ -168,15 +169,16 @@ const UpdateProfilePic = ({}: UpdateProfilePicProps) => {
           role="button"
           className={`w-5/12 border border-zinc-300 border-solid`}
           onClick={() => {
-            if (imageInputRef.current !== null) {
-              imageInputRef.current.click();
-            }
+            setEdittingNewImage(false);
+            // if (imageInputRef.current !== null) {
+            //   imageInputRef.current.click();
+            // }
           }}
         >
-          Change Image
+          Cancel
         </Button>
         <Button
-          className={`w-5/12 bg-blue-500 text-white`}
+          className={`w-5/12 bg-pantone-orange text-white`}
           onClick={sendImageHandler}
         >
           Update Image

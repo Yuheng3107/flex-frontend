@@ -36,7 +36,7 @@ const SearchPosts = ({  }) => {
                     <IonButtons slot="start">
                         <IonBackButton defaultHref="/home"></IonBackButton>
                     </IonButtons>
-                    <SearchBar submitForm={loadPosts} placeholder="Search Posts"/>
+                    <SearchBar submitForm={loadPosts} placeholder="search"/>
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen>
