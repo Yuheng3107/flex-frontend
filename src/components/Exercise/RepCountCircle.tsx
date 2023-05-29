@@ -5,6 +5,10 @@ type RepCountProps = {
 }
 
 function RepCountCircle({ repCountInput, repCount }: RepCountProps) {
+    let fullNumber = repCountInput;
+    if (fullNumber <= 0) {
+        fullNumber = repCount - repCountInput
+    }
     return <div id="rep-count-container" className="relative">
         <svg className="w-32 h-32 -rotate-90" viewBox="0 0 200 200">
 
@@ -31,8 +35,7 @@ function RepCountCircle({ repCountInput, repCount }: RepCountProps) {
                     //The formula is 2*Pi*r, r is defined earlier
                     strokeDasharray: `${2 * Math.PI * 80}`,
                     //This line tells us how much of the ring should be blank
-                    strokeDashoffset:
-                        ((repCountInput - repCount) / repCountInput) * 2 * Math.PI * 80,
+                    strokeDashoffset: repCountInput > 0 ? ((repCountInput - repCount) / repCountInput) * 2 * Math.PI * 80 : 2 * Math.PI * 80,
                     transition: "stroke-dashoffset 1000ms linear",
                     strokeLinecap: "round",
                 }}
