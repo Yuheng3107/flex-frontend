@@ -36,7 +36,7 @@ type ProfileProps = {
   // setUpdateProfileState: (arg: number) => void;
 };
 
-const Tab3 = ({}: ProfileProps) => {
+const Tab3 = ({ }: ProfileProps) => {
   const [posts, setPosts] = useState<PostArray>(emptyPostArray);
   const [currentUserPostSet, setCurrentUserPostSet] = useState(0);
   const dispatch = useAppDispatch();
@@ -67,14 +67,17 @@ const Tab3 = ({}: ProfileProps) => {
   return (
     <IonPage>
       <IonContent fullscreen>
-        <IonButton
-          routerLink="/profile/settings"
-          fill="default"
-          shape="round"
-          className="ion-no-padding mx-2 absolute"
-        >
-          <IonIcon icon={cog} />
-        </IonButton>
+        <div className="flex flex-row justify-end">
+          <IonButton
+            routerLink="/profile/settings"
+            fill="default"
+            shape="round"
+            className="ion-no-padding mx-2 absolute"
+          >
+            <IonIcon icon={cog} color="medium"/>
+          </IonButton>
+        </div>
+
         <UserProfileTemplate
           profileData={profileDataRedux}
           exerciseStats={exerciseStatsRedux}

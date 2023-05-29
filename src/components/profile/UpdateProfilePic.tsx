@@ -47,6 +47,7 @@ const UpdateProfilePic = ({}: UpdateProfilePicProps) => {
 
   const imageInputRef = useRef<HTMLInputElement>(null);
 
+  console.log(profileData.profile_photo);
   let profilePhotoFormData = new FormData();
 
   //Using getProfileData to get the current profilePic
@@ -168,15 +169,16 @@ const UpdateProfilePic = ({}: UpdateProfilePicProps) => {
           role="button"
           className={`w-5/12 border border-zinc-300 border-solid`}
           onClick={() => {
-            if (imageInputRef.current !== null) {
-              imageInputRef.current.click();
-            }
+            setEdittingNewImage(false);
+            // if (imageInputRef.current !== null) {
+            //   imageInputRef.current.click();
+            // }
           }}
         >
-          Change Image
+          Cancel
         </Button>
         <Button
-          className={`w-5/12 bg-blue-500 text-white`}
+          className={`w-5/12 bg-pantone-orange text-white`}
           onClick={sendImageHandler}
         >
           Update Image

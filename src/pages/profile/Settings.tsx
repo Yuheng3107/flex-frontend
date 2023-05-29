@@ -12,7 +12,9 @@ import {
     IonButton,
     IonTitle,
     IonButtons,
-    IonToggle
+    IonToggle,
+    IonItem,
+    IonLabel
 } from '@ionic/react';
 
 //utils
@@ -53,13 +55,16 @@ function Settings() {
         </IonHeader>
         <IonContent>
             <div className="flex flex-col justify-evenly">
-                <div>
-                    <p>Darkmode Toggle</p>
-                    <IonToggle checked={darkThemeToggleChecked} onIonChange={onDarkThemeToggle}></IonToggle>    
-                </div>
-                <IonButton routerLink="/profile/create" routerDirection="forward">
-                    Edit Profile
-                </IonButton>
+                <IonItem routerLink="/profile/create" routerDirection='forward'>
+                    <IonLabel>Edit Profile</IonLabel>
+                </IonItem>
+                <IonItem>
+                    <IonLabel>Darkmode</IonLabel>
+                    <IonToggle checked={darkThemeToggleChecked} onIonChange={onDarkThemeToggle}></IonToggle>
+                </IonItem>
+
+            </div>
+            <div id='logout-button-container' className="flex justify-center items-center mt-5">
                 <IonButton onClick={logout}>
                     Logout
                 </IonButton>
