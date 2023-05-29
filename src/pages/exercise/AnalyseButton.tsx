@@ -21,11 +21,7 @@ export default function AnalyseButton({
 
   return (
     <Button
-      className={
-        buttonVisible
-          ? "bg-[#FC6111] text-white text-[20px] font-medium"
-          : "hidden"
-      }
+      className={buttonVisible ? "exercise-button" : "hidden"}
       onClick={startVideoHandler}
     >
       Analyze
