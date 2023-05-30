@@ -24,6 +24,7 @@ import {
     IonImg
 } from "@ionic/react";
 import { addOutline, imageOutline, videocamOutline, closeOutline } from "ionicons/icons";
+import { startForAxis } from "@tensorflow/tfjs-core/dist/ops/slice_util";
 
 function CreatePost() {
     const makeUserPost = async (title: string, text: string, media: FormData) => {
@@ -32,7 +33,7 @@ function CreatePost() {
     const [postTitleInput, setPostTitleInput] = useState("");
     const [postTextInput, setPostTextInput] = useState("");
     const [imageDataUrl, setImageDataUrl] = useState<string | ArrayBuffer | null>("");
-    console.log(imageDataUrl);
+    const [mediaType, setMediaType] = useState("image");
 
     const history = useHistory();
     const mediaInputRef = useRef<HTMLInputElement | null>(null);
@@ -53,7 +54,6 @@ function CreatePost() {
             imageFormData.append("media", mediaInputRef.current!.files[0]);
         }
         let response = await makeUserPost(postTitleInput, postTextInput, imageFormData);
-        console.log(response);
         if (response?.status === 201) history.push(backUrl);
     };
 
@@ -103,35 +103,8 @@ function CreatePost() {
                         className="bg-transparent block p-4 text-xl font-light focus:outline-0 h-32 mb-4"
                         onChange={(event) => {
                             setPostTextInput(event.target.value);
-                            console.log(postTextInput);
                         }}
                     />
-                    
-
-                    {/* <hr className="border-t border-t-slate-300" />
-                    <p className="bg-transparent block p-4 text-xl focus:outline-0">
-                        Upload Optional Media
-                    </p>
-                    <input
-                        className="file-input"
-                        type="file"
-                        ref={mediaInputRef}
-                        onChange={(e) => {
-                            if (
-                                mediaInputRef.current!.files !== null &&
-                                mediaInputRef.current!.files.length > 0
-                            ) {
-                                if (mediaInputRef.current!.files[0].size > 10000000) {
-                                    e.target.value = "";
-                                    present({
-                                        message: "Image cannot be larger than 10mb!",
-                                        duration: 1000,
-                                        position: "top",
-                                    });
-                                }
-                            }
-                        }}
-                    /> */}
                 </main>
                 <IonFab slot="fixed" vertical="bottom" horizontal="end">
                     <IonFabButton color="tertiary">
@@ -143,11 +116,14 @@ function CreatePost() {
                                 className="opacity-0 absolute z-10"
                                 type="file"
                                 ref={mediaInputRef}
+                                accept="image/*"
                                 onChange={(e) => {
                                     if (
                                         mediaInputRef.current!.files !== null &&
                                         mediaInputRef.current!.files.length > 0
                                     ) {
+                                        setMediaType("image");
+                                        console.log(mediaInputRef.current!.files);
                                         if (mediaInputRef.current!.files[0].size > 10000000) {
                                             e.target.value = "";
                                             present({
@@ -164,6 +140,13 @@ function CreatePost() {
                                                 fr.readAsDataURL(mediaInputRef.current!.files[0]);
                                             }
                                         }
+                                    } else {
+                                        console.log('something went wrong')
+                                        present({
+                                            message: "Something went wrong 😢",
+                                            duration: 1000,
+                                            position: "top",
+                                        });
                                     }
                                 }}
                             />
