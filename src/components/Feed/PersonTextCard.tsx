@@ -199,10 +199,15 @@ const PersonTextCard = ({
               </>
             ) : (
               <>
-                {postData?.media ? (
-                  <img alt="post image" src={mediaUrl} className="w-full" />
+                {postData.media && (postData.media.endsWith(".mp4") || postData.media.endsWith(".webm"))  ? (
+                  <video
+                  src={mediaUrl}
+                  controls
+                  disablePictureInPicture
+                  className=""
+                ></video>
                 ) : (
-                  ""
+                  <img alt="post image" src={mediaUrl} className="w-full" />
                 )}
                 <h3 className="font-semibold text-xl mb-2">
                   {postData?.title}
