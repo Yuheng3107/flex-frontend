@@ -82,11 +82,24 @@ const PersonTextCard = ({
     }
   };
 
+  let postMediaDisplay = <></>
+  if (postData.media) {
+    if (postData.media.endsWith(".mp4") || postData.media.endsWith(".webm")) {
+      postMediaDisplay = <video
+        src={mediaUrl}
+        controls
+        disablePictureInPicture
+        className=""
+      ></video>
+    } else {
+      postMediaDisplay=<img alt="post image" src={mediaUrl} className="w-full" />
+    }
+  }
+
   return (
     <div
-      className={`border border-b-zinc-300 p-2  font-inter bg-white dark:bg-zinc-800 ${
-        isProfilePage && "m-4 rounded-lg drop-shadow-card"
-      }`}
+      className={`border border-b-zinc-300 p-2  font-inter bg-white dark:bg-zinc-800 ${isProfilePage && "m-4 rounded-lg drop-shadow-card"
+        }`}
     >
       {isComment ? (
         <div className="comment flex justify-between items-center mx-2 py-4">
@@ -177,8 +190,8 @@ const PersonTextCard = ({
               postType === "user"
                 ? `/home/post/${postData.id}`
                 : postType === "community"
-                ? `/home/community/post/${postData.id}`
-                : undefined
+                  ? `/home/community/post/${postData.id}`
+                  : undefined
             }
             className="mb-2"
             color="dark"
@@ -191,24 +204,11 @@ const PersonTextCard = ({
                 <p id="main-content" className="text-sm">
                   {postData?.text}
                 </p>
-                {postData?.media ? (
-                  <img alt="post image" src={mediaUrl} className="w-full" />
-                ) : (
-                  ""
-                )}
+                {postMediaDisplay}
               </>
             ) : (
               <>
-                {postData.media && (postData.media.endsWith(".mp4") || postData.media.endsWith(".webm"))  ? (
-                  <video
-                  src={mediaUrl}
-                  controls
-                  disablePictureInPicture
-                  className=""
-                ></video>
-                ) : (
-                  <img alt="post image" src={mediaUrl} className="w-full" />
-                )}
+                {postMediaDisplay}
                 <h3 className="font-semibold text-xl mb-2">
                   {postData?.title}
                 </h3>
@@ -240,8 +240,8 @@ const PersonTextCard = ({
                   postType === "user"
                     ? `/home/post/${postData.id}`
                     : postType === "community"
-                    ? `/home/community/post/${postData.id}`
-                    : undefined
+                      ? `/home/community/post/${postData.id}`
+                      : undefined
                 }
               >
                 <CommentIcon className="w-8 h-8"></CommentIcon>
