@@ -50,7 +50,7 @@ function CreatePost() {
         let inputRef = imageInputRef;
         if (mediaType === "video") inputRef = videoInputRef;
         const imageFormData = new FormData();
-        if (postTitleInput.trim() ==="" || postTextInput.trim() ==="") {
+        if (postTitleInput.trim() === "" || postTextInput.trim() === "") {
             present({
                 message: "Post title and text cannot be empty!",
                 duration: 1000,
@@ -143,14 +143,15 @@ function CreatePost() {
                         />
                     )}
                     <hr className="border-t border-t-slate-300" />
-                    {fileDataUrl && mediaType === "image" ?
+                    {fileDataUrl && mediaType === "image" &&
                         <div className="w-full aspect-square flex justify-center items-center overflow-hidden">
                             <IonImg
                                 className="object-cover"
                                 src={typeof fileDataUrl === "string" ? fileDataUrl : undefined}
                                 alt="post image"
                             />
-                        </div> :
+                        </div>}
+                    {fileDataUrl && mediaType === "video" &&
                         <video src={videoSrc} controls autoPlay className="" />}
                     <textarea
                         value={postTextInput}
