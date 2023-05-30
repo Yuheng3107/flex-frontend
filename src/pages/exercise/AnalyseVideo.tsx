@@ -42,7 +42,8 @@ import { RendererCanvas2d } from "../../components/Exercise/workout/renderer_can
 import { backend } from "../../App";
 let isActive = false;
 let chunks: any[] = [];
-
+let feedbackConclusion: any = "";
+let uploadedFile: any = null;
 const AnalyseVideo = () => {
   const [exerciseDone, setExerciseDone] = useState(false);
   const [repCount, setRepCount] = useState<number>(0);
@@ -77,11 +78,12 @@ const AnalyseVideo = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm();
   const { ref, ...rest } = { ...register("media") };
   let rendererCanvas: RendererCanvas2d;
   useEffect(() => {
-    // attach uploaded file
+    // attach uploaded file and set it
     attachUploadedFile();
   }, [saveActivity]);
   useEffect(() => {
@@ -116,7 +118,47 @@ const AnalyseVideo = () => {
   const toggleFeedbackLog = () => {
     setFeedbackLogShowing(!feedbackLogShowing);
   };
-  const onSubmit = (data: any) => {
+  const handleFormSubmission = (data: any) => {
+    let post_id = null;
+    // sends data to backend
+    const { text, title, media } = data;
+    // create feed post first
+    fetch(`${backend}/feed/feed_post/create`, {
+      method: "POST",
+      credentials: "include", // include cookies in the request
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": String(
+          document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]
+        ),
+      },
+      body: JSON.stringify({ text, title }),
+    })
+      .then((response) => {
+        console.log(response);
+        return response.json();
+      })
+      .then((id) => {
+        post_id = id;
+      })
+      .catch((error) => console.log(error));
+    // process media
+    // if input is of type file, we are going to use the default video
+
+    let uploaded_media;
+    if (media instanceof File) {
+      uploaded_media = uploadedFile;
+    }
+    // if input is of type FileList,
+    if (media instanceof FileList) {
+      // check whether it is empty or not
+      if (media.length === 0) {
+        // if empty, means they don't want to upload media, send them back home
+      }
+      // otherwise, retrieve the file we want to upload
+      uploaded_media = media[0];
+    }
+    // fetch();
     console.log(data);
   };
   const handleSelected = (e: any) => {
@@ -149,16 +191,14 @@ const AnalyseVideo = () => {
   async function attachUploadedFile() {
     const dataTransfer = new DataTransfer();
     let blob = await fetch(recordingURL).then((r) => r.blob());
-    const uploadedFile = new File([blob], "Exercise Video", {
+    uploadedFile = new File([blob], "Exercise Video", {
       type: "video/webm",
     });
-    console.log(uploadedFile);
     dataTransfer.items.add(uploadedFile);
     if (uploadedFileRef?.current !== null) {
-      console.log("Fuck");
-      console.log(uploadedFileRef.current);
       uploadedFileRef.current.files = dataTransfer.files;
     }
+    console.log(uploadedFile);
   }
   const start = async () => {
     if (detector === undefined || videoRef.current === null) {
@@ -247,7 +287,14 @@ const AnalyseVideo = () => {
       setFrameCount(frameCount + 1);
     }
   };
-
+  const setDefaultValues = () => {
+    // use reset to set default values
+    reset((formValues) => ({
+      title: "Exercise Session",
+      text: feedbackConclusion,
+      media: uploadedFile,
+    }));
+  };
   /**
    * Ends Exercise
    */
@@ -257,11 +304,13 @@ const AnalyseVideo = () => {
     console.log(completedFeedback[0]);
     setPerfectRepCount(completedFeedback[1]);
     setFeedbackConclusion(completedFeedback[0]);
+    feedbackConclusion = completedFeedback[0];
     setExerciseDone(true);
     setExerciseEnded(true);
     console.log(mediaRecorder);
     console.log(chunks);
     mediaRecorder.stop();
+    setDefaultValues();
   };
 
   /*--------------------
@@ -308,26 +357,28 @@ const AnalyseVideo = () => {
             <form
               action=""
               className="p-4 m-2 flex flex-col gap-4"
-              onSubmit={handleSubmit(onSubmit)}
+              onSubmit={handleSubmit(handleFormSubmission)}
             >
-              <input
-                type="text"
-                placeholder="Activity"
-                id="title"
-                className="p-2 border border-zinc-400 focus:border-orange-500 focus:border-2"
-                {...(register("title"),
-                {
-                  required: true,
-                })}
-              />
+              <div>
+                <input
+                  type="text"
+                  placeholder="Activity"
+                  id="title"
+                  className="p-2 border w-full border-zinc-400 focus:border-orange-500 focus:border-2"
+                  {...register("title", {
+                    required: true,
+                  })}
+                />
+                {errors.title?.type === "required" && (
+                  <p className="errorMsg my-1">Password is required</p>
+                )}
+              </div>
               <textarea
                 id="text"
                 className="p-2 border border-zinc-400 focus:border-orange-500 focus:border-2"
                 placeholder="How did it go? Share more about your activity here!"
                 {...register("text")}
-              >
-                {feedbackConslusion}
-              </textarea>
+              ></textarea>
               <div className="flex justify-center">
                 <video
                   src={recordingURL}

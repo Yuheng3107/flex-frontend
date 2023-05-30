@@ -25,3 +25,9 @@
 .exercise-button {
   @apply bg-[#FC6111] text-white text-[20px] font-medium;
 }
+
+.errorMsg {
+  color: #f21e08;
+  font-size: 14px;
+  font-weight: 300;
+}
