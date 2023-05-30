@@ -140,25 +140,45 @@ const AnalyseVideo = () => {
       })
       .then((id) => {
         post_id = id;
+        // process media
+        // if input is of type file, we are going to use the default video
+
+        let uploaded_media;
+        if (media instanceof File) {
+          uploaded_media = uploadedFile;
+        }
+        // if input is of type FileList,
+        if (media instanceof FileList) {
+          // check whether it is empty or not
+          if (media.length === 0) {
+            // if empty, means they don't want to upload media, send them back home
+          }
+          // otherwise, retrieve the file we want to upload
+          uploaded_media = media[0];
+        }
+
+        // prepare form data
+        let mediaFormData = new FormData();
+        mediaFormData.append("media", uploaded_media);
+        fetch(`${backend}/feed/feed_post/update/media/${post_id}`, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": String(
+              document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]
+            ),
+          },
+          credentials: "include",
+          body: mediaFormData,
+        })
+          .then((response) => {
+            console.log(response);
+            return response.json();
+          })
+          .then((data) => console.log(data))
+          .catch((err) => console.log(err));
       })
       .catch((error) => console.log(error));
-    // process media
-    // if input is of type file, we are going to use the default video
 
-    let uploaded_media;
-    if (media instanceof File) {
-      uploaded_media = uploadedFile;
-    }
-    // if input is of type FileList,
-    if (media instanceof FileList) {
-      // check whether it is empty or not
-      if (media.length === 0) {
-        // if empty, means they don't want to upload media, send them back home
-      }
-      // otherwise, retrieve the file we want to upload
-      uploaded_media = media[0];
-    }
-    // fetch();
     console.log(data);
   };
   const handleSelected = (e: any) => {
