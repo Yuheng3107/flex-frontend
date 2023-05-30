@@ -102,9 +102,7 @@ const PersonTextCard = ({
 
   return (
     <div
-      className={`border border-b-zinc-300 p-2  font-inter bg-white dark:bg-zinc-800 ${
-        isProfilePage && "m-4 rounded-lg drop-shadow-card"
-      }`}
+      className={`border border-b-zinc-300 p-2  font-inter bg-white dark:bg-zinc-800 m-1 rounded-lg drop-shadow-card`}
     >
       {isComment ? (
         <div className="comment flex justify-between items-center mx-2 py-4">
