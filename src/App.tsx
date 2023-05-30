@@ -75,10 +75,6 @@ import { emptyProfileData } from "./types/stateTypes";
 import Loading from "./pages/Home/Loading";
 import Login from "./pages/Home/Login";
 
-
-
-
-
 setupIonicReact();
 checkAndToggleDarkTheme();
 
