@@ -32,30 +32,83 @@ function CreatePost() {
     }
     const [postTitleInput, setPostTitleInput] = useState("");
     const [postTextInput, setPostTextInput] = useState("");
-    const [imageDataUrl, setImageDataUrl] = useState<string | ArrayBuffer | null>("");
+    const [fileDataUrl, setImageDataUrl] = useState<string | ArrayBuffer | null>("");
     const [mediaType, setMediaType] = useState("image");
 
+    const [videoSrc, setVideoSrc] = useState<string>("");
+
     const history = useHistory();
-    const mediaInputRef = useRef<HTMLInputElement | null>(null);
+    const imageInputRef = useRef<HTMLInputElement | null>(null);
+    const videoInputRef = useRef<HTMLInputElement | null>(null);
 
     const [present] = useIonToast();
 
     let backUrl = "/home";
     let isComment = false;
-
+    console.log(fileDataUrl);
     const submitHandler = async () => {
+        let inputRef = imageInputRef;
+        if (mediaType === "video") inputRef = videoInputRef;
         const imageFormData = new FormData();
+        if (postTitleInput.trim() === "" || postTextInput.trim() === "") {
+            present({
+                message: "Post title and text cannot be empty!",
+                duration: 1000,
+                position: "top",
+            });
+            return
+        }
         if (
-            mediaInputRef.current !== null &&
-            mediaInputRef.current!.files !== null &&
-            mediaInputRef.current!.files[0] !== undefined
+            inputRef.current !== null &&
+            inputRef.current!.files !== null &&
+            inputRef.current!.files[0] !== undefined
         ) {
             //type guard to ensure that the file isn't undefined
-            imageFormData.append("media", mediaInputRef.current!.files[0]);
+            imageFormData.append("media", inputRef.current!.files[0]);
         }
         let response = await makeUserPost(postTitleInput, postTextInput, imageFormData);
         if (response?.status === 201) history.push(backUrl);
     };
+
+    function fileInputChangeHandler(e: React.ChangeEvent<HTMLInputElement>, type: string) {
+        const target = e.target as HTMLInputElement;
+        let inputRef = imageInputRef;
+        if (type === "video") inputRef = videoInputRef;
+        console.log(target.files);
+        if (
+            inputRef.current!.files !== null &&
+            inputRef.current!.files.length > 0
+        ) {
+            setMediaType(type);
+            console.log(imageInputRef.current!.files);
+            if (inputRef.current!.files[0].size > 10000000) {
+                target.value = "";
+                present({
+                    message: "File cannot be larger than 10mb!",
+                    duration: 1000,
+                    position: "top",
+                });
+            } else {
+                // if (FileReader) {
+                //     var fr = new FileReader();
+                //     fr.onload = function () {
+                //         setImageDataUrl(fr.result);
+                //     }
+                //     fr.readAsDataURL(inputRef.current!.files[0]);
+                // }
+                let source = URL.createObjectURL(inputRef.current!.files[0])
+                setVideoSrc(source);
+            }
+        } else {
+            console.log('something went wrong')
+            present({
+                message: "Something went wrong 😢",
+                duration: 1000,
+                position: "top",
+            });
+        }
+
+    }
 
     return (
         <IonPage>
@@ -90,13 +143,16 @@ function CreatePost() {
                         />
                     )}
                     <hr className="border-t border-t-slate-300" />
-                    {imageDataUrl && <div className="w-full aspect-square flex justify-center items-center overflow-hidden">
-                        <IonImg
-                            className="object-cover"
-                            src={typeof imageDataUrl === "string" ? imageDataUrl : undefined}
-                            alt="post image"
-                        />
-                    </div>}
+                    {fileDataUrl && mediaType === "image" &&
+                        <div className="w-full aspect-square flex justify-center items-center overflow-hidden">
+                            <IonImg
+                                className="object-cover"
+                                src={typeof fileDataUrl === "string" ? fileDataUrl : undefined}
+                                alt="post image"
+                            />
+                        </div>}
+                    {fileDataUrl && mediaType === "video" &&
+                        <video src={videoSrc} controls autoPlay className="" />}
                     <textarea
                         value={postTextInput}
                         placeholder="Post Text"
@@ -115,44 +171,24 @@ function CreatePost() {
                             <input
                                 className="opacity-0 absolute z-10"
                                 type="file"
-                                ref={mediaInputRef}
+                                ref={imageInputRef}
                                 accept="image/*"
                                 onChange={(e) => {
-                                    if (
-                                        mediaInputRef.current!.files !== null &&
-                                        mediaInputRef.current!.files.length > 0
-                                    ) {
-                                        setMediaType("image");
-                                        console.log(mediaInputRef.current!.files);
-                                        if (mediaInputRef.current!.files[0].size > 10000000) {
-                                            e.target.value = "";
-                                            present({
-                                                message: "Image cannot be larger than 10mb!",
-                                                duration: 1000,
-                                                position: "top",
-                                            });
-                                        } else {
-                                            if (FileReader) {
-                                                var fr = new FileReader();
-                                                fr.onload = function () {
-                                                    setImageDataUrl(fr.result);
-                                                }
-                                                fr.readAsDataURL(mediaInputRef.current!.files[0]);
-                                            }
-                                        }
-                                    } else {
-                                        console.log('something went wrong')
-                                        present({
-                                            message: "Something went wrong 😢",
-                                            duration: 1000,
-                                            position: "top",
-                                        });
-                                    }
+                                    fileInputChangeHandler(e, "image")
                                 }}
                             />
                             <IonIcon icon={imageOutline}></IonIcon>
                         </IonFabButton>
                         <IonFabButton>
+                            <input
+                                className="opacity-0 absolute z-10"
+                                type="file"
+                                ref={videoInputRef}
+                                accept="video/*"
+                                onChange={(e) => {
+                                    fileInputChangeHandler(e, "video")
+                                }}
+                            />
                             <IonIcon icon={videocamOutline}></IonIcon>
                         </IonFabButton>
                     </IonFabList>
