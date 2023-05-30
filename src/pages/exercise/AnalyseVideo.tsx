@@ -18,6 +18,9 @@ import {
   IonSelectOption,
 } from "@ionic/react";
 
+// to navigate
+import { useHistory } from "react-router-dom";
+
 //components
 import TextBox from "../../components/ui/TextBox";
 import StartEndButton from "../../components/Exercise/StartEndButton";
@@ -40,11 +43,13 @@ import RepCountCircle from "../../components/Exercise/RepCountCircle";
 // draw lines
 import { RendererCanvas2d } from "../../components/Exercise/workout/renderer_canvas2d";
 import { backend } from "../../App";
+
 let isActive = false;
 let chunks: any[] = [];
 let feedbackConclusion: any = "";
 let uploadedFile: any = null;
 const AnalyseVideo = () => {
+  const history = useHistory();
   const [exerciseDone, setExerciseDone] = useState(false);
   const [repCount, setRepCount] = useState<number>(0);
   const [maxRepCount, setMaxRepCount] = useState<number>(0);
@@ -178,7 +183,7 @@ const AnalyseVideo = () => {
           .catch((err) => console.log(err));
       })
       .catch((error) => console.log(error));
-
+    history.push("/home");
     console.log(data);
   };
   const handleSelected = (e: any) => {
@@ -332,7 +337,16 @@ const AnalyseVideo = () => {
     mediaRecorder.stop();
     setDefaultValues();
   };
-
+  const handleRewind = () => {
+    // rewinds everything
+    // resets all the states
+    setRepCount(0);
+    setFeedbackConclusion("");
+    setPerfectRepCount(0);
+    setRepFeedbackLog("");
+    // starts video again
+    start();
+  };
   /*--------------------
   HELPER FUNCTIONS
   --------------------*/
@@ -490,17 +504,16 @@ const AnalyseVideo = () => {
             )}
             {exerciseEnded && (
               <div className="flex mx-2 items-center justify-center gap-4">
-                <IonButton>
-                  <Button className="exercise-button">Rewind</Button>
-                </IonButton>
-                <IonButton>
-                  <Button
-                    className="exercise-button"
-                    onClick={() => setSaveActivity(true)}
-                  >
-                    Save Activity
-                  </Button>
-                </IonButton>
+                <Button className="exercise-button" onClick={handleRewind}>
+                  Rewind
+                </Button>
+
+                <Button
+                  className="exercise-button"
+                  onClick={() => setSaveActivity(true)}
+                >
+                  Save Activity
+                </Button>
               </div>
             )}
           </>
