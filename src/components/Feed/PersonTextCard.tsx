@@ -82,24 +82,29 @@ const PersonTextCard = ({
     }
   };
 
-  let postMediaDisplay = <></>
+  let postMediaDisplay = <></>;
   if (postData.media) {
     if (postData.media.endsWith(".mp4") || postData.media.endsWith(".webm")) {
-      postMediaDisplay = <video
-        src={mediaUrl}
-        controls
-        disablePictureInPicture
-        className=""
-      ></video>
+      postMediaDisplay = (
+        <video
+          src={mediaUrl}
+          controls
+          disablePictureInPicture
+          className="mt-3"
+        ></video>
+      );
     } else {
-      postMediaDisplay=<img alt="post image" src={mediaUrl} className="w-full" />
+      postMediaDisplay = (
+        <img alt="post image" src={mediaUrl} className="w-full" />
+      );
     }
   }
 
   return (
     <div
-      className={`border border-b-zinc-300 p-2  font-inter bg-white dark:bg-zinc-800 ${isProfilePage && "m-4 rounded-lg drop-shadow-card"
-        }`}
+      className={`border border-b-zinc-300 p-2  font-inter bg-white dark:bg-zinc-800 ${
+        isProfilePage && "m-4 rounded-lg drop-shadow-card"
+      }`}
     >
       {isComment ? (
         <div className="comment flex justify-between items-center mx-2 py-4">
@@ -166,7 +171,9 @@ const PersonTextCard = ({
                   className="flex flex-row items-center text-sm text-gray-700 dark:text-gray-500"
                 >
                   <span id="post-place">
-                    {postType === "user" ? "" : postType === "community" ? (
+                    {postType === "user" ? (
+                      ""
+                    ) : postType === "community" ? (
                       <IonRouterLink
                         className="text-gray-700"
                         routerLink={`/home/community/${communityData?.id}`}
@@ -190,8 +197,8 @@ const PersonTextCard = ({
               postType === "user"
                 ? `/home/post/${postData.id}`
                 : postType === "community"
-                  ? `/home/community/post/${postData.id}`
-                  : undefined
+                ? `/home/community/post/${postData.id}`
+                : undefined
             }
             className="mb-2"
             color="dark"
@@ -240,8 +247,8 @@ const PersonTextCard = ({
                   postType === "user"
                     ? `/home/post/${postData.id}`
                     : postType === "community"
-                      ? `/home/community/post/${postData.id}`
-                      : undefined
+                    ? `/home/community/post/${postData.id}`
+                    : undefined
                 }
               >
                 <CommentIcon className="w-8 h-8"></CommentIcon>

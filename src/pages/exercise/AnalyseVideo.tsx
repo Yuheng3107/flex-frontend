@@ -216,7 +216,7 @@ const AnalyseVideo = () => {
   async function attachUploadedFile() {
     const dataTransfer = new DataTransfer();
     let blob = await fetch(recordingURL).then((r) => r.blob());
-    uploadedFile = new File([blob], "Exercise Video", {
+    uploadedFile = new File([blob], "Exercise Video.webm", {
       type: "video/webm",
     });
     dataTransfer.items.add(uploadedFile);
