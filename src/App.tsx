@@ -79,13 +79,8 @@ setupIonicReact();
 checkAndToggleDarkTheme();
 
 // 'globals'
-<<<<<<< HEAD
-const backend = "https://fitai.click";
-const imgBackend = "";
-=======
 const backend = isDev() ? "http://localhost:8000" : "https://fitai.click";
 const imgBackend = isDev() ? "http://localhost:8000" : "";
->>>>>>> aad4237be3b7ad393148bb2d34a81e90abf8f3b2
 const exercises = ["zero", "Squats", "Push-ups", "Hamstring Stretch"];
 
 const App: React.FC = () => {
