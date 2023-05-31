@@ -32,7 +32,7 @@ const Posts = ({
     <div
       id="userFeed"
       className={`flex flex-col justify-start w-full h-full ${
-        isProfilePage && "bg-[#EFEFEF] -my-3"
+        isProfilePage && " -my-3"
       }`}
     >
       {posts.postArray.length === 0 ? (

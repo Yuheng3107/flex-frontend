@@ -82,11 +82,27 @@ const PersonTextCard = ({
     }
   };
 
+  let postMediaDisplay = <></>;
+  if (postData.media) {
+    if (postData.media.endsWith(".mp4") || postData.media.endsWith(".webm")) {
+      postMediaDisplay = (
+        <video
+          src={mediaUrl}
+          controls
+          disablePictureInPicture
+          className="mt-3"
+        ></video>
+      );
+    } else {
+      postMediaDisplay = (
+        <img alt="post image" src={mediaUrl} className="w-full" />
+      );
+    }
+  }
+
   return (
     <div
-      className={`border border-b-zinc-300 p-2  font-inter bg-white ${
-        isProfilePage && "m-4 rounded-lg drop-shadow-card"
-      }`}
+      className={`border border-b-zinc-300 p-2  font-inter bg-white dark:bg-zinc-800 m-1 rounded-lg drop-shadow-card`}
     >
       {isComment ? (
         <div className="comment flex justify-between items-center mx-2 py-4">
@@ -150,17 +166,11 @@ const PersonTextCard = ({
                 </IonRouterLink>
                 <p
                   id="subtitle"
-                  className="flex flex-row items-center text-sm text-gray-700"
+                  className="flex flex-row items-center text-sm text-gray-700 dark:text-gray-500"
                 >
                   <span id="post-place">
                     {postType === "user" ? (
-                      <IonRouterLink
-                        className="text-gray-700"
-                        routerLink={`/home/profile/${profileData.id}`}
-                        routerDirection="forward"
-                      >
-                        Profile
-                      </IonRouterLink>
+                      ""
                     ) : postType === "community" ? (
                       <IonRouterLink
                         className="text-gray-700"
@@ -199,19 +209,11 @@ const PersonTextCard = ({
                 <p id="main-content" className="text-sm">
                   {postData?.text}
                 </p>
-                {postData?.media ? (
-                  <img alt="post image" src={mediaUrl} className="w-full" />
-                ) : (
-                  ""
-                )}
+                {postMediaDisplay}
               </>
             ) : (
               <>
-                {postData?.media ? (
-                  <img alt="post image" src={mediaUrl} className="w-full" />
-                ) : (
-                  ""
-                )}
+                {postMediaDisplay}
                 <h3 className="font-semibold text-xl mb-2">
                   {postData?.title}
                 </h3>

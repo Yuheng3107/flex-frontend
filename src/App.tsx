@@ -16,6 +16,7 @@ import {
 } from "./utils/data/profileData";
 import { getExerciseRegimeAsync } from "./utils/data/getExerciseData";
 import { checkAndToggleDarkTheme } from "./utils/darkMode";
+import { isDev } from "./utils/checkEnv";
 import { toggleDarkTheme } from "./utils/darkMode";
 
 // tailwind imports
@@ -43,6 +44,7 @@ import CreatePost from "./pages/post/CreatePost";
 import CommunityPage from "./pages/community/CommunityPage";
 import PostPage from "./pages/post/PostPage";
 import ProfilePages from "./pages/profile/ProfilePages";
+import Search from "./pages/Home/Search";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -77,8 +79,13 @@ setupIonicReact();
 checkAndToggleDarkTheme();
 
 // 'globals'
+<<<<<<< HEAD
 const backend = "https://fitai.click";
 const imgBackend = "";
+=======
+const backend = isDev() ? "http://localhost:8000" : "https://fitai.click";
+const imgBackend = isDev() ? "http://localhost:8000" : "";
+>>>>>>> aad4237be3b7ad393148bb2d34a81e90abf8f3b2
 const exercises = ["zero", "Squats", "Push-ups", "Hamstring Stretch"];
 
 const App: React.FC = () => {
@@ -179,6 +186,9 @@ const App: React.FC = () => {
                 />
                 <Route path="/home/post/create">
                   <CreatePost />
+                </Route>
+                <Route path="/home/search">
+                  <Search />
                 </Route>
                 <Route path="/home/search/post">
                   <SearchPosts />
