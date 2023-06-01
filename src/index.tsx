@@ -1,13 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import App from "./App";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
-import reportWebVitals from "./reportWebVitals";
-
-import "./theme/tailwind.css";
-
-import store from "./store/store";
-import { Provider } from "react-redux";
+import Application from "./Application";
 
 //Jems' clientID : 251115262243-96f07edno5mjnb3b74bo9r6lve83sddp.apps.googleusercontent.com
 
@@ -16,13 +10,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const container = document.getElementById("root");
 const root = createRoot(container!);
-root.render(
-  <Provider store={store}>
-    <GoogleOAuthProvider clientId="908101547092-2cg5rblc0ppg7dvn8csk6l8p8ehc6crt.apps.googleusercontent.com">
-      <App />
-    </GoogleOAuthProvider>
-  </Provider>
-);
+root.render(<Application />);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

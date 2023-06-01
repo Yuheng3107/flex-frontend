@@ -171,7 +171,6 @@ const AnalyseVideo = () => {
             "X-CSRFToken": String(
               document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]
             ),
-            "Access-Control-Allow-Origin": "*",
           },
           credentials: "include",
           body: mediaFormData,
