@@ -46,11 +46,12 @@ import { pencilOutline } from "ionicons/icons";
 //component imports
 import PersonTextCard from "../../components/Feed/PersonTextCard";
 import Posts from "../../components/Feed/Posts";
+import CommentContainer from "../../components/Feed/CommentContainer";
 
 interface PostPageProps
   extends RouteComponentProps<{
     postId: string;
-  }> {}
+  }> { }
 
 const PostPage: React.FC<PostPageProps> = ({ match }) => {
   const [profileData, setProfileData] = useState<ProfileData>(emptyProfileData);
@@ -62,6 +63,7 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
   const [posts, setPosts] = useState<PostArray>(emptyPostArray);
 
   const [postTextInput, setPostTextInput] = useState<string>("");
+  console.log(posts);
 
   useEffect(() => {
     if (postData === emptyUserPostData) loadPostData();
@@ -151,7 +153,7 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
               isLiked={isLiked}
               isPostPage={true}
             />
-            <Posts loadData={loadComments} posts={posts} isComment={true} />
+            <CommentContainer comments={posts} loadData={loadComments}></CommentContainer>
           </div>
         )}
       </IonContent>
