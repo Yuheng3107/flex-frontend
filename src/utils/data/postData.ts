@@ -313,3 +313,17 @@ export const getAllPostData = async function (post_type: PostType, newPosts: any
   console.log(data);
   return (data);
 }
+
+export const deleteUserPostAsync = async function (pk:number) {
+  try {
+    let res = await fetch(`${backend}/feed/feed_post/delete/${pk}`, {
+      method: "DELETE",
+      headers: {
+        "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]),
+        "Content-type": "application/json"
+      },
+      credentials: "include",
+    })
+    return res;
+  } catch (error) { console.log(error); };
+}

@@ -22,7 +22,7 @@ import {
   PostType,
 } from "../../types/stateTypes";
 import { timeSince } from "../../utils/generalUtils";
-import { likePostAsync, unlikePostAsync } from "../../utils/data/postData";
+import { deleteUserPostAsync, likePostAsync, unlikePostAsync } from "../../utils/data/postData";
 
 //ionic imports
 import { IonRouterLink, IonContent, IonButton, IonPopover } from "@ionic/react";
@@ -95,6 +95,11 @@ const PersonTextCard = ({
     }
   };
 
+  async function deletePostHandler () {
+    let res = await deleteUserPostAsync(postData.id);
+    console.log(res)
+  }
+
   let postMediaDisplay = <></>;
   if (postData.media) {
     if (postData.media.endsWith(".mp4") || postData.media.endsWith(".webm")) {
@@ -166,7 +171,7 @@ const PersonTextCard = ({
         <button id="menu-button" className="relative" onClick={e => setDropdownShowing(prev => !prev)}>
           <VerticalDots className="fill-gray-600 h-8"></VerticalDots>
           {dropdownShowing && <div className="-left-6 absolute bg-white border border-gray-200 shadow-sm blur-none p-3 rounded ">
-            <button>Delete</button>
+            <button onClick={deletePostHandler}>Delete</button>
           </div>}
         </button>
         <dialog ref={dialogRef}></dialog>
