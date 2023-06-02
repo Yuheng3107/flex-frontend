@@ -56,7 +56,11 @@ const PersonTextCard = ({
   const [hasLiked, setHasLiked] = useState(false);
   const [likes, setLikes] = useState<number>(postData.likes);
   const [postType, setPostType] = useState<PostType>("user");
+
+  const [dropdownShowing, setDropdownShowing] = useState(false);
   console.log(postData);
+
+  const dialogRef = useRef<HTMLDialogElement>(document.createElement("dialog"));
 
   const postDate =
     postData.posted_at === "" ? new Date() : new Date(postData.posted_at);
@@ -159,12 +163,13 @@ const PersonTextCard = ({
             </p>
           </div>
         </div>
-        <button id="click-trigger" className="" >
+        <button id="menu-button" className="relative" onClick={e => setDropdownShowing(prev => !prev)}>
           <VerticalDots className="fill-gray-600 h-8"></VerticalDots>
+          {dropdownShowing && <div className="-left-6 absolute bg-white border border-gray-200 shadow-sm blur-none p-3 rounded ">
+            <button>Delete</button>
+          </div>}
         </button>
-        <IonPopover trigger="click-trigger" triggerAction="click">
-          <IonContent class="ion-padding">Options!</IonContent>
-        </IonPopover>
+        <dialog ref={dialogRef}></dialog>
       </div>
       <IonRouterLink
         routerLink={
@@ -240,111 +245,41 @@ const PersonTextCard = ({
           <FilterIcon className="w-6 h-6"></FilterIcon>
         </div>
       )}
-    <Dropdown color="white"></Dropdown>
     </div>
   );
 };
 
 
-function Dropdown({color}: {color:string}) {
-  const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
-  const btnDropdownRef = useRef<HTMLButtonElement>(document.createElement("button"));
-  const dropdownRef = useRef<HTMLDivElement>(document.createElement("div"));
-  // const btnDropdownRef = React.createRef();
-  const popoverDropdownRef = React.createRef();
-  const openDropdownPopover = () => {
-    if (btnDropdownRef !== null) {
-      createPopper( btnDropdownRef.current, dropdownRef.current, {
-        placement: "bottom-start"
-      });
-    }
-   
-    setDropdownPopoverShow(true);
-  };
-  const closeDropdownPopover = () => {
-    setDropdownPopoverShow(false);
-  };
-  // bg colors
-  let bgColor;
-  color === "white"
-    ? (bgColor = "bg-slate-700")
-    : (bgColor = "bg-" + color + "-500");
-  return (
-    <>
-      <div className="flex flex-wrap">
-        <div className="w-full sm:w-6/12 md:w-4/12 px-4">
-          <div className="relative inline-flex align-middle w-full">
-            <button
-              className={
-                "text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 " +
-                bgColor
-              }
-              type="button"
-              ref={btnDropdownRef}
-              onClick={() => {
-                dropdownPopoverShow
-                  ? closeDropdownPopover()
-                  : openDropdownPopover();
-              }}
-            >
-              {color === "white" ? "White Dropdown" : color + " Dropdown"}
-            </button>
-            <div
-              ref={dropdownRef}
-              className={
-                (dropdownPopoverShow ? "block " : "hidden ") +
-                (color === "white" ? "bg-white " : bgColor + " ") +
-                "text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-1"
-              }
-              style={{ minWidth: "12rem" }}
-            >
-              <a
-                href="#pablo"
-                className={
-                  "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent " +
-                  (color === "white" ? " text-slate-700" : "text-white")
-                }
-                onClick={e => e.preventDefault()}
-              >
-                Action
-              </a>
-              <a
-                href="#pablo"
-                className={
-                  "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent " +
-                  (color === "white" ? " text-slate-700" : "text-white")
-                }
-                onClick={e => e.preventDefault()}
-              >
-                Another action
-              </a>
-              <a
-                href="#pablo"
-                className={
-                  "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent " +
-                  (color === "white" ? " text-slate-700" : "text-white")
-                }
-                onClick={e => e.preventDefault()}
-              >
-                Something else here
-              </a>
-              <div className="h-0 my-2 border border-solid border-t-0 border-slate-800 opacity-25" />
-              <a
-                href="#pablo"
-                className={
-                  "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent " +
-                  (color === "white" ? " text-slate-700" : "text-white")
-                }
-                onClick={e => e.preventDefault()}
-              >
-                Seprated link
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
+function Dropdown({ color }: { color: string }) {
+  const [referenceEl, setReferenceEl] = useState<HTMLElement | null>(null);
+  const [popperEl, setPopperEl] = useState<HTMLElement | null>(null);
+  const { styles, attributes } = usePopper(referenceEl, popperEl, {
+    placement: "bottom"
+  });
+
+  const showTooltip = () => {
+    popperEl!.setAttribute('data-show', "true");
+  }
+
+  const hideTooltip = () => {
+    popperEl!.removeAttribute('data-show')
+  }
+
+  return <div>
+    <button
+      onMouseEnter={showTooltip}
+      onMouseLeave={hideTooltip}
+      ref={setReferenceEl}
+    >
+      I'm a mystery
+    </button>
+    <div
+      ref={setPopperEl}
+      style={styles.popper}
+      {...attributes.popper}>
+      <p>A tooltip</p>
+    </div>
+  </div>
 };
 
 
