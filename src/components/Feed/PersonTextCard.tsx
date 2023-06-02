@@ -1,12 +1,19 @@
+
+//icons
 import FilledCircle from "../../assets/svgComponents/FilledCircle";
 import CommentIcon from "../../assets/svgComponents/CommentIcon";
 import LikeIcon from "../../assets/svgComponents/LikeIcon";
 import LikeIconFilled from "../../assets/svgComponents/LikeIconFilled";
-import ArrowForwardIcon from "../../assets/svgComponents/ArrowForwardIcon";
 import FilterIcon from "../../assets/svgComponents/FilterIcon";
-import React, { useState, useEffect } from "react";
+import VerticalDots from "../../assets/svgComponents/VerticalDotsIcon";
+
+//React
+import React, { useState, useEffect, useRef } from "react";
+
+//Redux
 import { useAppSelector } from "../../store/hooks";
 
+//utils
 import { imgBackend } from "../../App";
 import {
   UserPostData,
@@ -18,10 +25,11 @@ import { timeSince } from "../../utils/generalUtils";
 import { likePostAsync, unlikePostAsync } from "../../utils/data/postData";
 
 //ionic imports
-import { IonRouterLink, IonContent, IonButton } from "@ionic/react";
+import { IonRouterLink, IonContent, IonButton, IonPopover } from "@ionic/react";
 
-//icons
-import VerticalDots from "../../assets/svgComponents/VerticalDotsIcon";
+//Popper
+import { usePopper } from 'react-popper';
+import { createPopper } from "@popperjs/core";
 
 type PostProps = {
   postData: UserPostData;
@@ -151,9 +159,12 @@ const PersonTextCard = ({
             </p>
           </div>
         </div>
-        <button id="menu-button" className="" >
+        <button id="click-trigger" className="" >
           <VerticalDots className="fill-gray-600 h-8"></VerticalDots>
         </button>
+        <IonPopover trigger="click-trigger" triggerAction="click">
+          <IonContent class="ion-padding">Options!</IonContent>
+        </IonPopover>
       </div>
       <IonRouterLink
         routerLink={
@@ -188,6 +199,7 @@ const PersonTextCard = ({
           </>
         )}
       </IonRouterLink>
+
       <div className="flex flex-row items-center justify-start mx-auto action-bar gap-2">
         <div className="like-group flex items-center gap-1">
           {hasLiked ? (
@@ -228,8 +240,112 @@ const PersonTextCard = ({
           <FilterIcon className="w-6 h-6"></FilterIcon>
         </div>
       )}
+    <Dropdown color="white"></Dropdown>
     </div>
   );
 };
+
+
+function Dropdown({color}: {color:string}) {
+  const [dropdownPopoverShow, setDropdownPopoverShow] = React.useState(false);
+  const btnDropdownRef = useRef<HTMLButtonElement>(document.createElement("button"));
+  const dropdownRef = useRef<HTMLDivElement>(document.createElement("div"));
+  // const btnDropdownRef = React.createRef();
+  const popoverDropdownRef = React.createRef();
+  const openDropdownPopover = () => {
+    if (btnDropdownRef !== null) {
+      createPopper( btnDropdownRef.current, dropdownRef.current, {
+        placement: "bottom-start"
+      });
+    }
+   
+    setDropdownPopoverShow(true);
+  };
+  const closeDropdownPopover = () => {
+    setDropdownPopoverShow(false);
+  };
+  // bg colors
+  let bgColor;
+  color === "white"
+    ? (bgColor = "bg-slate-700")
+    : (bgColor = "bg-" + color + "-500");
+  return (
+    <>
+      <div className="flex flex-wrap">
+        <div className="w-full sm:w-6/12 md:w-4/12 px-4">
+          <div className="relative inline-flex align-middle w-full">
+            <button
+              className={
+                "text-white font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 " +
+                bgColor
+              }
+              type="button"
+              ref={btnDropdownRef}
+              onClick={() => {
+                dropdownPopoverShow
+                  ? closeDropdownPopover()
+                  : openDropdownPopover();
+              }}
+            >
+              {color === "white" ? "White Dropdown" : color + " Dropdown"}
+            </button>
+            <div
+              ref={dropdownRef}
+              className={
+                (dropdownPopoverShow ? "block " : "hidden ") +
+                (color === "white" ? "bg-white " : bgColor + " ") +
+                "text-base z-50 float-left py-2 list-none text-left rounded shadow-lg mt-1"
+              }
+              style={{ minWidth: "12rem" }}
+            >
+              <a
+                href="#pablo"
+                className={
+                  "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent " +
+                  (color === "white" ? " text-slate-700" : "text-white")
+                }
+                onClick={e => e.preventDefault()}
+              >
+                Action
+              </a>
+              <a
+                href="#pablo"
+                className={
+                  "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent " +
+                  (color === "white" ? " text-slate-700" : "text-white")
+                }
+                onClick={e => e.preventDefault()}
+              >
+                Another action
+              </a>
+              <a
+                href="#pablo"
+                className={
+                  "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent " +
+                  (color === "white" ? " text-slate-700" : "text-white")
+                }
+                onClick={e => e.preventDefault()}
+              >
+                Something else here
+              </a>
+              <div className="h-0 my-2 border border-solid border-t-0 border-slate-800 opacity-25" />
+              <a
+                href="#pablo"
+                className={
+                  "text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent " +
+                  (color === "white" ? " text-slate-700" : "text-white")
+                }
+                onClick={e => e.preventDefault()}
+              >
+                Seprated link
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
 
 export default PersonTextCard;
