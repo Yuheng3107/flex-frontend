@@ -27,9 +27,6 @@ import { deleteUserPostAsync, likePostAsync, unlikePostAsync } from "../../utils
 //ionic imports
 import { IonRouterLink, IonContent, IonButton, IonPopover } from "@ionic/react";
 
-//Popper
-import { usePopper } from 'react-popper';
-import { createPopper } from "@popperjs/core";
 
 type PostProps = {
   postData: UserPostData;
@@ -252,39 +249,6 @@ const PersonTextCard = ({
       )}
     </div>
   );
-};
-
-
-function Dropdown({ color }: { color: string }) {
-  const [referenceEl, setReferenceEl] = useState<HTMLElement | null>(null);
-  const [popperEl, setPopperEl] = useState<HTMLElement | null>(null);
-  const { styles, attributes } = usePopper(referenceEl, popperEl, {
-    placement: "bottom"
-  });
-
-  const showTooltip = () => {
-    popperEl!.setAttribute('data-show', "true");
-  }
-
-  const hideTooltip = () => {
-    popperEl!.removeAttribute('data-show')
-  }
-
-  return <div>
-    <button
-      onMouseEnter={showTooltip}
-      onMouseLeave={hideTooltip}
-      ref={setReferenceEl}
-    >
-      I'm a mystery
-    </button>
-    <div
-      ref={setPopperEl}
-      style={styles.popper}
-      {...attributes.popper}>
-      <p>A tooltip</p>
-    </div>
-  </div>
 };
 
 
