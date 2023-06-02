@@ -92,7 +92,7 @@ const PersonTextCard = ({
     }
   };
 
-  async function deletePostHandler () {
+  async function deletePostHandler() {
     let res = await deleteUserPostAsync(postData.id);
     console.log(res)
   }
@@ -165,13 +165,16 @@ const PersonTextCard = ({
             </p>
           </div>
         </div>
-        <button id="menu-button" className="relative" onClick={e => setDropdownShowing(prev => !prev)}>
-          <VerticalDots className="fill-gray-600 h-8"></VerticalDots>
-          {dropdownShowing && <div className="-left-6 absolute bg-white border border-gray-200 shadow-sm blur-none p-3 rounded ">
-            <button onClick={deletePostHandler}>Delete</button>
-          </div>}
-        </button>
-        <dialog ref={dialogRef}></dialog>
+        {postData.poster === profileDataRedux.id && <>
+          <button id="menu-button" className="relative" onClick={e => setDropdownShowing(prev => !prev)}>
+            <VerticalDots className="fill-gray-600 h-8"></VerticalDots>
+            {dropdownShowing && <div className="-left-6 absolute bg-white border border-gray-200 shadow-sm blur-none p-3 rounded ">
+              <button onClick={deletePostHandler}>Delete</button>
+            </div>}
+          </button>
+          <dialog ref={dialogRef}></dialog>
+        </>}
+
       </div>
       <IonRouterLink
         routerLink={
@@ -241,12 +244,7 @@ const PersonTextCard = ({
         </div>
       </div>
       <div className="hashtags"></div>
-      {isPostPage && (
-        <div className="all-comments flex justify-between items-center mx-2">
-          <h5 className="text-[#090909] text-sm">All Comments</h5>{" "}
-          <FilterIcon className="w-6 h-6"></FilterIcon>
-        </div>
-      )}
+
     </div>
   );
 };

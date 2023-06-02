@@ -2,6 +2,8 @@ import React from 'react';
 
 import CommentCard from './CommentCard';
 
+import FilterIcon from '../../assets/svgComponents/FilterIcon';
+
 type CommentContainerProps = {
     comments: {
         postArray: any[];
@@ -15,6 +17,10 @@ type CommentContainerProps = {
 
 function CommentContainer({ comments }: CommentContainerProps) {
     return <div>
+        <div className="all-comments flex justify-between items-center mx-2">
+            <h5 className="text-zinc-700 text-sm">All Comments</h5>{" "}
+            <FilterIcon className="w-6 h-6"></FilterIcon>
+        </div>
         {comments.postArray.map((item, i) => (
             <CommentCard
                 postData={item}

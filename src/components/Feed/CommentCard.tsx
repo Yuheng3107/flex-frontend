@@ -15,6 +15,12 @@ import { UserPostData, ProfileData, CommunityData } from '../../types/stateTypes
 import { imgBackend } from '../../App';
 import { likePostAsync, unlikePostAsync } from '../../utils/data/postData';
 
+//hooks
+import { useDropdown } from '../../customHooks/useDropdown';
+import { useAppSelector } from '../../store/hooks';
+
+//redux
+
 type CommentCardProps = {
     postData: UserPostData;
     profileData: ProfileData;
@@ -30,12 +36,17 @@ function CommentCard({ postData, profileData, isLiked }: CommentCardProps) {
     const [hasLiked, setHasLiked] = useState(false);
     const [likes, setLikes] = useState<number>(postData.likes);
 
+    const profileDataRedux = useAppSelector((state) => state.profile.profileData);
+
     useEffect(() => {
         if (profileData?.profile_photo) {
             setImageUrl(imgBackend.concat(profileData.profile_photo));
         }
         if (isLiked) setHasLiked(true);
     }, [profileData?.profile_photo]);
+
+    const dropdownContent = <><p>Dropdown content</p></>
+    const [Dropdown] = useDropdown();
 
     const likePost = async () => {
         let response = await likePostAsync("comment", postData.id);
@@ -52,7 +63,9 @@ function CommentCard({ postData, profileData, isLiked }: CommentCardProps) {
         }
     };
 
-    return <div className="comment flex justify-between items-center mx-2 py-4">
+
+
+    return <div className="comment flex justify-between items-start p-4 border-b border-b-zinc-200">
         <div className="profile flex flex-row items-start">
             <img
                 alt="prof pic"
@@ -76,15 +89,22 @@ function CommentCard({ postData, profileData, isLiked }: CommentCardProps) {
                 </p>
             </div>
         </div>
-        {hasLiked ? (
-            <button onClick={unlikePost}>
-                <LikeIconFilled className="w-6 h-6 fill-red-500" />
-            </button>
-        ) : (
-            <button onClick={likePost}>
-                <LikeIcon className="w-6 h-6 fill-red-500" />
-            </button>
-        )}
+        <div className="flex flex-row">
+            {hasLiked ? (
+                <button onClick={unlikePost}>
+                    <LikeIconFilled className="w-6 h-6 my-3 fill-red-500" />
+                </button>
+            ) : (
+                <button onClick={likePost}>
+                    <LikeIcon className="w-6 h-6 fill-red-500" />
+                </button>
+            )}
+            {postData.poster === profileDataRedux.id && <Dropdown iconClass="w-6" leftOffset='-left-10'>
+                <button >Delete</button>
+            </Dropdown>}
+
+        </div>
+
     </div>
 }
 
