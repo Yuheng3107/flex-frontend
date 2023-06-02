@@ -327,3 +327,17 @@ export const deleteUserPostAsync = async function (pk:number) {
     return res;
   } catch (error) { console.log(error); };
 }
+
+export const deleteUserCommentAsync = async function (pk:number) {
+  try {
+    let res = await fetch(`${backend}/feed/comment/delete/${pk}`, {
+      method: "DELETE",
+      headers: {
+        "X-CSRFToken": String(document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]),
+        "Content-type": "application/json"
+      },
+      credentials: "include",
+    })
+    return res;
+  } catch (error) { console.log(error); };
+}

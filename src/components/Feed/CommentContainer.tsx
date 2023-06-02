@@ -23,7 +23,7 @@ function CommentContainer({ comments }: CommentContainerProps) {
         </div>
         {comments.postArray.map((item, i) => (
             <CommentCard
-                postData={item}
+                commentData={item}
                 profileData={
                     comments.profileArray.length === 1
                         ? comments.profileArray[0]
