@@ -227,9 +227,7 @@ const AnalyseVideo = () => {
     ) {
       setVideoURL(URL.createObjectURL(videoInputRef.current.files[0]));
       loadDetector();
-    } else {
-      setTimeout(fileInputHandler, 1000);
-      window.alert("In Loop");
+      window.alert("Detector created");
     }
   }
   async function attachUploadedFile() {
