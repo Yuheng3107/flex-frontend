@@ -117,7 +117,7 @@ const PersonTextCard = ({
 
   return (
     <div
-      className={`border border-b-zinc-300 p-2  font-inter bg-white dark:bg-zinc-800 m-1 rounded-lg drop-shadow-card`}
+      className={` p-2  font-inter bg-white dark:bg-zinc-800 m-1 dark:mx-2 rounded-lg drop-shadow-card`}
     >
       <div id="top-bar" className=" flex flex-row justify-between">
         <div className="flex flex-row">

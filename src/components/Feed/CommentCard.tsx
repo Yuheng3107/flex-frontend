@@ -68,7 +68,7 @@ function CommentCard({ commentData, profileData, isLiked }: CommentCardProps) {
         const res = await deleteUserCommentAsync(commentData.id);
     }
 
-    return <div className="comment flex justify-between items-start p-4 border-b border-b-zinc-200">
+    return <div className="comment flex justify-between items-start p-4 border-b border-b-zinc-200 dark:border-b-zinc-600">
         <div className="profile flex flex-row items-start">
             <img
                 alt="prof pic"
