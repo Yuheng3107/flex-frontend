@@ -84,6 +84,7 @@ const AnalyseVideo = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    setError,
   } = useForm();
   const { ref, ...rest } = { ...register("media") };
   let rendererCanvas: RendererCanvas2d;
@@ -161,6 +162,21 @@ const AnalyseVideo = () => {
           // otherwise, retrieve the file we want to upload
           uploaded_media = media[0];
         }
+        // check that media is less than 50MB
+        console.log(uploaded_media);
+        let file_size_in_MB = uploaded_media.size / (1024 * 1024);
+        if (file_size_in_MB > 50) {
+          // set error
+          setError(
+            "media",
+            {
+              type: "custom",
+              message: "File must be smaller than 50MB",
+            },
+            { shouldFocus: true }
+          );
+          return;
+        }
 
         // prepare form data
         let mediaFormData = new FormData();
@@ -176,14 +192,14 @@ const AnalyseVideo = () => {
           body: mediaFormData,
         })
           .then((response) => {
-            console.log(response);
+            history.push("/home");
             return response.json();
           })
           .then((data) => console.log(data))
           .catch((err) => console.log(err));
       })
       .catch((error) => console.log(error));
-    history.push("/home");
+
     console.log(data);
   };
   const handleSelected = (e: any) => {
@@ -432,6 +448,9 @@ const AnalyseVideo = () => {
                   uploadedFileRef.current = e;
                 }}
               />
+              {errors.media?.message && (
+                <p className="errorMsg -mt-4">{`${errors?.media?.message}`}</p>
+              )}
               <Button type="submit" className="p-2 bg-sky-600 text-white">
                 Save
               </Button>
