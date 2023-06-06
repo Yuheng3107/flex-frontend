@@ -227,7 +227,6 @@ const AnalyseVideo = () => {
     ) {
       setVideoURL(URL.createObjectURL(videoInputRef.current.files[0]));
       loadDetector();
-      window.alert("Detector created");
     }
   }
   async function attachUploadedFile() {
@@ -299,6 +298,7 @@ const AnalyseVideo = () => {
     );
 
     while (isActive) {
+      window.alert(detector);
       let poses = await detector.estimatePoses(videoRef.current);
       await delay(1);
       // add lines
@@ -467,7 +467,7 @@ const AnalyseVideo = () => {
                   ref={videoRef}
                   height={videoRef.current?.videoHeight}
                   width={videoRef.current?.videoWidth}
-                  className="w-full"
+                  className="w-full block"
                   onEnded={end}
                   playsInline
                   disablePictureInPicture
