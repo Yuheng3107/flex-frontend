@@ -246,7 +246,7 @@ const AnalyseVideo = () => {
       window.alert("loading!");
       return;
     }
-
+    window.alert("Starting");
     setSelected(true);
 
     // assign img height
