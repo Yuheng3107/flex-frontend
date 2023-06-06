@@ -256,7 +256,7 @@ const AnalyseVideo = () => {
     videoRef.current.play();
     await delay(1);
     await detector.estimatePoses(videoRef.current);
-
+    window.alert("Sanity check");
     // functionality to get a video from the canvas
     canvas_stream = canvas.current?.captureStream(30); // captures stream at 30fps
     let media_recorder = null;
