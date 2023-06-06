@@ -229,6 +229,7 @@ const AnalyseVideo = () => {
       loadDetector();
     } else {
       setTimeout(fileInputHandler, 1000);
+      window.alert("In Loop");
     }
   }
   async function attachUploadedFile() {
