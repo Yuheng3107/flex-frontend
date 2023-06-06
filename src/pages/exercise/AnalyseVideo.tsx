@@ -246,7 +246,7 @@ const AnalyseVideo = () => {
       window.alert("loading!");
       return;
     }
-    window.alert("Starting");
+
     setSelected(true);
 
     // assign img height
@@ -298,6 +298,7 @@ const AnalyseVideo = () => {
     );
 
     while (isActive) {
+      window.alert("Loop is running");
       window.alert(detector);
       let poses = await detector.estimatePoses(videoRef.current);
       await delay(1);
