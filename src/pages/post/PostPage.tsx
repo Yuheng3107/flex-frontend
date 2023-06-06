@@ -169,12 +169,12 @@ const PostPage: React.FC<PostPageProps> = ({ match }) => {
                 console.log(postTextInput);
               }}
             />
-            <IonButton
-              className="mr-1 rounded-lg bg-sky-400 text-white"
+            <button
+              className="mr-1 rounded-lg bg-pantone-orange-300 py-3 px-4 text-black"
               onClick={submitHandler}
             >
               Post
-            </IonButton>
+            </button>
           </div>
         </IonToolbar>
       </IonFooter>

@@ -10,7 +10,8 @@ module.exports = {
       },
       colors:{
         'theme-off-white' : '#FEFCFB',
-        'pantone-orange': '#FC6111'
+        'pantone-orange': '#FC6111',
+        'pantone-orange-300':'#ffb793',
       }
     },
   },
