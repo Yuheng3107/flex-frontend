@@ -296,7 +296,7 @@ const AnalyseVideo = () => {
       exercise.glossary,
       exercise.minSwitchPoseCount
     );
-
+    window.alert(`isActive ${isActive}`);
     while (isActive) {
       window.alert("Loop is running");
       window.alert(detector);
