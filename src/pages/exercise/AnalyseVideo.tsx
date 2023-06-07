@@ -43,6 +43,7 @@ import RepCountCircle from "../../components/Exercise/RepCountCircle";
 // draw lines
 import { RendererCanvas2d } from "../../components/Exercise/workout/renderer_canvas2d";
 import { backend } from "../../App";
+import { isiOS } from "../../components/Exercise/workout/util";
 
 let isActive = false;
 let chunks: any[] = [];
@@ -118,7 +119,9 @@ const AnalyseVideo = () => {
   // invoke mediaRecorder.stop() to stop recording
   const stopMediaRecording = (chunks: any[]) => {
     let blob = new Blob(chunks, { type: "video/webm" });
-    let recording_url = URL.createObjectURL(blob);
+    let recording_url = isiOS()
+      ? webkitURL.createObjectURL(blob)
+      : URL.createObjectURL(blob);
     setRecordingURL(recording_url);
   };
   const toggleFeedbackLog = () => {
@@ -225,7 +228,11 @@ const AnalyseVideo = () => {
       videoInputRef.current !== null &&
       videoInputRef.current.files !== null
     ) {
-      setVideoURL(URL.createObjectURL(videoInputRef.current.files[0]));
+      setVideoURL(
+        isiOS()
+          ? webkitURL.createObjectURL(videoInputRef.current.files[0])
+          : URL.createObjectURL(videoInputRef.current.files[0])
+      );
       loadDetector();
     }
   }
