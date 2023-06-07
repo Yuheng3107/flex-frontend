@@ -147,9 +147,9 @@ const App: React.FC = () => {
             ) : profileDataRedux.id === -1 ? (
               <>
                 <Route>
-                  <Redirect to="/login" />
+                  <Redirect to="/profile/login" />
                 </Route>
-                <Route exact path="/login">
+                <Route exact path="/profile/login">
                   <Login />
                 </Route>
               </>
@@ -161,8 +161,8 @@ const App: React.FC = () => {
                 <Route exact path="/home">
                   <Home ref={homeMenuRef} />
                 </Route>
-
-                <Route path="/home/community" component={CommunityPage} />
+                {/* SubRoutes of /home/community are inside the CommunityPage component */}
+                <Route path="/home/community/" component={CommunityPage} />
 
                 <Route
                   exact
@@ -202,19 +202,20 @@ const App: React.FC = () => {
             )}
           </IonRouterOutlet>
           <IonTabBar slot="bottom" onClick={closeHomeSideMenu}>
-            <IonTabButton tab="home" href="/home">
-              <IonIcon aria-hidden="true" icon={home} />
-            </IonTabButton>
+            {profileDataRedux.id !== -1 &&
+              <IonTabButton tab="home" href="/home">
+                <IonIcon aria-hidden="true" icon={home} />
+              </IonTabButton>}
+            {profileDataRedux.id !== -1 &&
+              <IonTabButton tab="exercise" href="/exercise">
+                <IonIcon
+                  className="absolute"
+                  aria-hidden="true"
+                  icon={accessibility}
+                />
+              </IonTabButton>}
 
-            <IonTabButton tab="exercise" href="/exercise">
-              {/* <div className="relative bg-sky-400 aspect-square rounded-full"> */}
-              <IonIcon
-                className="absolute"
-                aria-hidden="true"
-                icon={accessibility}
-              />
-              {/* </div> */}
-            </IonTabButton>
+
             <IonTabButton tab="profile" href="/profile">
               {/* <IonIcon aria-hidden="true" icon={profileData.profile_photo} /> */}
               {profileDataRedux.profile_photo ? (
