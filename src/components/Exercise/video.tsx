@@ -122,6 +122,7 @@ const VideoFeed = ({
 
     // get from backend
     let exercise: any = getExercise(exerciseId);
+
     // initialise form correction
     formCorrection.init(
       exercise.evalPoses,
@@ -168,7 +169,6 @@ const VideoFeed = ({
     console.log(completedFeedback);
   };
 
-
   /*--------------------
   Text to Speech Functions
   ---------------------- */
@@ -189,7 +189,6 @@ const VideoFeed = ({
     }
     // can enable error to pop up if no text to speech
   };
-
 
   /*--------------------
   HELPER FUNCTIONS
@@ -267,9 +266,10 @@ const VideoFeed = ({
         </TextBox>
       </div>
       <div id="button-container" className="flex justify-center pb-20">
-        {exerciseEnded ?
-          completeExerciseButton !== null ?
-            completeExerciseButton :
+        {exerciseEnded ? (
+          completeExerciseButton !== null ? (
+            completeExerciseButton
+          ) : (
             <StartEndButton
               detector={detector}
               start={start}
@@ -279,10 +279,11 @@ const VideoFeed = ({
               repCount={repCount}
               perfectRepCount={perfectRepCount}
             />
-          : detector === null || webcam.current?.video === null ?
-            <IonSpinner />
-          :
-            <StartEndButton
+          )
+        ) : detector === null || webcam.current?.video === null ? (
+          <IonSpinner />
+        ) : (
+          <StartEndButton
             detector={detector}
             start={start}
             end={end}
@@ -290,7 +291,8 @@ const VideoFeed = ({
             setButton={setStartButton}
             repCount={repCount}
             perfectRepCount={perfectRepCount}
-          />}
+          />
+        )}
       </div>
     </div>
   );

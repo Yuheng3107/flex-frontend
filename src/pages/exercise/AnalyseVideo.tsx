@@ -291,7 +291,9 @@ const AnalyseVideo = () => {
     setFeedback(["", ""]);
 
     // get from backend
+
     let exercise: any = getExercise(exerciseId);
+
     // initialise form correction
     formCorrection.init(
       exercise.evalPoses,

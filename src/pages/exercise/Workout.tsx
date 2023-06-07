@@ -118,7 +118,7 @@ function Workout({ match }: WorkoutPageProps) {
           repCountInput={currentDisplayElement.reps.rep_count[0]}
           completeExerciseButton={nextExerciseButton}
           exerciseData={displaysArr[currentDisplayIndex]}
-          exerciseId={0}
+          exerciseId={(displaysArr[currentDisplayIndex] as ExerciseData)?.id}
         ></VideoFeed>
       );
     }
