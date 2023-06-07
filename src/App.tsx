@@ -216,7 +216,7 @@ const App: React.FC = () => {
               </IonTabButton>}
 
 
-            <IonTabButton tab="profile" href="/profile">
+            <IonTabButton tab="profile" href={profileDataRedux.id === -1 ? "/profile/login" : "/profile"}>
               {/* <IonIcon aria-hidden="true" icon={profileData.profile_photo} /> */}
               {profileDataRedux.profile_photo ? (
                 <img
