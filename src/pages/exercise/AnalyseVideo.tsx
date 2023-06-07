@@ -270,7 +270,7 @@ const AnalyseVideo = () => {
     // Create media recorder from canvas stream
     if (canvas_stream !== undefined) {
       media_recorder = new MediaRecorder(canvas_stream, {
-        mimeType: "video/mp4; codecs=vp9",
+        mimeType: "video/mp4; codecs=avc1",
       });
     }
     if (media_recorder !== null) {
