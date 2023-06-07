@@ -1,6 +1,6 @@
 //React imports
-import { useState } from "react";
-
+import { useEffect, useState } from "react";
+import { backend } from "../../App";
 import {
   IonContent,
   IonPage,
@@ -26,7 +26,9 @@ const ExercisePage: React.FC<ExercisePageProps> = ({ match }) => {
   console.log(match.params.exerciseId);
   const [isExercising, setIsExercising] = useState(false);
   const [repCountInput, setRepCountInput] = useState<number>(10);
-
+  const [exerciseName, setExerciseName] = useState<string>(
+    "Exercise Name (Placeholder)"
+  );
   function startExerciseHandler(event: React.MouseEvent<HTMLButtonElement>) {
     setIsExercising(true);
   }
@@ -43,10 +45,25 @@ const ExercisePage: React.FC<ExercisePageProps> = ({ match }) => {
       });
     }
   };
-
+  useEffect(() => {
+    fetch(`${backend}/exercises/exercise/${Number(match.params.exerciseId)}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": String(
+          document.cookie?.match(/csrftoken=([\w-]+)/)?.[1]
+        ),
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setExerciseName(data?.name);
+      })
+      .catch((err) => console.log(err));
+  }, []);
   return (
     <IonPage>
-      <Header title="Exercise Name (Placeholder)"></Header>
+      <Header title={exerciseName}></Header>
       <IonContent fullscreen>
         <main className="w-full h-full">
           {isExercising ? (
