@@ -118,7 +118,7 @@ const AnalyseVideo = () => {
   }, []);
   // invoke mediaRecorder.stop() to stop recording
   const stopMediaRecording = (chunks: any[]) => {
-    let blob = new Blob(chunks, { type: "video/webm" });
+    let blob = new Blob(chunks, { type: "video/mp4" });
     let recording_url = isiOS()
       ? webkitURL.createObjectURL(blob)
       : URL.createObjectURL(blob);
@@ -240,7 +240,7 @@ const AnalyseVideo = () => {
     const dataTransfer = new DataTransfer();
     let blob = await fetch(recordingURL).then((r) => r.blob());
     uploadedFile = new File([blob], "Exercise Video.webm", {
-      type: "video/webm",
+      type: "video/mp4",
     });
     dataTransfer.items.add(uploadedFile);
     if (uploadedFileRef?.current !== null) {
@@ -270,7 +270,7 @@ const AnalyseVideo = () => {
     // Create media recorder from canvas stream
     if (canvas_stream !== undefined) {
       media_recorder = new MediaRecorder(canvas_stream, {
-        mimeType: "video/webm; codecs=vp9",
+        mimeType: "video/mp4; codecs=vp9",
       });
     }
     if (media_recorder !== null) {
