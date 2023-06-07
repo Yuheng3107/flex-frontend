@@ -2,7 +2,7 @@ import { useState } from 'react';
 import SearchIcon from "../../assets/svgComponents/SearchIcon";
 
 type SearchBarProps = {
-    submitForm: (content: string) => void;
+    submitForm: (content: string) => Promise<void>;
     placeholder: string;
 }
 function SearchBar({submitForm, placeholder}: SearchBarProps) {
@@ -26,7 +26,7 @@ function SearchBar({submitForm, placeholder}: SearchBarProps) {
         <input value={searchInput} onChange={inputChangeHandler} type="text" placeholder={placeholder}
         className="focus:outline-0 bg-transparent dark:text-gray-200"></input>
         <button type="submit">
-            <SearchIcon className="w-6 aspect-square dark:stroke-gray-400" />
+            <SearchIcon className="w-6 aspect-square dark:stroke-gray-400 stroke-gray-700" />
         </button>
     </form>
 }

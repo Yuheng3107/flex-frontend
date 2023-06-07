@@ -34,6 +34,7 @@ const Search = ({ }) => {
     const [users, setUsers] = useState<any[]>([]);
     const [searchCategory, setSearchCategory] = useState<string>("posts");
 
+
     const loadPosts = async (content: string) => {
         let postArray: any[] = await getSearchPostsAsync(content);
         console.log(postArray);
@@ -51,6 +52,22 @@ const Search = ({ }) => {
         if (typeof results !== "string") setUsers(results);
     };
 
+    const determineSearchFunction = () => {
+        switch (searchCategory) {
+            case "posts":
+                return loadPosts;
+                break;
+            case "communities":
+                return loadCommunities;
+                break;
+            case "users":
+                return loadUsers;
+                break;
+        }
+
+        return loadPosts;
+    }
+
     return (
         <IonPage>
             <IonHeader>
@@ -58,26 +75,26 @@ const Search = ({ }) => {
                     <IonButtons slot="start">
                         <IonBackButton defaultHref="/home"></IonBackButton>
                     </IonButtons>
-                    <SearchBar submitForm={loadPosts} placeholder="search" />
+                    <SearchBar submitForm={determineSearchFunction()} placeholder="search" />
                 </IonToolbar>
             </IonHeader>
             <IonContent fullscreen>
                 <IonSegment value={searchCategory} className="pb-1">
-                    <IonSegmentButton value="posts" onClick={(e)=>setSearchCategory("posts")} >
+                    <IonSegmentButton value="posts" onClick={(e) => setSearchCategory("posts")} >
                         <IonLabel>Posts</IonLabel>
                     </IonSegmentButton>
-                    <IonSegmentButton value="communities" onClick={(e)=>setSearchCategory("communities")}>
+                    <IonSegmentButton value="communities" onClick={(e) => setSearchCategory("communities")}>
                         <IonLabel>Communities</IonLabel>
                     </IonSegmentButton>
-                    <IonSegmentButton value="users"  onClick={(e)=>setSearchCategory("users")}>
+                    <IonSegmentButton value="users" onClick={(e) => setSearchCategory("users")}>
                         <IonLabel>Users</IonLabel>
                     </IonSegmentButton>
                 </IonSegment>
 
                 <main className="mt-3">
                     {searchCategory === "posts" && <Posts loadData={undefined} posts={posts} />}
-                    {searchCategory === "communities" && <CommunityListDisplay communitiesData={communities}/>}
-                    {searchCategory === "users" && <UserDisplay users={users}/>}
+                    {searchCategory === "communities" && <CommunityListDisplay communitiesData={communities} />}
+                    {searchCategory === "users" && <UserDisplay users={users} />}
                 </main>
             </IonContent>
         </IonPage>
