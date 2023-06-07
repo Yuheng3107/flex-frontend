@@ -263,7 +263,7 @@ const AnalyseVideo = () => {
     videoRef.current.play();
     await delay(1);
     await detector.estimatePoses(videoRef.current);
-    window.alert("Sanity check");
+
     // functionality to get a video from the canvas
     canvas_stream = canvas.current?.captureStream(30); // captures stream at 30fps
     let media_recorder = null;
@@ -303,10 +303,8 @@ const AnalyseVideo = () => {
       exercise.glossary,
       exercise.minSwitchPoseCount
     );
-    window.alert(`isActive ${isActive}`);
+
     while (isActive) {
-      window.alert("Loop is running");
-      window.alert(detector);
       let poses = await detector.estimatePoses(videoRef.current);
       await delay(1);
       // add lines
