@@ -92,8 +92,13 @@ function Login(props) {
 
   return (
     <div className="px-5">
+
+      <div className="text-zinc-900 dark:text-zinc-50">
+        <h1>Welcome to Flex.</h1>
+        <span>Please Sign in to continue.</span>
+      </div>
       <IonButton
-        className="flex flex-row items-center
+        className="flex flex-row items-center mt-5
         dark:text-zinc-100 dark:border-zinc-100 text-base border border-gray-800 border-1"
         onClick={() => login()}
         color="light"
@@ -105,10 +110,6 @@ function Login(props) {
           alt="Google icon"
         ></IonImg>
       </IonButton>
-      <div>
-        <h1>Welcome to Flex.</h1>
-        <span>Please Sign in to continue.</span>
-      </div>
     </div>
   );
 }

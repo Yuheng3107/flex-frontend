@@ -61,6 +61,7 @@ export const getSearchCommunitiesAsync = async function (content: string) {
       })
     })
     let data = await res.json();
+    console.log(data);
     return data;
   } catch (error) { console.log(error); };
 }
