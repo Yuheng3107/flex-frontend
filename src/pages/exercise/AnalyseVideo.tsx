@@ -43,7 +43,7 @@ import RepCountCircle from "../../components/Exercise/RepCountCircle";
 // draw lines
 import { RendererCanvas2d } from "../../components/Exercise/workout/renderer_canvas2d";
 import { backend } from "../../App";
-import { isiOS } from "../../components/Exercise/workout/util";
+import { isIOS } from "react-device-detect";
 
 let isActive = false;
 let chunks: any[] = [];
@@ -118,8 +118,10 @@ const AnalyseVideo = () => {
   }, []);
   // invoke mediaRecorder.stop() to stop recording
   const stopMediaRecording = (chunks: any[]) => {
-    let blob = new Blob(chunks, { type: "video/mp4" });
-    let recording_url = isiOS()
+    let blob = new Blob(chunks, {
+      type: `${isIOS ? "video/mp4" : "video/webm"}`,
+    });
+    let recording_url = isIOS
       ? webkitURL.createObjectURL(blob)
       : URL.createObjectURL(blob);
     setRecordingURL(recording_url);
@@ -229,7 +231,7 @@ const AnalyseVideo = () => {
       videoInputRef.current.files !== null
     ) {
       setVideoURL(
-        isiOS()
+        isIOS
           ? webkitURL.createObjectURL(videoInputRef.current.files[0])
           : URL.createObjectURL(videoInputRef.current.files[0])
       );
@@ -239,9 +241,13 @@ const AnalyseVideo = () => {
   async function attachUploadedFile() {
     const dataTransfer = new DataTransfer();
     let blob = await fetch(recordingURL).then((r) => r.blob());
-    uploadedFile = new File([blob], "Exercise Video.webm", {
-      type: "video/mp4",
-    });
+    uploadedFile = new File(
+      [blob],
+      `Exercise Video.${isIOS ? ".mp4" : ".webm"}`,
+      {
+        type: `${isIOS ? "video/mp4" : "video.webm"}`,
+      }
+    );
     dataTransfer.items.add(uploadedFile);
     if (uploadedFileRef?.current !== null) {
       uploadedFileRef.current.files = dataTransfer.files;
@@ -255,7 +261,6 @@ const AnalyseVideo = () => {
     }
 
     setSelected(true);
-
     // assign img height
     assignImgHeight();
     setGeneralFeedback("Loading...");
@@ -270,7 +275,7 @@ const AnalyseVideo = () => {
     // Create media recorder from canvas stream
     if (canvas_stream !== undefined) {
       media_recorder = new MediaRecorder(canvas_stream, {
-        mimeType: "video/mp4; codecs=avc1",
+        mimeType: `${isIOS ? "video/mp4; codecs=avc1" : "video/webm"}`,
       });
     }
     if (media_recorder !== null) {
@@ -469,8 +474,8 @@ const AnalyseVideo = () => {
           <>
             {videoURL !== "" && (
               <>
-                <canvas ref={canvas} className="absolute z-10 w-full"></canvas>
                 <div className="flex justify-center">
+                  <canvas ref={canvas} className="absolute z-10 w-3/5"></canvas>
                   <video
                     src={videoURL}
                     ref={videoRef}
