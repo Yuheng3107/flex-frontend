@@ -470,17 +470,19 @@ const AnalyseVideo = () => {
             {videoURL !== "" && (
               <>
                 <canvas ref={canvas} className="absolute z-10 w-full"></canvas>
-                <video
-                  src={videoURL}
-                  ref={videoRef}
-                  height={videoRef.current?.videoHeight}
-                  width={videoRef.current?.videoWidth}
-                  className="w-full block"
-                  onEnded={end}
-                  playsInline
-                  disablePictureInPicture
-                  disableRemotePlayback
-                />
+                <div className="flex justify-center">
+                  <video
+                    src={videoURL}
+                    ref={videoRef}
+                    height={videoRef.current?.videoHeight}
+                    width={videoRef.current?.videoWidth}
+                    className="w-3/5"
+                    onEnded={end}
+                    playsInline
+                    disablePictureInPicture
+                    disableRemotePlayback
+                  />
+                </div>
               </>
             )}
             <div id="scatter-gl-container" className="hidden"></div>
