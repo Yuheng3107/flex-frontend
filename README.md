@@ -1,3 +1,6 @@
+### Frontend for Flex 
+This repo hosts the frontend for the MVP of Flex, which aimed to provide real-time form correction using Machine Learning. It was made public as the startup idea failed to take off due to lack of experience in prospecting the market.
+
 ### Exercises
 
 ## Exercise ID (DATABASE)
